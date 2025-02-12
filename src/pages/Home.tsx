@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import SignOutButton from '@/components/SignOutButton';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -35,8 +36,9 @@ const Home = () => {
       <div className="min-h-screen flex">
         <AppSidebar />
         <main className="flex-1">
-          <div className="p-4">
+          <div className="p-4 flex justify-between items-center">
             <SidebarTrigger />
+            <SignOutButton />
           </div>
           <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
             <div className="max-w-7xl mx-auto space-y-8">
