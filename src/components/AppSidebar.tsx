@@ -37,6 +37,13 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar>
+      <div className="p-4 border-b border-slate-200">
+        <img 
+          src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+          alt="Domain Model Logo" 
+          className="h-8 w-full object-contain"
+        />
+      </div>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Domain Modeler</SidebarGroupLabel>
