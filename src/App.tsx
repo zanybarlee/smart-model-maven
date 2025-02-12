@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
@@ -17,6 +18,7 @@ import Monitoring from "./pages/Monitoring";
 import Flow from "./pages/Flow";
 import Data from "./pages/Data";
 import Knowledge from "./pages/Knowledge";
+import Auth from "./pages/Auth";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -36,18 +38,103 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/domain" element={<Index />} />
-            <Route path="/data" element={<Data />} />
-            <Route path="/knowledge" element={<Knowledge />} />
-            <Route path="/flow" element={<Flow />} />
-            <Route path="/design" element={<Design />} />
-            <Route path="/code" element={<CodeGeneration />} />
-            <Route path="/testing" element={<Testing />} />
-            <Route path="/deployment" element={<Deployment />} />
-            <Route path="/monitoring" element={<Monitoring />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/domain"
+              element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/data"
+              element={
+                <ProtectedRoute>
+                  <Data />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/knowledge"
+              element={
+                <ProtectedRoute>
+                  <Knowledge />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/flow"
+              element={
+                <ProtectedRoute>
+                  <Flow />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/design"
+              element={
+                <ProtectedRoute>
+                  <Design />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/code"
+              element={
+                <ProtectedRoute>
+                  <CodeGeneration />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/testing"
+              element={
+                <ProtectedRoute>
+                  <Testing />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/deployment"
+              element={
+                <ProtectedRoute>
+                  <Deployment />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/monitoring"
+              element={
+                <ProtectedRoute>
+                  <Monitoring />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <ProtectedRoute>
+                  <About />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
