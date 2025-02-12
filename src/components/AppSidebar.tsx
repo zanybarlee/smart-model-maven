@@ -1,5 +1,5 @@
 
-import { Menu, Home, FileJson, Settings, Info, Code, TestTube, Cloud, Activity, Database } from "lucide-react";
+import { Menu, Home, FileJson, Settings, Info, Code, TestTube, Cloud, Activity, Database, Layout } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -26,7 +26,7 @@ const items = [
   {
     title: "Design & Planning",
     url: "/design",
-    icon: Database,
+    icon: Layout,
     description: "AI-assisted requirements and architecture"
   },
   {
