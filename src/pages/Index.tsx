@@ -80,12 +80,13 @@ const Index = () => {
 
     setEntities(mockEntities);
 
-    // Convert entities to flow nodes
+    // Convert entities to flow nodes with draggable property
     const flowNodes = mockEntities.map((entity, index) => ({
       id: entity.id,
       type: 'entity',
       position: { x: 250 * index, y: 100 },
-      data: { label: entity.name, attributes: entity.attributes }
+      data: { label: entity.name, attributes: entity.attributes },
+      draggable: true // Explicitly set draggable to true
     }));
 
     setNodes(flowNodes);
@@ -120,7 +121,11 @@ const Index = () => {
         setEntities(entities.map(e => e.id === selectedEntity.id ? newEntity : e));
         setNodes(nodes.map(node => 
           node.id === selectedEntity.id 
-            ? { ...node, data: { label: name, attributes } }
+            ? { 
+                ...node, 
+                data: { label: name, attributes },
+                draggable: true // Ensure draggable is set when updating nodes
+              }
             : node
         ));
       } else {
@@ -129,7 +134,8 @@ const Index = () => {
           id: newEntity.id,
           type: 'entity',
           position: { x: Math.random() * 500, y: Math.random() * 300 },
-          data: { label: name, attributes }
+          data: { label: name, attributes },
+          draggable: true // Ensure draggable is set for new nodes
         }]);
       }
 
