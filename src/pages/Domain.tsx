@@ -125,7 +125,7 @@ const Domain = () => {
               </p>
             </div>
 
-            <div className="flex flex-col gap-6 flex-1">
+            <div className="grid lg:grid-cols-3 gap-6 flex-1">
               <DomainModelEditor
                 modelDescription={modelDescription}
                 onModelDescriptionChange={handleModelDescriptionChange}
@@ -135,7 +135,7 @@ const Domain = () => {
                 selectedEntity={selectedEntity}
                 onSaveEntity={handleSaveEntity}
               />
-              <div className="flex-1 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden">
+              <div className="lg:col-span-2 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden">
                 <ReactFlow
                   nodes={nodes}
                   edges={edges}
