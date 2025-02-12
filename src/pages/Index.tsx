@@ -1,9 +1,21 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import ReactFlow, { 
+  Background, 
+  Controls,
+  Node,
+  Edge,
+  Connection,
+  addEdge,
+  Handle,
+  Position,
+} from 'reactflow';
+import 'reactflow/dist/style.css';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Entity {
   id: string;
@@ -11,9 +23,34 @@ interface Entity {
   attributes: string[];
 }
 
+// Custom Node Component
+const EntityNode = ({ data }: { data: { label: string; attributes: string[] } }) => {
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-lg border border-slate-200 min-w-[200px]">
+      <Handle type="target" position={Position.Top} className="!bg-primary" />
+      <div className="font-semibold text-primary mb-2">{data.label}</div>
+      <div className="text-sm text-slate-600">
+        {data.attributes.map((attr, index) => (
+          <div key={index} className="py-1 border-b border-slate-100 last:border-0">
+            {attr}
+          </div>
+        ))}
+      </div>
+      <Handle type="source" position={Position.Bottom} className="!bg-primary" />
+    </div>
+  );
+};
+
+const nodeTypes = {
+  entity: EntityNode,
+};
+
 const Index = () => {
   const [modelDescription, setModelDescription] = useState('');
   const [entities, setEntities] = useState<Entity[]>([]);
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
+  const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
   const { toast } = useToast();
 
   const handleGenerateModel = () => {
@@ -26,7 +63,7 @@ const Index = () => {
       return;
     }
 
-    // This is a mock response - in a real app, this would come from an AI service
+    // Mock entities generation
     const mockEntities: Entity[] = [
       {
         id: '1',
@@ -41,10 +78,118 @@ const Index = () => {
     ];
 
     setEntities(mockEntities);
+
+    // Convert entities to flow nodes
+    const flowNodes = mockEntities.map((entity, index) => ({
+      id: entity.id,
+      type: 'entity',
+      position: { x: 250 * index, y: 100 },
+      data: { label: entity.name, attributes: entity.attributes }
+    }));
+
+    setNodes(flowNodes);
     toast({
       title: "Model Generated",
       description: "Your domain model has been generated successfully.",
     });
+  };
+
+  const onConnect = useCallback((params: Connection) => {
+    setEdges((eds) => addEdge(params, eds));
+  }, []);
+
+  const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node) => {
+    console.log('Node dragged:', node);
+  }, []);
+
+  // Add/Edit Entity Dialog
+  const EntityDialog = () => {
+    const [name, setName] = useState(selectedEntity?.name || '');
+    const [attribute, setAttribute] = useState('');
+    const [attributes, setAttributes] = useState<string[]>(selectedEntity?.attributes || []);
+
+    const handleSave = () => {
+      const newEntity: Entity = {
+        id: selectedEntity?.id || Date.now().toString(),
+        name,
+        attributes
+      };
+
+      if (selectedEntity) {
+        setEntities(entities.map(e => e.id === selectedEntity.id ? newEntity : e));
+        setNodes(nodes.map(node => 
+          node.id === selectedEntity.id 
+            ? { ...node, data: { label: name, attributes } }
+            : node
+        ));
+      } else {
+        setEntities([...entities, newEntity]);
+        setNodes([...nodes, {
+          id: newEntity.id,
+          type: 'entity',
+          position: { x: Math.random() * 500, y: Math.random() * 300 },
+          data: { label: name, attributes }
+        }]);
+      }
+
+      setSelectedEntity(null);
+    };
+
+    const addAttribute = () => {
+      if (attribute.trim()) {
+        setAttributes([...attributes, attribute]);
+        setAttribute('');
+      }
+    };
+
+    return (
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{selectedEntity ? 'Edit Entity' : 'Add New Entity'}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 p-4">
+          <div>
+            <label className="text-sm font-medium mb-1 block">Entity Name</label>
+            <Input 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+              placeholder="Enter entity name"
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium mb-1 block">Add Attribute</label>
+            <div className="flex gap-2">
+              <Input 
+                value={attribute}
+                onChange={(e) => setAttribute(e.target.value)}
+                placeholder="Enter attribute name"
+              />
+              <Button onClick={addAttribute}>Add</Button>
+            </div>
+          </div>
+          <div>
+            <label className="text-sm font-medium mb-1 block">Attributes</label>
+            <div className="space-y-2">
+              {attributes.map((attr, index) => (
+                <div key={index} className="flex items-center justify-between bg-slate-50 p-2 rounded">
+                  <span>{attr}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setAttributes(attributes.filter((_, i) => i !== index))}
+                  >
+                    ×
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <Button className="w-full" onClick={handleSave}>
+            {selectedEntity ? 'Update Entity' : 'Create Entity'}
+          </Button>
+        </div>
+      </DialogContent>
+    );
   };
 
   return (
@@ -74,12 +219,20 @@ const Index = () => {
                   placeholder="Describe your business domain in natural language... 
                   For example: I need a system to manage an online bookstore with customers, orders, and books."
                 />
-                <Button 
-                  onClick={handleGenerateModel}
-                  className="w-full bg-primary hover:bg-primary/90"
-                >
-                  Generate Domain Model
-                </Button>
+                <div className="flex gap-4">
+                  <Button 
+                    onClick={handleGenerateModel}
+                    className="flex-1 bg-primary hover:bg-primary/90"
+                  >
+                    Generate Domain Model
+                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">Add Entity</Button>
+                    </DialogTrigger>
+                    <EntityDialog />
+                  </Dialog>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -98,31 +251,25 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Generated Model Display */}
-          {entities.length > 0 && (
+          {/* Flow Diagram */}
+          {nodes.length > 0 && (
             <Card className="lg:col-span-3">
               <CardHeader>
-                <CardTitle>Generated Domain Model</CardTitle>
+                <CardTitle>Domain Model Diagram</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {entities.map((entity) => (
-                    <div 
-                      key={entity.id}
-                      className="p-4 bg-white rounded-lg shadow-sm border border-slate-100"
-                    >
-                      <h3 className="text-lg font-semibold text-primary mb-2">
-                        {entity.name}
-                      </h3>
-                      <ul className="space-y-1">
-                        {entity.attributes.map((attr, index) => (
-                          <li key={index} className="text-sm text-slate-600">
-                            {attr}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+                <div style={{ height: '500px' }}>
+                  <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onConnect={onConnect}
+                    onNodeDragStop={onNodeDragStop}
+                    nodeTypes={nodeTypes}
+                    fitView
+                  >
+                    <Background />
+                    <Controls />
+                  </ReactFlow>
                 </div>
               </CardContent>
             </Card>
