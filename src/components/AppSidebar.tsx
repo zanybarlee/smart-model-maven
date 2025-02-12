@@ -1,5 +1,5 @@
 
-import { Menu, Home, FileJson, Settings, Info } from "lucide-react";
+import { Menu, Home, FileJson, Settings, Info, Code, TestTube, Cloud, Activity, Database } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,9 +18,34 @@ const items = [
     icon: Home,
   },
   {
-    title: "Domain Models",
-    url: "/",
-    icon: FileJson,
+    title: "Design & Planning",
+    url: "/design",
+    icon: Database,
+    description: "AI-assisted requirements and architecture"
+  },
+  {
+    title: "Code Generation",
+    url: "/code",
+    icon: Code,
+    description: "AI-powered coding and optimization"
+  },
+  {
+    title: "Testing",
+    url: "/testing",
+    icon: TestTube,
+    description: "Automated testing and quality assurance"
+  },
+  {
+    title: "Deployment",
+    url: "/deployment",
+    icon: Cloud,
+    description: "CI/CD and deployment strategies"
+  },
+  {
+    title: "Monitoring",
+    url: "/monitoring",
+    icon: Activity,
+    description: "System monitoring and maintenance"
   },
   {
     title: "Settings",
@@ -46,7 +71,7 @@ export function AppSidebar() {
       </div>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Domain Modeler</SidebarGroupLabel>
+          <SidebarGroupLabel>GenAI Application Life Cycle</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

@@ -8,6 +8,11 @@ import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import Design from "./pages/Design";
+import CodeGeneration from "./pages/CodeGeneration";
+import Testing from "./pages/Testing";
+import Deployment from "./pages/Deployment";
+import Monitoring from "./pages/Monitoring";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -28,6 +33,11 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/design" element={<Design />} />
+            <Route path="/code" element={<CodeGeneration />} />
+            <Route path="/testing" element={<Testing />} />
+            <Route path="/deployment" element={<Deployment />} />
+            <Route path="/monitoring" element={<Monitoring />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/about" element={<About />} />
             <Route path="*" element={<NotFound />} />
