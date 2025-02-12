@@ -39,7 +39,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>CENS Domain Modeler</SidebarGroupLabel>
+          <SidebarGroupLabel>Domain Modeler</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

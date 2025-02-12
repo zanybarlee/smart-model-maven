@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import {
   ReactFlow,
@@ -197,12 +196,12 @@ const Index = () => {
               <div className="text-center space-y-4">
                 <div className="flex justify-center mb-4">
                   <img 
-                    src="/lovable-uploads/23e76822-ab3b-4e04-a807-dd20a35ff95c.png" 
-                    alt="CENS Logo" 
-                    className="h-20 object-contain"
+                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+                    alt="Domain Model Logo" 
+                    className="h-20 object-contain rounded-lg shadow-md"
                   />
                 </div>
-                <h1 className="text-4xl font-bold text-slate-900">CENS Generative Domain Model</h1>
+                <h1 className="text-4xl font-bold text-slate-900">Generative Domain Modeler</h1>
                 <p className="text-slate-600 max-w-2xl mx-auto">
                   Transform your business requirements into a comprehensive domain model using AI-powered analysis
                 </p>
