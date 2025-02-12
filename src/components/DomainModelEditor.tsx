@@ -26,7 +26,7 @@ const DomainModelEditor = ({
   onSaveEntity
 }: DomainModelEditorProps) => {
   return (
-    <Card className="lg:col-span-2">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Describe Your Domain</CardTitle>
       </CardHeader>
