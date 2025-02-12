@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Handle, Position } from 'reactflow';
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Copy } from "lucide-react";
 
 interface EntityNodeProps {
   data: { 
@@ -9,6 +9,7 @@ interface EntityNodeProps {
     attributes: string[];
     onEdit: (id: string) => void;
     onDelete: (id: string) => void;
+    onDuplicate: (id: string) => void;
   };
   id: string;
 }
@@ -23,9 +24,20 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
           <button 
             onClick={(e) => {
               e.stopPropagation();
+              data.onDuplicate(id);
+            }}
+            className="p-1 hover:bg-slate-100 rounded"
+            title="Duplicate"
+          >
+            <Copy className="h-4 w-4 text-slate-500" />
+          </button>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
               data.onEdit(id);
             }}
             className="p-1 hover:bg-slate-100 rounded"
+            title="Edit"
           >
             <Pencil className="h-4 w-4 text-slate-500" />
           </button>
@@ -35,6 +47,7 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
               data.onDelete(id);
             }}
             className="p-1 hover:bg-slate-100 rounded"
+            title="Delete"
           >
             <Trash2 className="h-4 w-4 text-red-500" />
           </button>

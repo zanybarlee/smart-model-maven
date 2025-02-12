@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import {
   ReactFlow,
@@ -28,6 +27,45 @@ const Index = () => {
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
   const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleDuplicateEntity = (id: string) => {
+    const entityToDuplicate = entities.find(e => e.id === id);
+    if (entityToDuplicate) {
+      const newEntity: Entity = {
+        id: Date.now().toString(),
+        name: `${entityToDuplicate.name} (Copy)`,
+        attributes: [...entityToDuplicate.attributes]
+      };
+
+      setEntities([...entities, newEntity]);
+
+      // Find the position of the original node
+      const originalNode = nodes.find(node => node.id === id);
+      const offset = 50; // Offset for the new node position
+
+      setNodes([...nodes, {
+        id: newEntity.id,
+        type: 'entity',
+        position: { 
+          x: (originalNode?.position.x || 0) + offset, 
+          y: (originalNode?.position.y || 0) + offset 
+        },
+        data: { 
+          label: newEntity.name, 
+          attributes: newEntity.attributes,
+          onEdit: handleEditEntity,
+          onDelete: handleDeleteEntity,
+          onDuplicate: handleDuplicateEntity,
+        },
+        draggable: true
+      }]);
+
+      toast({
+        title: "Entity Duplicated",
+        description: "A copy of the entity has been created.",
+      });
+    }
+  };
 
   const handleEditEntity = (id: string) => {
     const entity = entities.find(e => e.id === id);
@@ -83,6 +121,7 @@ const Index = () => {
         attributes: entity.attributes,
         onEdit: handleEditEntity,
         onDelete: handleDeleteEntity,
+        onDuplicate: handleDuplicateEntity,
       },
       draggable: true
     }));
@@ -106,6 +145,7 @@ const Index = () => {
                 attributes: entity.attributes,
                 onEdit: handleEditEntity,
                 onDelete: handleDeleteEntity,
+                onDuplicate: handleDuplicateEntity,
               },
               draggable: true
             }
@@ -122,6 +162,7 @@ const Index = () => {
           attributes: entity.attributes,
           onEdit: handleEditEntity,
           onDelete: handleDeleteEntity,
+          onDuplicate: handleDuplicateEntity,
         },
         draggable: true
       }]);
