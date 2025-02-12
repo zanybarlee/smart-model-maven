@@ -42,7 +42,7 @@ const Home = () => {
             <div className="max-w-7xl mx-auto space-y-8">
               {/* Header */}
               <div className="text-center space-y-4">
-                <h1 className="text-4xl font-bold text-slate-900">Welcome to CENS AI</h1>
+                <h1 className="text-4xl font-bold text-slate-900">Welcome to CENS GenAI</h1>
                 <p className="text-slate-600 max-w-2xl mx-auto">
                   Your comprehensive AI-powered platform for application development lifecycle management
                 </p>
