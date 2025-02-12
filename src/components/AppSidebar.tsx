@@ -19,17 +19,17 @@ const items = [
   },
   {
     title: "Domain Models",
-    url: "#",
+    url: "/",
     icon: FileJson,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/settings",
     icon: Settings,
   },
   {
     title: "About",
-    url: "#",
+    url: "/about",
     icon: Info,
   },
 ];
