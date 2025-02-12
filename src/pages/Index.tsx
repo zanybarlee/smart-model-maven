@@ -10,6 +10,7 @@ import {
   addEdge,
   Handle,
   Position,
+  useReactFlow,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface Entity {
   id: string;
@@ -25,11 +27,33 @@ interface Entity {
 }
 
 // Custom Node Component
-const EntityNode = ({ data }: { data: { label: string; attributes: string[] } }) => {
+const EntityNode = ({ data, id }: { data: { label: string; attributes: string[]; onEdit: (id: string) => void; onDelete: (id: string) => void }; id: string }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg border border-slate-200 min-w-[200px]">
+    <div className="bg-white p-4 rounded-lg shadow-lg border border-slate-200 min-w-[200px] relative">
       <Handle type="target" position={Position.Top} className="!bg-primary" />
-      <div className="font-semibold text-primary mb-2">{data.label}</div>
+      <div className="flex justify-between items-center mb-2">
+        <div className="font-semibold text-primary">{data.label}</div>
+        <div className="flex gap-2">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              data.onEdit(id);
+            }}
+            className="p-1 hover:bg-slate-100 rounded"
+          >
+            <Pencil className="h-4 w-4 text-slate-500" />
+          </button>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              data.onDelete(id);
+            }}
+            className="p-1 hover:bg-slate-100 rounded"
+          >
+            <Trash2 className="h-4 w-4 text-red-500" />
+          </button>
+        </div>
+      </div>
       <div className="text-sm text-slate-600">
         {data.attributes.map((attr, index) => (
           <div key={index} className="py-1 border-b border-slate-100 last:border-0">
@@ -53,6 +77,25 @@ const Index = () => {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
   const { toast } = useToast();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleEditEntity = (id: string) => {
+    const entity = entities.find(e => e.id === id);
+    if (entity) {
+      setSelectedEntity(entity);
+      setDialogOpen(true);
+    }
+  };
+
+  const handleDeleteEntity = (id: string) => {
+    setEntities(entities.filter(e => e.id !== id));
+    setNodes(nodes.filter(node => node.id !== id));
+    setEdges(edges.filter(edge => edge.source !== id && edge.target !== id));
+    toast({
+      title: "Entity Deleted",
+      description: "The entity has been removed from the model.",
+    });
+  };
 
   const handleGenerateModel = () => {
     if (!modelDescription.trim()) {
@@ -80,13 +123,18 @@ const Index = () => {
 
     setEntities(mockEntities);
 
-    // Convert entities to flow nodes with draggable property
+    // Convert entities to flow nodes
     const flowNodes = mockEntities.map((entity, index) => ({
       id: entity.id,
       type: 'entity',
       position: { x: 250 * index, y: 100 },
-      data: { label: entity.name, attributes: entity.attributes },
-      draggable: true // Explicitly set draggable to true
+      data: { 
+        label: entity.name, 
+        attributes: entity.attributes,
+        onEdit: handleEditEntity,
+        onDelete: handleDeleteEntity,
+      },
+      draggable: true
     }));
 
     setNodes(flowNodes);
@@ -111,6 +159,15 @@ const Index = () => {
     const [attributes, setAttributes] = useState<string[]>(selectedEntity?.attributes || []);
 
     const handleSave = () => {
+      if (!name.trim()) {
+        toast({
+          title: "Name Required",
+          description: "Please enter a name for the entity.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const newEntity: Entity = {
         id: selectedEntity?.id || Date.now().toString(),
         name,
@@ -123,8 +180,13 @@ const Index = () => {
           node.id === selectedEntity.id 
             ? { 
                 ...node, 
-                data: { label: name, attributes },
-                draggable: true // Ensure draggable is set when updating nodes
+                data: { 
+                  label: name, 
+                  attributes,
+                  onEdit: handleEditEntity,
+                  onDelete: handleDeleteEntity,
+                },
+                draggable: true
               }
             : node
         ));
@@ -134,12 +196,18 @@ const Index = () => {
           id: newEntity.id,
           type: 'entity',
           position: { x: Math.random() * 500, y: Math.random() * 300 },
-          data: { label: name, attributes },
-          draggable: true // Ensure draggable is set for new nodes
+          data: { 
+            label: name, 
+            attributes,
+            onEdit: handleEditEntity,
+            onDelete: handleDeleteEntity,
+          },
+          draggable: true
         }]);
       }
 
       setSelectedEntity(null);
+      setDialogOpen(false);
     };
 
     const addAttribute = () => {
@@ -240,7 +308,7 @@ const Index = () => {
                   >
                     Generate Domain Model
                   </Button>
-                  <Dialog>
+                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
                       <Button variant="outline">Add Entity</Button>
                     </DialogTrigger>
