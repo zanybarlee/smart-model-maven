@@ -13,9 +13,14 @@ import {
 
 const items = [
   {
-    title: "Domain Modeler",
+    title: "Home",
     url: "/",
     icon: Home,
+  },
+  {
+    title: "Domain Modeler",
+    url: "/domain",
+    icon: Database,
     description: "AI-powered domain modeling"
   },
   {
