@@ -16,6 +16,7 @@ import Deployment from "./pages/Deployment";
 import Monitoring from "./pages/Monitoring";
 import Flow from "./pages/Flow";
 import Data from "./pages/Data";
+import Knowledge from "./pages/Knowledge";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/domain" element={<Index />} />
             <Route path="/data" element={<Data />} />
+            <Route path="/knowledge" element={<Knowledge />} />
             <Route path="/flow" element={<Flow />} />
             <Route path="/design" element={<Design />} />
             <Route path="/code" element={<CodeGeneration />} />

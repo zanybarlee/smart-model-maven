@@ -1,5 +1,5 @@
 
-import { Menu, Home, FileJson, Settings, Info, Code, TestTube, Cloud, Activity, Database, Layout, Share2, ChartBar } from "lucide-react";
+import { Menu, Home, FileJson, Settings, Info, Code, TestTube, Cloud, Activity, Database, Layout, Share2, ChartBar, Book } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -28,6 +28,12 @@ const items = [
     url: "/data",
     icon: ChartBar,
     description: "Data pipeline and analytics"
+  },
+  {
+    title: "Knowledge Management",
+    url: "/knowledge",
+    icon: Book,
+    description: "RAG-powered knowledge base"
   },
   {
     title: "Flow Engineering",
