@@ -13,7 +13,6 @@ import CodeGeneration from "./pages/CodeGeneration";
 import Testing from "./pages/Testing";
 import Deployment from "./pages/Deployment";
 import Monitoring from "./pages/Monitoring";
-import Domain from "./pages/Domain";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -34,7 +33,6 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/domain" element={<Domain />} />
             <Route path="/design" element={<Design />} />
             <Route path="/code" element={<CodeGeneration />} />
             <Route path="/testing" element={<Testing />} />
@@ -51,3 +49,4 @@ const App = () => {
 };
 
 export default App;
+
