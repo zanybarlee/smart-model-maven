@@ -15,6 +15,8 @@ import { useToast } from "@/hooks/use-toast";
 import EntityNode from '@/components/EntityNode';
 import DomainModelEditor from '@/components/DomainModelEditor';
 import { Entity } from '@/types/domain';
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 
 const nodeTypes = {
   entity: EntityNode,
@@ -182,75 +184,85 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/lovable-uploads/23e76822-ab3b-4e04-a807-dd20a35ff95c.png" 
-              alt="CENS Logo" 
-              className="h-20 object-contain"
-            />
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <main className="flex-1">
+          <div className="p-4">
+            <SidebarTrigger />
           </div>
-          <h1 className="text-4xl font-bold text-slate-900">CENS Generative Domain Model</h1>
-          <p className="text-slate-600 max-w-2xl mx-auto">
-            Transform your business requirements into a comprehensive domain model using AI-powered analysis
-          </p>
-        </div>
-
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <DomainModelEditor 
-            modelDescription={modelDescription}
-            onModelDescriptionChange={setModelDescription}
-            onGenerateModel={handleGenerateModel}
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-            selectedEntity={selectedEntity}
-            onSaveEntity={handleSaveEntity}
-          />
-
-          {/* Suggestions Panel */}
-          <Card>
-            <CardHeader>
-              <CardTitle>AI Suggestions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3 text-sm text-slate-600">
-                <p>• Add validation rules for email addresses</p>
-                <p>• Consider adding timestamps for auditing</p>
-                <p>• Include soft delete functionality</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Flow Diagram */}
-          {nodes.length > 0 && (
-            <Card className="lg:col-span-3">
-              <CardHeader>
-                <CardTitle>Domain Model Diagram</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div style={{ height: '500px' }}>
-                  <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onConnect={onConnect}
-                    onNodeDragStop={onNodeDragStop}
-                    nodeTypes={nodeTypes}
-                    fitView
-                  >
-                    <Background />
-                    <Controls />
-                  </ReactFlow>
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+            <div className="max-w-7xl mx-auto space-y-8">
+              {/* Header */}
+              <div className="text-center space-y-4">
+                <div className="flex justify-center mb-4">
+                  <img 
+                    src="/lovable-uploads/23e76822-ab3b-4e04-a807-dd20a35ff95c.png" 
+                    alt="CENS Logo" 
+                    className="h-20 object-contain"
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+                <h1 className="text-4xl font-bold text-slate-900">CENS Generative Domain Model</h1>
+                <p className="text-slate-600 max-w-2xl mx-auto">
+                  Transform your business requirements into a comprehensive domain model using AI-powered analysis
+                </p>
+              </div>
+
+              {/* Main Content */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <DomainModelEditor 
+                  modelDescription={modelDescription}
+                  onModelDescriptionChange={setModelDescription}
+                  onGenerateModel={handleGenerateModel}
+                  dialogOpen={dialogOpen}
+                  setDialogOpen={setDialogOpen}
+                  selectedEntity={selectedEntity}
+                  onSaveEntity={handleSaveEntity}
+                />
+
+                {/* Suggestions Panel */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>AI Suggestions</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3 text-sm text-slate-600">
+                      <p>• Add validation rules for email addresses</p>
+                      <p>• Consider adding timestamps for auditing</p>
+                      <p>• Include soft delete functionality</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Flow Diagram */}
+                {nodes.length > 0 && (
+                  <Card className="lg:col-span-3">
+                    <CardHeader>
+                      <CardTitle>Domain Model Diagram</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div style={{ height: '500px' }}>
+                        <ReactFlow
+                          nodes={nodes}
+                          edges={edges}
+                          onConnect={onConnect}
+                          onNodeDragStop={onNodeDragStop}
+                          nodeTypes={nodeTypes}
+                          fitView
+                        >
+                          <Background />
+                          <Controls />
+                        </ReactFlow>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
