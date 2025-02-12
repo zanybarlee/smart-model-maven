@@ -1,5 +1,5 @@
 
-import { Menu, Home, FileJson, Settings, Info, Code, TestTube, Cloud, Activity, Database, Layout } from "lucide-react";
+import { Menu, Home, FileJson, Settings, Info, Code, TestTube, Cloud, Activity, Database, Layout, Share2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -22,6 +22,12 @@ const items = [
     url: "/domain",
     icon: Database,
     description: "AI-powered domain modeling"
+  },
+  {
+    title: "Flow Engineering",
+    url: "/flow",
+    icon: Share2,
+    description: "Visual flow engineering"
   },
   {
     title: "Design & Planning",

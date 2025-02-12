@@ -14,6 +14,7 @@ import CodeGeneration from "./pages/CodeGeneration";
 import Testing from "./pages/Testing";
 import Deployment from "./pages/Deployment";
 import Monitoring from "./pages/Monitoring";
+import Flow from "./pages/Flow";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -35,6 +36,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/domain" element={<Index />} />
+            <Route path="/flow" element={<Flow />} />
             <Route path="/design" element={<Design />} />
             <Route path="/code" element={<CodeGeneration />} />
             <Route path="/testing" element={<Testing />} />
