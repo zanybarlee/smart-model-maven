@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import {
   ReactFlow,
@@ -121,7 +122,7 @@ const Index = () => {
         attributes: entity.attributes,
         onEdit: handleEditEntity,
         onDelete: handleDeleteEntity,
-        onDuplicate: handleDuplicateEntity,
+        onDuplicate: handleDuplicateEntity, // Added this line
       },
       draggable: true
     }));
