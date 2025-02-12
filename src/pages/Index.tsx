@@ -198,7 +198,14 @@ const Index = () => {
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-slate-900">AI Domain Model Generator</h1>
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/lovable-uploads/23e76822-ab3b-4e04-a807-dd20a35ff95c.png" 
+              alt="CENS Logo" 
+              className="h-20 object-contain"
+            />
+          </div>
+          <h1 className="text-4xl font-bold text-slate-900">CENS Generative Domain Model</h1>
           <p className="text-slate-600 max-w-2xl mx-auto">
             Transform your business requirements into a comprehensive domain model using AI-powered analysis
           </p>
