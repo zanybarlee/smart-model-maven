@@ -1,4 +1,3 @@
-
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Check, Play, Rocket, Settings2 } from "lucide-react";
+import { PipelineConfigList } from "@/components/deployment/PipelineConfigList";
+import { PipelineVersionHistory } from "@/components/deployment/PipelineVersionHistory";
 
 interface DeploymentConfigForm {
   name: string;
@@ -146,9 +147,10 @@ const Deployment = () => {
             </div>
 
             <Tabs defaultValue="deployment" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="deployment">Deployment Configuration</TabsTrigger>
-                <TabsTrigger value="pipeline">Pipeline Configuration</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="deployment">Deployment Config</TabsTrigger>
+                <TabsTrigger value="pipeline">Pipeline Config</TabsTrigger>
+                <TabsTrigger value="versions">Version History</TabsTrigger>
               </TabsList>
 
               <TabsContent value="deployment">
@@ -235,68 +237,94 @@ const Deployment = () => {
               </TabsContent>
 
               <TabsContent value="pipeline">
+                <div className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Pipeline Configurations</CardTitle>
+                      <CardDescription>
+                        Manage your CI/CD pipeline configurations
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <PipelineConfigList />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>New Pipeline Configuration</CardTitle>
+                      <CardDescription>Set up a new CI/CD pipeline</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Form {...pipelineForm}>
+                        <form onSubmit={pipelineForm.handleSubmit(onPipelineSubmit)} className="space-y-4">
+                          <FormField
+                            control={pipelineForm.control}
+                            name="name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Pipeline Name</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g., main-pipeline" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={pipelineForm.control}
+                            name="trigger"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Trigger</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g., on push to main branch" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  When should this pipeline run?
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={pipelineForm.control}
+                            name="steps"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Pipeline Steps</FormLabel>
+                                <FormControl>
+                                  <Textarea
+                                    placeholder="Define your pipeline steps..."
+                                    className="min-h-[200px]"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormDescription>
+                                  Define the steps in your CI/CD pipeline
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button type="submit">Create Pipeline</Button>
+                        </form>
+                      </Form>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="versions">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pipeline Configuration</CardTitle>
+                    <CardTitle>Version History</CardTitle>
                     <CardDescription>
-                      Set up your CI/CD pipeline steps and triggers
+                      Track changes and maintain historical versions
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Form {...pipelineForm}>
-                      <form onSubmit={pipelineForm.handleSubmit(onPipelineSubmit)} className="space-y-4">
-                        <FormField
-                          control={pipelineForm.control}
-                          name="name"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Pipeline Name</FormLabel>
-                              <FormControl>
-                                <Input placeholder="e.g., main-pipeline" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={pipelineForm.control}
-                          name="trigger"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Trigger</FormLabel>
-                              <FormControl>
-                                <Input placeholder="e.g., on push to main branch" {...field} />
-                              </FormControl>
-                              <FormDescription>
-                                When should this pipeline run?
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={pipelineForm.control}
-                          name="steps"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Pipeline Steps</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Define your pipeline steps..."
-                                  className="min-h-[200px]"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                Define the steps in your CI/CD pipeline
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button type="submit">Create Pipeline</Button>
-                      </form>
-                    </Form>
+                    <PipelineVersionHistory />
                   </CardContent>
                 </Card>
               </TabsContent>

@@ -393,6 +393,128 @@ export type Database = {
         }
         Relationships: []
       }
+      pipeline_configurations: {
+        Row: {
+          configuration: Json
+          created_at: string | null
+          id: string
+          name: string
+          status: string | null
+          tool_type: string
+          updated_at: string | null
+          validation_scripts: Json | null
+        }
+        Insert: {
+          configuration: Json
+          created_at?: string | null
+          id?: string
+          name: string
+          status?: string | null
+          tool_type: string
+          updated_at?: string | null
+          validation_scripts?: Json | null
+        }
+        Update: {
+          configuration?: Json
+          created_at?: string | null
+          id?: string
+          name?: string
+          status?: string | null
+          tool_type?: string
+          updated_at?: string | null
+          validation_scripts?: Json | null
+        }
+        Relationships: []
+      }
+      pipeline_executions: {
+        Row: {
+          end_time: string | null
+          execution_logs: Json | null
+          id: string
+          pipeline_id: string | null
+          start_time: string | null
+          status: string
+          validation_results: Json | null
+          version_id: string | null
+        }
+        Insert: {
+          end_time?: string | null
+          execution_logs?: Json | null
+          id?: string
+          pipeline_id?: string | null
+          start_time?: string | null
+          status: string
+          validation_results?: Json | null
+          version_id?: string | null
+        }
+        Update: {
+          end_time?: string | null
+          execution_logs?: Json | null
+          id?: string
+          pipeline_id?: string | null
+          start_time?: string | null
+          status?: string
+          validation_results?: Json | null
+          version_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_executions_pipeline_id_fkey"
+            columns: ["pipeline_id"]
+            isOneToOne: false
+            referencedRelation: "pipeline_configurations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pipeline_executions_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "pipeline_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pipeline_versions: {
+        Row: {
+          changes_description: string | null
+          configuration_snapshot: Json
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          pipeline_id: string | null
+          version_number: number
+        }
+        Insert: {
+          changes_description?: string | null
+          configuration_snapshot: Json
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          pipeline_id?: string | null
+          version_number: number
+        }
+        Update: {
+          changes_description?: string | null
+          configuration_snapshot?: Json
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          pipeline_id?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_versions_pipeline_id_fkey"
+            columns: ["pipeline_id"]
+            isOneToOne: false
+            referencedRelation: "pipeline_configurations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
