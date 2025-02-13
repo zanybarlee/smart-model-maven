@@ -606,6 +606,48 @@ export type Database = {
         }
         Relationships: []
       }
+      knowledge_base_files: {
+        Row: {
+          chunk_method: string | null
+          chunk_number: number | null
+          created_at: string | null
+          enabled: boolean | null
+          file_path: string
+          filename: string
+          id: string
+          parsing_status: string | null
+          updated_at: string | null
+          upload_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          chunk_method?: string | null
+          chunk_number?: number | null
+          created_at?: string | null
+          enabled?: boolean | null
+          file_path: string
+          filename: string
+          id?: string
+          parsing_status?: string | null
+          updated_at?: string | null
+          upload_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          chunk_method?: string | null
+          chunk_number?: number | null
+          created_at?: string | null
+          enabled?: boolean | null
+          file_path?: string
+          filename?: string
+          id?: string
+          parsing_status?: string | null
+          updated_at?: string | null
+          upload_date?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       knowledge_bases: {
         Row: {
           chunk_size: number | null
