@@ -113,6 +113,147 @@ export type Database = {
         }
         Relationships: []
       }
+      data_cleaning_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          rules: Json
+          source_id: string | null
+          stats: Json | null
+          status: Database["public"]["Enums"]["data_process_status"] | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          rules: Json
+          source_id?: string | null
+          stats?: Json | null
+          status?: Database["public"]["Enums"]["data_process_status"] | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          rules?: Json
+          source_id?: string | null
+          stats?: Json | null
+          status?: Database["public"]["Enums"]["data_process_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_cleaning_jobs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_labeling_tasks: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          label_schema: Json
+          progress: number | null
+          source_id: string | null
+          status: Database["public"]["Enums"]["data_process_status"] | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          label_schema: Json
+          progress?: number | null
+          source_id?: string | null
+          status?: Database["public"]["Enums"]["data_process_status"] | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          label_schema?: Json
+          progress?: number | null
+          source_id?: string | null
+          status?: Database["public"]["Enums"]["data_process_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_labeling_tasks_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_sources: {
+        Row: {
+          connection_details: Json | null
+          created_at: string | null
+          id: string
+          name: string
+          source_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          connection_details?: Json | null
+          created_at?: string | null
+          id?: string
+          name: string
+          source_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          connection_details?: Json | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          source_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      feature_engineering_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          features: Json
+          id: string
+          source_id: string | null
+          status: Database["public"]["Enums"]["data_process_status"] | null
+          transformations: Json | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          features: Json
+          id?: string
+          source_id?: string | null
+          status?: Database["public"]["Enums"]["data_process_status"] | null
+          transformations?: Json | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          features?: Json
+          id?: string
+          source_id?: string | null
+          status?: Database["public"]["Enums"]["data_process_status"] | null
+          transformations?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_engineering_jobs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jobs: {
         Row: {
           company: string
@@ -175,7 +316,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      data_process_status: "pending" | "in_progress" | "completed" | "failed"
     }
     CompositeTypes: {
       [_ in never]: never
