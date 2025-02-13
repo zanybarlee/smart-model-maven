@@ -42,6 +42,45 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_models: {
+        Row: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          model_type: Database["public"]["Enums"]["model_type"]
+          name: string
+          registry_url: string | null
+          status: string | null
+          updated_at: string | null
+          validation_rules: Json | null
+          version: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          model_type: Database["public"]["Enums"]["model_type"]
+          name: string
+          registry_url?: string | null
+          status?: string | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+          version: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          model_type?: Database["public"]["Enums"]["model_type"]
+          name?: string
+          registry_url?: string | null
+          status?: string | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+          version?: string
+        }
+        Relationships: []
+      }
       compliance_reports: {
         Row: {
           compliance_standards: string[] | null
@@ -495,6 +534,45 @@ export type Database = {
           },
         ]
       }
+      feature_store: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          feature_name: string
+          feature_type: string
+          id: string
+          last_updated: string | null
+          metadata: Json | null
+          updated_at: string | null
+          validation_rules: Json | null
+          version: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          feature_name: string
+          feature_type: string
+          id?: string
+          last_updated?: string | null
+          metadata?: Json | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+          version?: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          feature_name?: string
+          feature_type?: string
+          id?: string
+          last_updated?: string | null
+          metadata?: Json | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+          version?: string
+        }
+        Relationships: []
+      }
       jobs: {
         Row: {
           company: string
@@ -527,6 +605,89 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      knowledge_bases: {
+        Row: {
+          chunk_size: number | null
+          created_at: string | null
+          description: string | null
+          embedding_model: string | null
+          id: string
+          last_sync: string | null
+          metadata: Json | null
+          name: string
+          source_type: string
+          updated_at: string | null
+          validation_status: string | null
+        }
+        Insert: {
+          chunk_size?: number | null
+          created_at?: string | null
+          description?: string | null
+          embedding_model?: string | null
+          id?: string
+          last_sync?: string | null
+          metadata?: Json | null
+          name: string
+          source_type: string
+          updated_at?: string | null
+          validation_status?: string | null
+        }
+        Update: {
+          chunk_size?: number | null
+          created_at?: string | null
+          description?: string | null
+          embedding_model?: string | null
+          id?: string
+          last_sync?: string | null
+          metadata?: Json | null
+          name?: string
+          source_type?: string
+          updated_at?: string | null
+          validation_status?: string | null
+        }
+        Relationships: []
+      }
+      model_validations: {
+        Row: {
+          id: string
+          issues_found: Json | null
+          metrics: Json
+          model_id: string | null
+          status: string | null
+          validation_dataset: string | null
+          validation_date: string | null
+          validation_type: string
+        }
+        Insert: {
+          id?: string
+          issues_found?: Json | null
+          metrics: Json
+          model_id?: string | null
+          status?: string | null
+          validation_dataset?: string | null
+          validation_date?: string | null
+          validation_type: string
+        }
+        Update: {
+          id?: string
+          issues_found?: Json | null
+          metrics?: Json
+          model_id?: string | null
+          status?: string | null
+          validation_dataset?: string | null
+          validation_date?: string | null
+          validation_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "model_validations_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "ai_models"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       monitoring_alerts: {
         Row: {
@@ -834,6 +995,7 @@ export type Database = {
     }
     Enums: {
       data_process_status: "pending" | "in_progress" | "completed" | "failed"
+      model_type: "rag" | "classification" | "generation" | "embedding"
     }
     CompositeTypes: {
       [_ in never]: never
