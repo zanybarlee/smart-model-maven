@@ -528,6 +528,119 @@ export type Database = {
         }
         Relationships: []
       }
+      monitoring_alerts: {
+        Row: {
+          acknowledged_by: string | null
+          alert_type: string
+          id: string
+          message: string
+          metric_id: string | null
+          resolution_details: string | null
+          resolved_at: string | null
+          severity: string
+          status: string | null
+          triggered_at: string | null
+        }
+        Insert: {
+          acknowledged_by?: string | null
+          alert_type: string
+          id?: string
+          message: string
+          metric_id?: string | null
+          resolution_details?: string | null
+          resolved_at?: string | null
+          severity: string
+          status?: string | null
+          triggered_at?: string | null
+        }
+        Update: {
+          acknowledged_by?: string | null
+          alert_type?: string
+          id?: string
+          message?: string
+          metric_id?: string | null
+          resolution_details?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string | null
+          triggered_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monitoring_alerts_metric_id_fkey"
+            columns: ["metric_id"]
+            isOneToOne: false
+            referencedRelation: "monitoring_metrics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monitoring_integrations: {
+        Row: {
+          config: Json
+          created_at: string | null
+          credentials: Json | null
+          id: string
+          integration_type: string
+          is_active: boolean | null
+          last_sync_at: string | null
+          webhook_url: string | null
+        }
+        Insert: {
+          config: Json
+          created_at?: string | null
+          credentials?: Json | null
+          id?: string
+          integration_type: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          webhook_url?: string | null
+        }
+        Update: {
+          config?: Json
+          created_at?: string | null
+          credentials?: Json | null
+          id?: string
+          integration_type?: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          webhook_url?: string | null
+        }
+        Relationships: []
+      }
+      monitoring_metrics: {
+        Row: {
+          alert_threshold: number | null
+          alert_triggered: boolean | null
+          id: string
+          metric_name: string
+          metric_type: string
+          metric_value: number
+          source: string
+          timestamp: string | null
+        }
+        Insert: {
+          alert_threshold?: number | null
+          alert_triggered?: boolean | null
+          id?: string
+          metric_name: string
+          metric_type: string
+          metric_value: number
+          source: string
+          timestamp?: string | null
+        }
+        Update: {
+          alert_threshold?: number | null
+          alert_triggered?: boolean | null
+          id?: string
+          metric_name?: string
+          metric_type?: string
+          metric_value?: number
+          source?: string
+          timestamp?: string | null
+        }
+        Relationships: []
+      }
       pipeline_configurations: {
         Row: {
           configuration: Json
