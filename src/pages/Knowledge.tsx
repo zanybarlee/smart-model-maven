@@ -1,31 +1,15 @@
+
 import React, { useState } from 'react';
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Activity, Tags, Clock, Shield } from "lucide-react";
 import { KnowledgeBaseList } from "@/components/data/KnowledgeBaseList";
-import {
-  Search,
-  Database,
-  Shield,
-  Activity,
-  Tags,
-  Clock,
-  Settings,
-} from "lucide-react";
-
-// Mock data for demonstration
-const metrics = [
-  { name: 'Query Latency', value: '156ms', trend: '-12ms', icon: Clock },
-  { name: 'Documents Indexed', value: '1,234', trend: '+45', icon: Database },
-  { name: 'Query Success Rate', value: '99.9%', trend: '+0.1%', icon: Activity },
-  { name: 'Avg Response Time', value: '189ms', trend: '-8ms', icon: Shield },
-];
+import { MetricsOverview } from "@/components/knowledge/MetricsOverview";
+import { SearchBar } from "@/components/knowledge/SearchBar";
+import { VectorStoreMetrics } from "@/components/knowledge/VectorStoreMetrics";
 
 const Knowledge = () => {
   const [activeTab, setActiveTab] = useState('documents');
@@ -44,32 +28,8 @@ const Knowledge = () => {
                 <p className="text-gray-600">RAG-powered knowledge base and document management</p>
               </div>
 
-              {/* Search Bar */}
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  className="pl-10 h-12"
-                  placeholder="Search knowledge base..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-
-              {/* Metrics Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {metrics.map((metric, i) => (
-                  <Card key={i}>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                      <CardTitle className="text-sm font-medium">{metric.name}</CardTitle>
-                      <metric.icon className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">{metric.value}</div>
-                      <p className="text-xs text-muted-foreground">{metric.trend} from last week</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+              <MetricsOverview />
 
               {/* Main Content */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
@@ -80,41 +40,13 @@ const Knowledge = () => {
                   <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
 
-                {/* Documents Tab */}
                 <TabsContent value="documents">
                   <KnowledgeBaseList />
                 </TabsContent>
 
-                {/* Vector Store Tab */}
                 <TabsContent value="vectors">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card>
-                      <CardHeader>
-                        <div className="flex items-center gap-2">
-                          <Database className="h-5 w-5" />
-                          <CardTitle>Vector Database</CardTitle>
-                        </div>
-                        <CardDescription>Vector store status and metrics</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          {[
-                            { metric: 'Vector DB Size', value: '2.3GB', progress: 45 },
-                            { metric: 'Total Vectors', value: '156K', progress: 78 },
-                            { metric: 'Index Health', value: '98%', progress: 98 }
-                          ].map((item, i) => (
-                            <div key={i} className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="text-sm font-medium">{item.metric}</span>
-                                <span className="text-sm text-muted-foreground">{item.value}</span>
-                              </div>
-                              <Progress value={item.progress} />
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-
+                    <VectorStoreMetrics />
                     <Card>
                       <CardHeader>
                         <div className="flex items-center gap-2">
@@ -141,7 +73,6 @@ const Knowledge = () => {
                   </div>
                 </TabsContent>
 
-                {/* Analytics Tab */}
                 <TabsContent value="analytics">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card>
@@ -194,33 +125,8 @@ const Knowledge = () => {
                   </div>
                 </TabsContent>
 
-                {/* Settings Tab */}
                 <TabsContent value="settings">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card>
-                      <CardHeader>
-                        <div className="flex items-center gap-2">
-                          <Settings className="h-5 w-5" />
-                          <CardTitle>System Configuration</CardTitle>
-                        </div>
-                        <CardDescription>Knowledge base settings</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          {[
-                            { setting: 'Max Document Size', value: '10MB' },
-                            { setting: 'Vector Dimensions', value: '1,536' },
-                            { setting: 'Update Frequency', value: 'Real-time' }
-                          ].map((item, i) => (
-                            <div key={i} className="flex items-center justify-between p-2 border rounded">
-                              <span className="font-medium">{item.setting}</span>
-                              <span className="text-muted-foreground">{item.value}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-
                     <Card>
                       <CardHeader>
                         <div className="flex items-center gap-2">
