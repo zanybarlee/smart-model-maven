@@ -1,19 +1,14 @@
+
 import React, { useState } from 'react';
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { DataSourceForm } from "@/components/data/DataSourceForm";
-import { DataSourceList } from "@/components/data/DataSourceList";
-import { CleaningRulesList } from "@/components/data/CleaningRulesList";
-import { LabelingTasksList } from "@/components/data/LabelingTasksList";
-import { FeaturesList } from "@/components/data/FeaturesList";
-import { DataContractsList } from "@/components/data/DataContractsList";
-import { DataLineageView } from "@/components/data/DataLineageView";
-import { SchemaDriftMonitor } from "@/components/data/SchemaDriftMonitor";
-import { ComplianceReportList } from "@/components/compliance/ComplianceReportList";
-import { DataMaskingRules } from "@/components/compliance/DataMaskingRules";
-import { AccessAuditLog } from "@/components/compliance/AccessAuditLog";
+import { DataCollectionTab } from "@/components/data/DataCollectionTab";
+import { DataQualityTab } from "@/components/data/DataQualityTab";
+import { DataCleaningTab } from "@/components/data/DataCleaningTab";
+import { DataLabelingTab } from "@/components/data/DataLabelingTab";
+import { FeatureEngineeringTab } from "@/components/data/FeatureEngineeringTab";
+import { ComplianceTab } from "@/components/compliance/ComplianceTab";
 
 const Data = () => {
   const [activeTab, setActiveTab] = useState('collection');
@@ -41,131 +36,27 @@ const Data = () => {
                 </TabsList>
 
                 <TabsContent value="collection">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Add New Data Source</CardTitle>
-                        <CardDescription>Register a new data source for processing</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <DataSourceForm />
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Data Sources</CardTitle>
-                        <CardDescription>Currently registered data sources</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <DataSourceList />
-                      </CardContent>
-                    </Card>
-                  </div>
+                  <DataCollectionTab />
                 </TabsContent>
 
                 <TabsContent value="quality">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Data Contracts</CardTitle>
-                        <CardDescription>Schema and quality requirements</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <DataContractsList />
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Schema Drift Monitoring</CardTitle>
-                        <CardDescription>Track and detect schema changes</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <SchemaDriftMonitor />
-                      </CardContent>
-                    </Card>
-
-                    <Card className="md:col-span-2">
-                      <CardHeader>
-                        <CardTitle>Data Lineage</CardTitle>
-                        <CardDescription>Track data transformations and dependencies</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <DataLineageView />
-                      </CardContent>
-                    </Card>
-                  </div>
+                  <DataQualityTab />
                 </TabsContent>
 
                 <TabsContent value="cleaning">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Data Cleaning Rules</CardTitle>
-                      <CardDescription>Manage and monitor data cleaning processes</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <CleaningRulesList />
-                    </CardContent>
-                  </Card>
+                  <DataCleaningTab />
                 </TabsContent>
 
                 <TabsContent value="labeling">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Labeling Tasks</CardTitle>
-                      <CardDescription>Track data labeling progress</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <LabelingTasksList />
-                    </CardContent>
-                  </Card>
+                  <DataLabelingTab />
                 </TabsContent>
 
                 <TabsContent value="features">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Feature Engineering</CardTitle>
-                      <CardDescription>Transform and generate new features</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <FeaturesList />
-                    </CardContent>
-                  </Card>
+                  <FeatureEngineeringTab />
                 </TabsContent>
 
                 <TabsContent value="compliance">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Compliance Reports</CardTitle>
-                        <CardDescription>Generated compliance and audit reports</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <ComplianceReportList />
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Data Masking Rules</CardTitle>
-                        <CardDescription>Active data protection measures</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <DataMaskingRules />
-                      </CardContent>
-                    </Card>
-
-                    <Card className="md:col-span-2">
-                      <CardHeader>
-                        <CardTitle>Access Audit Log</CardTitle>
-                        <CardDescription>Track data access and modifications</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <AccessAuditLog />
-                      </CardContent>
-                    </Card>
-                  </div>
+                  <ComplianceTab />
                 </TabsContent>
               </Tabs>
             </div>
