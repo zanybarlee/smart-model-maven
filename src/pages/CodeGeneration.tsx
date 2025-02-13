@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Code2 } from "lucide-react";
 
 interface CodeGenerationForm {
   description: string;
@@ -24,6 +26,7 @@ const CodeGeneration = () => {
   const { toast } = useToast();
   const [generatedCode, setGeneratedCode] = useState<string>("");
   const [optimizedCode, setOptimizedCode] = useState<string>("");
+  const [isAICoderOpen, setIsAICoderOpen] = useState(false);
 
   const generationForm = useForm<CodeGenerationForm>({
     defaultValues: {
@@ -40,7 +43,6 @@ const CodeGeneration = () => {
   });
 
   const onGenerateSubmit = (data: CodeGenerationForm) => {
-    // Placeholder for AI code generation
     setGeneratedCode("// Generated code will appear here\nfunction example() {\n  console.log('Hello World');\n}");
     toast({
       title: "Code Generation Started",
@@ -49,7 +51,6 @@ const CodeGeneration = () => {
   };
 
   const onOptimizeSubmit = (data: OptimizationForm) => {
-    // Placeholder for AI code optimization
     setOptimizedCode("// Optimized code will appear here\nfunction optimizedExample() {\n  // Optimized implementation\n}");
     toast({
       title: "Code Optimization Started",
@@ -63,11 +64,21 @@ const CodeGeneration = () => {
         <AppSidebar />
         <main className="p-6 overflow-y-auto">
           <div className="max-w-4xl mx-auto space-y-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-4">Code Generation</h1>
-              <p className="text-gray-600">
-                AI-powered code generation and optimization tools
-              </p>
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold mb-4">Code Generation</h1>
+                <p className="text-gray-600">
+                  AI-powered code generation and optimization tools
+                </p>
+              </div>
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={() => setIsAICoderOpen(true)}
+              >
+                <Code2 className="h-4 w-4" />
+                Text to App (AI Coder Assistant)
+              </Button>
             </div>
 
             <Tabs defaultValue="generate" className="space-y-6">
@@ -207,6 +218,16 @@ const CodeGeneration = () => {
           </div>
         </main>
       </div>
+
+      <Dialog open={isAICoderOpen} onOpenChange={setIsAICoderOpen}>
+        <DialogContent className="max-w-[100vw] w-[100vw] h-[100vh] p-0">
+          <iframe
+            src="https://lovable.dev/"
+            className="w-full h-full border-0"
+            title="AI Coder Assistant"
+          />
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };
