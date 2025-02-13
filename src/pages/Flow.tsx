@@ -103,6 +103,7 @@ const Flow = () => {
               <Tabs defaultValue="value-stream" className="space-y-4">
                 <TabsList>
                   <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
+                  <TabsTrigger value="chatflow">Chatflow</TabsTrigger>
                   <TabsTrigger value="continuous-improvement">Continuous Improvement</TabsTrigger>
                   <TabsTrigger value="automation">Automation</TabsTrigger>
                   <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -130,6 +131,25 @@ const Flow = () => {
                         <MiniMap />
                         <Background />
                       </ReactFlow>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                {/* Chatflow Tab */}
+                <TabsContent value="chatflow" className="space-y-4">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Chatflow Designer</CardTitle>
+                      <CardDescription>
+                        Design and manage your chat workflows using the external flow design tool
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="h-[800px] p-0">
+                      <iframe 
+                        src="http://127.0.0.1:3001/"
+                        className="w-full h-full border-0"
+                        title="Chatflow Designer"
+                      />
                     </CardContent>
                   </Card>
                 </TabsContent>
