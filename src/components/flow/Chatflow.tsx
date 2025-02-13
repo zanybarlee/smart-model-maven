@@ -41,7 +41,7 @@ export const Chatflow = () => {
       </Card>
 
       <Dialog open={isDetached} onOpenChange={setIsDetached}>
-        <DialogContent className="max-w-[90vw] h-[90vh]" onInteractOutside={(e) => e.preventDefault()}>
+        <DialogContent className="max-w-[100vw] w-full h-[100vh] p-4" onInteractOutside={(e) => e.preventDefault()}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Chatflow Designer</h2>
             <Button
@@ -53,7 +53,7 @@ export const Chatflow = () => {
               <Minimize2 className="h-4 w-4" />
             </Button>
           </div>
-          <div className="flex-1 h-[calc(90vh-80px)]">
+          <div className="flex-1 h-[calc(100vh-64px)]">
             <ChatflowContent />
           </div>
         </DialogContent>
