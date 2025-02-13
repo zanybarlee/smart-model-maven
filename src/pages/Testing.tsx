@@ -1,4 +1,3 @@
-
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { RetrievalTesting } from "@/components/knowledge/RetrievalTesting";
 
 interface TestGenerationForm {
   codeInput: string;
@@ -85,14 +85,15 @@ describe('ExampleComponent', () => {
             <div>
               <h1 className="text-3xl font-bold mb-4">Testing</h1>
               <p className="text-gray-600">
-                AI-powered test generation and execution platform
+                AI-powered test generation and retrieval testing platform
               </p>
             </div>
 
             <Tabs defaultValue="generate" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="generate">Generate Tests</TabsTrigger>
                 <TabsTrigger value="execute">Execute Tests</TabsTrigger>
+                <TabsTrigger value="retrieval">Retrieval Testing</TabsTrigger>
               </TabsList>
 
               <TabsContent value="generate">
@@ -238,6 +239,10 @@ describe('ExampleComponent', () => {
                     )}
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              <TabsContent value="retrieval">
+                <RetrievalTesting />
               </TabsContent>
             </Tabs>
           </div>
