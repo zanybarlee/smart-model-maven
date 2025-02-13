@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -9,42 +8,23 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { KnowledgeBaseList } from "@/components/data/KnowledgeBaseList";
 import {
   Search,
-  Upload,
-  FileText,
-  Settings,
   Database,
   Shield,
   Activity,
   Tags,
   Clock,
-  AlertCircle,
-  CheckCircle2,
-  Timer,
-  Zap,
+  Settings,
 } from "lucide-react";
 
 // Mock data for demonstration
-const documents = [
-  { id: 1, title: 'System Architecture', type: 'PDF', status: 'indexed', date: '2024-02-20', tags: ['technical', 'architecture'] },
-  { id: 2, title: 'API Documentation', type: 'Markdown', status: 'processing', date: '2024-02-19', tags: ['api', 'documentation'] },
-  { id: 3, title: 'Security Guidelines', type: 'Word', status: 'indexed', date: '2024-02-18', tags: ['security', 'compliance'] },
-];
-
 const metrics = [
-  { name: 'Query Latency', value: '156ms', trend: '-12ms', icon: Timer },
-  { name: 'Documents Indexed', value: '1,234', trend: '+45', icon: FileText },
-  { name: 'Query Success Rate', value: '99.9%', trend: '+0.1%', icon: CheckCircle2 },
-  { name: 'Avg Response Time', value: '189ms', trend: '-8ms', icon: Zap },
+  { name: 'Query Latency', value: '156ms', trend: '-12ms', icon: Clock },
+  { name: 'Documents Indexed', value: '1,234', trend: '+45', icon: Database },
+  { name: 'Query Success Rate', value: '99.9%', trend: '+0.1%', icon: Activity },
+  { name: 'Avg Response Time', value: '189ms', trend: '-8ms', icon: Shield },
 ];
 
 const Knowledge = () => {
@@ -102,55 +82,7 @@ const Knowledge = () => {
 
                 {/* Documents Tab */}
                 <TabsContent value="documents">
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
-                      <div>
-                        <CardTitle>Document Repository</CardTitle>
-                        <CardDescription>Manage and track indexed documents</CardDescription>
-                      </div>
-                      <Button>
-                        <Upload className="mr-2 h-4 w-4" /> Upload Document
-                      </Button>
-                    </CardHeader>
-                    <CardContent>
-                      <ScrollArea className="h-[400px]">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Title</TableHead>
-                              <TableHead>Type</TableHead>
-                              <TableHead>Status</TableHead>
-                              <TableHead>Date Added</TableHead>
-                              <TableHead>Tags</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {documents.map((doc) => (
-                              <TableRow key={doc.id}>
-                                <TableCell className="font-medium">{doc.title}</TableCell>
-                                <TableCell>{doc.type}</TableCell>
-                                <TableCell>
-                                  <Badge variant={doc.status === 'indexed' ? 'success' : 'secondary'}>
-                                    {doc.status}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell>{doc.date}</TableCell>
-                                <TableCell>
-                                  <div className="flex gap-1">
-                                    {doc.tags.map((tag, i) => (
-                                      <Badge key={i} variant="outline">
-                                        {tag}
-                                      </Badge>
-                                    ))}
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </ScrollArea>
-                    </CardContent>
-                  </Card>
+                  <KnowledgeBaseList />
                 </TabsContent>
 
                 {/* Vector Store Tab */}
