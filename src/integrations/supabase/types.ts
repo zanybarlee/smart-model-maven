@@ -151,6 +151,39 @@ export type Database = {
           },
         ]
       }
+      data_contracts: {
+        Row: {
+          created_at: string | null
+          distribution_rules: Json | null
+          id: string
+          name: string
+          null_value_threshold: number | null
+          schema_definition: Json
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          distribution_rules?: Json | null
+          id?: string
+          name: string
+          null_value_threshold?: number | null
+          schema_definition: Json
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          distribution_rules?: Json | null
+          id?: string
+          name?: string
+          null_value_threshold?: number | null
+          schema_definition?: Json
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       data_labeling_tasks: {
         Row: {
           completed_at: string | null
@@ -182,6 +215,79 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "data_labeling_tasks_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_lineage: {
+        Row: {
+          created_at: string | null
+          id: string
+          source_id: string | null
+          transformation_steps: Json
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          source_id?: string | null
+          transformation_steps: Json
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          source_id?: string | null
+          transformation_steps?: Json
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_lineage_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_quality_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string | null
+          description: string
+          id: string
+          resolution_details: string | null
+          resolved_at: string | null
+          severity: string
+          source_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string | null
+          description: string
+          id?: string
+          resolution_details?: string | null
+          resolved_at?: string | null
+          severity: string
+          source_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          resolution_details?: string | null
+          resolved_at?: string | null
+          severity?: string
+          source_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_quality_alerts_source_id_fkey"
             columns: ["source_id"]
             isOneToOne: false
             referencedRelation: "data_sources"
@@ -307,6 +413,47 @@ export type Database = {
           username?: string | null
         }
         Relationships: []
+      }
+      schema_versions: {
+        Row: {
+          created_at: string | null
+          drift_details: Json | null
+          drift_detected: boolean | null
+          id: string
+          is_current: boolean | null
+          schema_snapshot: Json
+          source_id: string | null
+          version_number: number
+        }
+        Insert: {
+          created_at?: string | null
+          drift_details?: Json | null
+          drift_detected?: boolean | null
+          id?: string
+          is_current?: boolean | null
+          schema_snapshot: Json
+          source_id?: string | null
+          version_number: number
+        }
+        Update: {
+          created_at?: string | null
+          drift_details?: Json | null
+          drift_detected?: boolean | null
+          id?: string
+          is_current?: boolean | null
+          schema_snapshot?: Json
+          source_id?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schema_versions_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

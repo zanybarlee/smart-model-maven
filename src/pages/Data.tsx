@@ -9,6 +9,9 @@ import { DataSourceList } from "@/components/data/DataSourceList";
 import { CleaningRulesList } from "@/components/data/CleaningRulesList";
 import { LabelingTasksList } from "@/components/data/LabelingTasksList";
 import { FeaturesList } from "@/components/data/FeaturesList";
+import { DataContractsList } from "@/components/data/DataContractsList";
+import { DataLineageView } from "@/components/data/DataLineageView";
+import { SchemaDriftMonitor } from "@/components/data/SchemaDriftMonitor";
 
 const Data = () => {
   const [activeTab, setActiveTab] = useState('collection');
@@ -28,6 +31,7 @@ const Data = () => {
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
                 <TabsList>
                   <TabsTrigger value="collection">Data Collection</TabsTrigger>
+                  <TabsTrigger value="quality">Data Quality</TabsTrigger>
                   <TabsTrigger value="cleaning">Data Cleaning</TabsTrigger>
                   <TabsTrigger value="labeling">Data Labeling</TabsTrigger>
                   <TabsTrigger value="features">Feature Engineering</TabsTrigger>
@@ -52,6 +56,40 @@ const Data = () => {
                       </CardHeader>
                       <CardContent>
                         <DataSourceList />
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="quality">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Data Contracts</CardTitle>
+                        <CardDescription>Schema and quality requirements</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <DataContractsList />
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Schema Drift Monitoring</CardTitle>
+                        <CardDescription>Track and detect schema changes</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <SchemaDriftMonitor />
+                      </CardContent>
+                    </Card>
+
+                    <Card className="md:col-span-2">
+                      <CardHeader>
+                        <CardTitle>Data Lineage</CardTitle>
+                        <CardDescription>Track data transformations and dependencies</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <DataLineageView />
                       </CardContent>
                     </Card>
                   </div>
