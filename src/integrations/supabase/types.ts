@@ -9,6 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      access_control_policies: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          permissions: Json
+          resource_id: string | null
+          resource_type: string
+          role_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          permissions: Json
+          resource_id?: string | null
+          resource_type: string
+          role_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          permissions?: Json
+          resource_id?: string | null
+          resource_type?: string
+          role_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      compliance_reports: {
+        Row: {
+          compliance_standards: string[] | null
+          generated_at: string | null
+          generated_by: string | null
+          id: string
+          report_data: Json
+          report_period_end: string | null
+          report_period_start: string | null
+          report_type: string
+          status: string | null
+        }
+        Insert: {
+          compliance_standards?: string[] | null
+          generated_at?: string | null
+          generated_by?: string | null
+          id?: string
+          report_data: Json
+          report_period_end?: string | null
+          report_period_start?: string | null
+          report_type: string
+          status?: string | null
+        }
+        Update: {
+          compliance_standards?: string[] | null
+          generated_at?: string | null
+          generated_by?: string | null
+          id?: string
+          report_data?: Json
+          report_period_end?: string | null
+          report_period_start?: string | null
+          report_type?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
       cv_match: {
         Row: {
           created_at: string | null
@@ -110,6 +179,39 @@ export type Database = {
           phone?: string | null
           skills?: Json | null
           types_of_work_passes?: string | null
+        }
+        Relationships: []
+      }
+      data_access_logs: {
+        Row: {
+          access_details: Json | null
+          accessed_at: string | null
+          action_type: string
+          id: string
+          ip_address: string | null
+          resource_id: string | null
+          resource_type: string
+          user_id: string | null
+        }
+        Insert: {
+          access_details?: Json | null
+          accessed_at?: string | null
+          action_type: string
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type: string
+          user_id?: string | null
+        }
+        Update: {
+          access_details?: Json | null
+          accessed_at?: string | null
+          action_type?: string
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -253,6 +355,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      data_masking_rules: {
+        Row: {
+          column_name: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          masking_pattern: string | null
+          masking_type: string
+          table_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          column_name: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          masking_pattern?: string | null
+          masking_type: string
+          table_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          column_name?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          masking_pattern?: string | null
+          masking_type?: string
+          table_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       data_quality_alerts: {
         Row: {

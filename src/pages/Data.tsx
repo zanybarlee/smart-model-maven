@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -12,6 +11,9 @@ import { FeaturesList } from "@/components/data/FeaturesList";
 import { DataContractsList } from "@/components/data/DataContractsList";
 import { DataLineageView } from "@/components/data/DataLineageView";
 import { SchemaDriftMonitor } from "@/components/data/SchemaDriftMonitor";
+import { ComplianceReportList } from "@/components/compliance/ComplianceReportList";
+import { DataMaskingRules } from "@/components/compliance/DataMaskingRules";
+import { AccessAuditLog } from "@/components/compliance/AccessAuditLog";
 
 const Data = () => {
   const [activeTab, setActiveTab] = useState('collection');
@@ -35,6 +37,7 @@ const Data = () => {
                   <TabsTrigger value="cleaning">Data Cleaning</TabsTrigger>
                   <TabsTrigger value="labeling">Data Labeling</TabsTrigger>
                   <TabsTrigger value="features">Feature Engineering</TabsTrigger>
+                  <TabsTrigger value="compliance">Compliance</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="collection">
@@ -129,6 +132,40 @@ const Data = () => {
                       <FeaturesList />
                     </CardContent>
                   </Card>
+                </TabsContent>
+
+                <TabsContent value="compliance">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Compliance Reports</CardTitle>
+                        <CardDescription>Generated compliance and audit reports</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <ComplianceReportList />
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Data Masking Rules</CardTitle>
+                        <CardDescription>Active data protection measures</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <DataMaskingRules />
+                      </CardContent>
+                    </Card>
+
+                    <Card className="md:col-span-2">
+                      <CardHeader>
+                        <CardTitle>Access Audit Log</CardTitle>
+                        <CardDescription>Track data access and modifications</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <AccessAuditLog />
+                      </CardContent>
+                    </Card>
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>
