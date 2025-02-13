@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BookOpen, CheckCircle, RefreshCw, Plus, FileText } from "lucide-react";
+import { BookOpen, CheckCircle, RefreshCw, Plus, FileText, Clock } from "lucide-react";
 import { FileUploadModal } from "./FileUploadModal";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -43,6 +43,18 @@ export const KnowledgeBaseList = () => {
     fetchFiles();
   }, []);
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).format(date);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -62,7 +74,8 @@ export const KnowledgeBaseList = () => {
                 <div>
                   <h3 className="font-medium">{file.filename}</h3>
                   <div className="flex items-center space-x-2 text-sm text-gray-500">
-                    <span>Uploaded on {new Date(file.upload_date).toLocaleDateString()}</span>
+                    <Clock className="h-4 w-4" />
+                    <span>Uploaded on {formatDate(file.upload_date)}</span>
                   </div>
                 </div>
               </div>
