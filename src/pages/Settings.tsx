@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
-import { Bell, Lock, Mail, Moon, Settings2, User, Wifi } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Bell, Lock, Settings2, User } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { ProfileForm } from "@/components/profile/ProfileForm";
 
 interface GeneralSettingsForm {
   appName: string;
@@ -31,6 +32,7 @@ interface SecuritySettingsForm {
 
 const Settings = () => {
   const { toast } = useToast();
+  const [profile, setProfile] = useState<any>(null);
 
   const generalForm = useForm<GeneralSettingsForm>({
     defaultValues: {
@@ -54,6 +56,26 @@ const Settings = () => {
       sessionTimeout: "30",
     },
   });
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        setProfile(profile);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
 
   const onGeneralSubmit = (data: GeneralSettingsForm) => {
     toast({
@@ -88,7 +110,16 @@ const Settings = () => {
             <div className="max-w-4xl mx-auto space-y-8">
               <div>
                 <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
-                <p className="text-slate-600 mt-2">Customize your domain modeling experience</p>
+                <p className="text-slate-600 mt-2">Customize your experience and manage your profile</p>
+              </div>
+
+              {/* Profile Settings */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  <h2 className="text-xl font-semibold">Profile Settings</h2>
+                </div>
+                <ProfileForm profile={profile} onProfileUpdate={fetchProfile} />
               </div>
 
               {/* General Settings */}

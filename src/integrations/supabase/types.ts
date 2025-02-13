@@ -928,19 +928,34 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          first_name: string | null
           id: string
+          job_title: string | null
+          last_name: string | null
+          organization: string | null
+          role: Database["public"]["Enums"]["user_role"] | null
           username: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          first_name?: string | null
           id: string
+          job_title?: string | null
+          last_name?: string | null
+          organization?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
           username?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          first_name?: string | null
           id?: string
+          job_title?: string | null
+          last_name?: string | null
+          organization?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
           username?: string | null
         }
         Relationships: []
@@ -996,6 +1011,13 @@ export type Database = {
     Enums: {
       data_process_status: "pending" | "in_progress" | "completed" | "failed"
       model_type: "rag" | "classification" | "generation" | "embedding"
+      user_role:
+        | "data_engineer"
+        | "data_scientist"
+        | "ml_engineer"
+        | "devops_engineer"
+        | "compliance_officer"
+        | "software_engineer"
     }
     CompositeTypes: {
       [_ in never]: never
