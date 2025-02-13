@@ -1,7 +1,11 @@
+
 import React, { useState } from 'react';
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Shield, Tags } from "lucide-react";
 import { KnowledgeBaseList } from "@/components/data/KnowledgeBaseList";
 import { MetricsOverview } from "@/components/knowledge/MetricsOverview";
 import { SearchBar } from "@/components/knowledge/SearchBar";
