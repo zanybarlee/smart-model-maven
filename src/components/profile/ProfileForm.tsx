@@ -9,15 +9,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+type UserRole = 'data_engineer' | 'data_scientist' | 'ml_engineer' | 'devops_engineer' | 'compliance_officer' | 'software_engineer';
+
 interface ProfileFormData {
   first_name: string;
   last_name: string;
-  role: string;
+  role: UserRole;
   job_title: string;
   organization: string;
 }
 
-const roles = [
+const roles: { value: UserRole; label: string }[] = [
   { value: 'data_engineer', label: 'Data Engineer' },
   { value: 'data_scientist', label: 'Data Scientist' },
   { value: 'ml_engineer', label: 'ML Engineer' },
@@ -35,7 +37,7 @@ export const ProfileForm = ({ profile, onProfileUpdate }: {
     defaultValues: {
       first_name: profile?.first_name || '',
       last_name: profile?.last_name || '',
-      role: profile?.role || '',
+      role: (profile?.role as UserRole) || 'data_engineer',
       job_title: profile?.job_title || '',
       organization: profile?.organization || '',
     },
