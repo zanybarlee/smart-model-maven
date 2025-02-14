@@ -35,10 +35,10 @@ export const GenerateCodeForm = ({ onCodeGenerated }: GenerateCodeFormProps) => 
   };
 
   return (
-    <Card className="w-full">
+    <Card className="bg-gray-900 border-gray-800">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-xl md:text-2xl">Generate New Code</CardTitle>
-        <CardDescription className="text-sm md:text-base">
+        <CardTitle className="text-xl md:text-2xl text-white">Generate New Code</CardTitle>
+        <CardDescription className="text-gray-400">
           Describe the functionality you want to implement, and our AI will generate the code for you.
         </CardDescription>
       </CardHeader>
@@ -50,15 +50,15 @@ export const GenerateCodeForm = ({ onCodeGenerated }: GenerateCodeFormProps) => 
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm md:text-base">Functionality Description</FormLabel>
+                  <FormLabel className="text-sm md:text-base text-gray-200">Functionality Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Describe what you want the code to do... (e.g., Create a function that sorts an array of objects by a specific property)"
-                      className="min-h-[100px] md:min-h-[120px] text-sm md:text-base"
+                      className="min-h-[100px] md:min-h-[120px] text-sm md:text-base bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-xs md:text-sm">
+                  <FormDescription className="text-xs md:text-sm text-gray-400">
                     Be specific about the desired functionality, inputs, and outputs.
                   </FormDescription>
                   <FormMessage />
@@ -70,11 +70,11 @@ export const GenerateCodeForm = ({ onCodeGenerated }: GenerateCodeFormProps) => 
               name="context"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm md:text-base">Additional Context (Optional)</FormLabel>
+                  <FormLabel className="text-sm md:text-base text-gray-200">Additional Context (Optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Provide any additional context or requirements... (e.g., specific libraries to use, performance considerations)"
-                      className="min-h-[80px] md:min-h-[100px] text-sm md:text-base"
+                      className="min-h-[80px] md:min-h-[100px] text-sm md:text-base bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                       {...field}
                     />
                   </FormControl>
@@ -82,7 +82,7 @@ export const GenerateCodeForm = ({ onCodeGenerated }: GenerateCodeFormProps) => 
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full sm:w-auto">Generate Code</Button>
+            <Button type="submit" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700">Generate Code</Button>
           </form>
         </Form>
       </CardContent>

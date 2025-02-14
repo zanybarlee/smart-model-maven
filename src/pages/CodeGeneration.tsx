@@ -16,12 +16,12 @@ const CodeGeneration = () => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <AppSidebar />
-        <main className="flex-1 overflow-auto bg-slate-50">
+        <main className="flex-1 overflow-auto bg-black">
           <div className="p-6">
             <div className="max-w-[1800px] mx-auto space-y-6">
               <div>
-                <h1 className="text-3xl font-bold mb-2">Code Generation</h1>
-                <p className="text-gray-600">
+                <h1 className="text-3xl font-bold mb-2 text-white">Code Generation</h1>
+                <p className="text-gray-400">
                   AI-powered code generation and optimization tools
                 </p>
               </div>
@@ -29,9 +29,19 @@ const CodeGeneration = () => {
               <TextToApp />
 
               <Tabs defaultValue="generate" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
-                  <TabsTrigger value="generate">Generate Code</TabsTrigger>
-                  <TabsTrigger value="optimize">Optimize Code</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 max-w-[400px] bg-gray-900">
+                  <TabsTrigger 
+                    value="generate"
+                    className="data-[state=active]:bg-gray-800"
+                  >
+                    Generate Code
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="optimize"
+                    className="data-[state=active]:bg-gray-800"
+                  >
+                    Optimize Code
+                  </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="generate" className="space-y-6">
