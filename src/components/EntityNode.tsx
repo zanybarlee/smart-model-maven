@@ -50,11 +50,11 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg border border-slate-200 min-w-[200px] relative">
+    <div className="bg-white p-4 rounded-lg shadow-lg border border-slate-200 min-w-[200px]">
       <Handle type="target" position={Position.Top} className="!bg-primary" />
       <div className="flex justify-between items-center mb-2">
         {isEditing ? (
-          <div className="nodrag flex-1">
+          <div className="flex-1 nodrag">
             <Input
               value={tempLabel}
               onChange={(e) => setTempLabel(e.target.value)}
@@ -69,7 +69,7 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
           {isEditing ? (
             <button 
               onClick={handleSave}
-              className="p-1 hover:bg-slate-100 rounded"
+              className="p-1 hover:bg-slate-100 rounded nodrag"
               title="Save"
             >
               <Save className="h-4 w-4 text-green-500" />
@@ -81,7 +81,7 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
                   e.stopPropagation();
                   data.onDuplicate(id);
                 }}
-                className="p-1 hover:bg-slate-100 rounded"
+                className="p-1 hover:bg-slate-100 rounded nodrag"
                 title="Duplicate"
               >
                 <Copy className="h-4 w-4 text-slate-500" />
@@ -91,7 +91,7 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
                   e.stopPropagation();
                   setIsEditing(true);
                 }}
-                className="p-1 hover:bg-slate-100 rounded"
+                className="p-1 hover:bg-slate-100 rounded nodrag"
                 title="Edit"
               >
                 <Edit2 className="h-4 w-4 text-slate-500" />
@@ -101,7 +101,7 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
                   e.stopPropagation();
                   data.onDelete(id);
                 }}
-                className="p-1 hover:bg-slate-100 rounded"
+                className="p-1 hover:bg-slate-100 rounded nodrag"
                 title="Delete"
               >
                 <Trash2 className="h-4 w-4 text-red-500" />
