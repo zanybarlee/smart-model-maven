@@ -62,6 +62,7 @@ const Index = () => {
           onEdit: handleEditEntity,
           onDelete: handleDeleteEntity,
           onDuplicate: handleDuplicateEntity,
+          onSave: handleSaveEntity,
         },
         draggable: true
       }]);
@@ -71,6 +72,33 @@ const Index = () => {
         description: "A copy of the entity has been created.",
       });
     }
+  };
+
+  const handleSaveEntity = (id: string, newData: { label: string; attributes: string[] }) => {
+    const updatedEntity: Entity = {
+      id,
+      name: newData.label,
+      attributes: newData.attributes
+    };
+
+    setEntities(entities.map(e => e.id === id ? updatedEntity : e));
+    setNodes(nodes.map(node => 
+      node.id === id 
+        ? {
+            ...node,
+            data: {
+              ...node.data,
+              label: newData.label,
+              attributes: newData.attributes,
+            }
+          }
+        : node
+    ));
+
+    toast({
+      title: "Entity Updated",
+      description: "The entity has been updated successfully.",
+    });
   };
 
   const handleEditEntity = (id: string) => {
@@ -128,6 +156,7 @@ const Index = () => {
         onEdit: handleEditEntity,
         onDelete: handleDeleteEntity,
         onDuplicate: handleDuplicateEntity,
+        onSave: handleSaveEntity,
       },
       draggable: true
     }));
@@ -137,45 +166,6 @@ const Index = () => {
       title: "Model Generated",
       description: "Your domain model has been generated successfully.",
     });
-  };
-
-  const handleSaveEntity = (entity: Entity) => {
-    if (selectedEntity) {
-      setEntities(entities.map(e => e.id === selectedEntity.id ? entity : e));
-      setNodes(nodes.map(node => 
-        node.id === selectedEntity.id 
-          ? { 
-              ...node, 
-              data: { 
-                label: entity.name, 
-                attributes: entity.attributes,
-                onEdit: handleEditEntity,
-                onDelete: handleDeleteEntity,
-                onDuplicate: handleDuplicateEntity,
-              },
-              draggable: true
-            }
-          : node
-      ));
-    } else {
-      setEntities([...entities, entity]);
-      setNodes([...nodes, {
-        id: entity.id,
-        type: 'entity',
-        position: { x: Math.random() * 500, y: Math.random() * 300 },
-        data: { 
-          label: entity.name, 
-          attributes: entity.attributes,
-          onEdit: handleEditEntity,
-          onDelete: handleDeleteEntity,
-          onDuplicate: handleDuplicateEntity,
-        },
-        draggable: true
-      }]);
-    }
-
-    setSelectedEntity(null);
-    setDialogOpen(false);
   };
 
   const onConnect = useCallback((params: Connection) => {
