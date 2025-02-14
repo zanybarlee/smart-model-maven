@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from 'react';
 import {
   ReactFlow,
@@ -10,6 +9,10 @@ import {
   addEdge,
 } from '@xyflow/react';
 import { useToast } from "@/components/ui/use-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Maximize2, Minimize2 } from "lucide-react";
 import { DataEngineeringNode } from './nodes/DataEngineeringNode';
 import { TextToFlowDialog } from './dialogs/TextToFlowDialog';
 import { initialNodes, initialEdges, createNodeConfig } from './types/flow-types';
@@ -23,6 +26,7 @@ export const DataEngineering = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isTextToFlowOpen, setIsTextToFlowOpen] = useState(false);
   const [flowDescription, setFlowDescription] = useState('');
+  const [isDetached, setIsDetached] = useState(false);
   const { toast } = useToast();
 
   const nodeTypes = {
@@ -43,51 +47,6 @@ export const DataEngineering = () => {
       position: { x: Math.random() * 500, y: Math.random() * 300 },
     };
     setNodes((nds) => [...nds, newNode]);
-  };
-
-  const handleNodeConfigUpdate = (nodeId: string, config: any) => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === nodeId) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              config,
-              status: 'configured'
-            }
-          };
-        }
-        return node;
-      })
-    );
-    
-    toast({
-      title: "Node configured",
-      description: "Node has been configured successfully."
-    });
-  };
-
-  const runPipeline = () => {
-    setNodes((nds) =>
-      nds.map((node) => ({
-        ...node,
-        data: { ...node.data, status: 'running' }
-      }))
-    );
-
-    setTimeout(() => {
-      setNodes((nds) =>
-        nds.map((node) => ({
-          ...node,
-          data: { ...node.data, status: 'completed' }
-        }))
-      );
-      toast({
-        title: "Pipeline completed",
-        description: "All nodes have been processed successfully."
-      });
-    }, 2000);
   };
 
   const handleGenerateFromText = () => {
@@ -160,41 +119,84 @@ export const DataEngineering = () => {
     });
   };
 
-  return (
-    <div className="h-full">
-      <div className="flex h-[800px]">
-        <FlowSidebar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onAddNode={handleAddNode}
-        />
-        <div className="flex-1 h-full">
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            nodeTypes={nodeTypes}
-            fitView
-          >
-            <Controls />
-            <MiniMap />
-            <Background />
-            <FlowToolbar
-              onOpenTextToFlow={() => setIsTextToFlowOpen(true)}
-              onRunPipeline={runPipeline}
-            />
-          </ReactFlow>
-        </div>
-        <TextToFlowDialog
-          isOpen={isTextToFlowOpen}
-          onClose={() => setIsTextToFlowOpen(false)}
-          flowDescription={flowDescription}
-          onFlowDescriptionChange={(value) => setFlowDescription(value)}
-          onGenerate={handleGenerateFromText}
-        />
+  const DataEngineeringContent = () => (
+    <div className="flex h-full">
+      <FlowSidebar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onAddNode={handleAddNode}
+      />
+      <div className="flex-1 h-full">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          fitView
+        >
+          <Controls />
+          <MiniMap />
+          <Background />
+          <FlowToolbar
+            onOpenTextToFlow={() => setIsTextToFlowOpen(true)}
+            onRunPipeline={() => {}}
+          />
+        </ReactFlow>
       </div>
+      <TextToFlowDialog
+        isOpen={isTextToFlowOpen}
+        onClose={() => setIsTextToFlowOpen(false)}
+        flowDescription={flowDescription}
+        onFlowDescriptionChange={(value) => setFlowDescription(value)}
+        onGenerate={handleGenerateFromText}
+      />
     </div>
+  );
+
+  return (
+    <>
+      <Card>
+        <CardHeader className="flex flex-row items-start justify-between">
+          <div>
+            <CardTitle>Dataflow Designer</CardTitle>
+            <CardDescription>
+              Design and manage your data engineering workflows
+            </CardDescription>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsDetached(true)}
+            className="h-8 w-8"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </Button>
+        </CardHeader>
+        <CardContent className="h-[800px] p-0">
+          {!isDetached && <DataEngineeringContent />}
+        </CardContent>
+      </Card>
+
+      <Dialog open={isDetached} onOpenChange={setIsDetached}>
+        <DialogContent className="max-w-[100vw] w-full h-[100vh] p-4" onInteractOutside={(e) => e.preventDefault()}>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Dataflow Designer</h2>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsDetached(false)}
+              className="h-8 w-8"
+            >
+              <Minimize2 className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="flex-1 h-[calc(100vh-64px)]">
+            <DataEngineeringContent />
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
