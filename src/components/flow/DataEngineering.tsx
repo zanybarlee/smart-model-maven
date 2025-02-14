@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -10,13 +9,13 @@ import {
   useEdgesState,
   addEdge,
   Panel,
+  Node,
 } from '@xyflow/react';
 import { Button } from "@/components/ui/button";
-import { Plus, Search, Play, Settings } from "lucide-react";
+import { Plus, Search, Play } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import '@xyflow/react/dist/style.css';
@@ -34,63 +33,50 @@ interface NodeData {
   status: 'configured' | 'pending' | 'running' | 'completed' | 'error';
 }
 
+interface FlowNode extends Node {
+  data: NodeData;
+  className: string;
+}
+
+const createNodeConfig = (type: string, label: string): NodeData => ({
+  label,
+  type: type as NodeData['type'],
+  config: {},
+  status: 'pending'
+});
+
 const nodeTypes = {
   dataIngestion: { 
     type: 'input', 
-    data: { 
-      label: 'Data Ingestion',
-      type: 'dataIngestion',
-      config: {},
-      status: 'pending'
-    } 
+    data: createNodeConfig('dataIngestion', 'Data Ingestion')
   },
   dataCleaning: { 
     type: 'default', 
-    data: { 
-      label: 'Data Cleaning',
-      type: 'dataCleaning',
-      config: {
-        cleaningRules: []
-      },
-      status: 'pending'
-    } 
+    data: createNodeConfig('dataCleaning', 'Data Cleaning')
   },
   featureEngineering: { 
     type: 'default', 
-    data: { 
-      label: 'Feature Engineering',
-      type: 'featureEngineering',
-      config: {
-        features: [],
-        transformations: []
-      },
-      status: 'pending'
-    } 
+    data: createNodeConfig('featureEngineering', 'Feature Engineering')
   }
 };
 
-const initialNodes = [
+const initialNodes: FlowNode[] = [
   {
     id: 'dataingestion-1',
     type: 'input',
-    data: { 
-      label: 'Data Ingestion',
-      type: 'dataIngestion',
-      config: {},
-      status: 'pending'
-    },
+    data: createNodeConfig('dataIngestion', 'Data Ingestion'),
     position: { x: 100, y: 100 },
-    className: 'light',
+    className: 'light'
   }
 ];
 
 const initialEdges = [];
 
 export const DataEngineering = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [selectedNode, setSelectedNode] = useState<FlowNode | null>(null);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const { toast } = useToast();
 
@@ -98,21 +84,24 @@ export const DataEngineering = () => {
 
   const handleAddNode = (type: string) => {
     const nodeConfig = nodeTypes[type as keyof typeof nodeTypes];
-    const newNode = {
+    const newNode: FlowNode = {
       id: `${type}-${Date.now()}`,
       type: nodeConfig.type,
       data: nodeConfig.data,
       position: { x: Math.random() * 500, y: Math.random() * 300 },
+      className: 'light'
     };
     setNodes((nds) => [...nds, newNode]);
   };
 
-  const handleNodeClick = (event: any, node: any) => {
+  const handleNodeClick = (event: React.MouseEvent, node: FlowNode) => {
     setSelectedNode(node);
     setIsConfigOpen(true);
   };
 
-  const updateNodeConfig = (config: any) => {
+  const updateNodeConfig = (config: Partial<NodeData['config']>) => {
+    if (!selectedNode) return;
+    
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id === selectedNode.id) {
@@ -120,7 +109,7 @@ export const DataEngineering = () => {
             ...node,
             data: {
               ...node.data,
-              config,
+              config: { ...node.data.config, ...config },
               status: 'configured'
             }
           };
