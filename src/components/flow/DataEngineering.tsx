@@ -162,13 +162,13 @@ export const DataEngineering = () => {
 
   return (
     <div className="h-full">
-      <div className="flex h-full">
+      <div className="flex h-[800px]">
         <FlowSidebar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onAddNode={handleAddNode}
         />
-        <div className="flex-1 h-full relative">
+        <div className="flex-1 h-full">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -177,7 +177,6 @@ export const DataEngineering = () => {
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             fitView
-            className="bg-slate-50"
           >
             <Controls />
             <MiniMap />
