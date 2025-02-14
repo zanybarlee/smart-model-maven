@@ -52,23 +52,23 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
               <div className="text-xs font-medium mb-2">Inputs</div>
               <div className="space-y-2">
                 <div>
-                  <div className="text-xs text-slate-500 mb-1">Work List</div>
+                  <div className="text-xs text-slate-500 mb-1">Data Source</div>
                   <div className="nodrag">
                     <Input 
-                      placeholder="Work List"
+                      placeholder="Data Source"
                       className="h-8 text-sm"
-                      value={data.config.inputs?.workList || ''}
+                      value={data.config.inputs?.dataSource || ''}
                       readOnly
                     />
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs text-slate-500 mb-1">Variable Name *</div>
+                  <div className="text-xs text-slate-500 mb-1">Connection String</div>
                   <div className="nodrag">
                     <Input 
-                      placeholder="Variable Name"
+                      placeholder="Connection String"
                       className="h-8 text-sm"
-                      value={data.config.inputs?.variableName || ''}
+                      value={data.config.inputs?.connectionString || ''}
                       readOnly
                     />
                   </div>
