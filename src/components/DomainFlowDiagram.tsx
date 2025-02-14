@@ -1,6 +1,15 @@
 
 import React from 'react';
-import { ReactFlow, Background, Controls, Node, Edge, Connection, Panel } from 'reactflow';
+import ReactFlow, {
+  Background,
+  Controls,
+  Node,
+  Edge,
+  Connection,
+  Panel,
+  MiniMap,
+} from 'reactflow';
+import 'reactflow/dist/style.css';
 import EntityNode from './EntityNode';
 
 const nodeTypes = {
@@ -30,11 +39,15 @@ const DomainFlowDiagram: React.FC<DomainFlowDiagramProps> = ({
         onConnect={onConnect}
         onNodeDragStop={onNodeDragStop}
         nodeTypes={nodeTypes}
+        defaultViewport={{ x: 0, y: 0, zoom: 1 }}
         fitView
-        className="bg-slate-50"
+        minZoom={0.1}
+        maxZoom={4}
+        proOptions={{ hideAttribution: true }}
       >
         <Background />
         <Controls />
+        <MiniMap />
         <Panel position="top-right">
           <div className="bg-white p-2 rounded shadow-sm text-xs text-slate-500">
             Drag to pan, scroll to zoom
