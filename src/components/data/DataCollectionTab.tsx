@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { DataSourceForm } from "@/components/data/DataSourceForm";
 import { DataSourceList } from "@/components/data/DataSourceList";
 
-export const DataCollectionTab = () => {
+export const DataCollectionTab: React.FC = () => {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <Card>

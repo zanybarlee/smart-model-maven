@@ -13,7 +13,7 @@ import { DataEngineering } from "@/components/flow/DataEngineering";
 import { DataCollectionTab } from "@/components/data/DataCollectionTab";
 import '@xyflow/react/dist/style.css';
 
-const Flow = () => {
+const Flow: React.FC = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
