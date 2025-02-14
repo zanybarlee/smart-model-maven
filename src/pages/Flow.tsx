@@ -11,6 +11,7 @@ import { Automation } from "@/components/flow/Automation";
 import { Analytics } from "@/components/flow/Analytics";
 import { DataEngineering } from "@/components/flow/DataEngineering";
 import { FullScreenDialog } from "@/components/flow/components/FullScreenDialog";
+import { KanbanBoard } from "@/components/flow/KanbanBoard";
 import '@xyflow/react/dist/style.css';
 
 const Flow: React.FC = () => {
@@ -35,6 +36,7 @@ const Flow: React.FC = () => {
                   <TabsTrigger value="chatflow">Chatflow Designer</TabsTrigger>
                   <TabsTrigger value="data-flow">Dataflow Designer</TabsTrigger>
                   <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
+                  <TabsTrigger value="kanban">Kanban Board</TabsTrigger>
                   <TabsTrigger value="continuous-improvement">Continuous Improvement</TabsTrigger>
                   <TabsTrigger value="automation">Automation</TabsTrigger>
                   <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -50,6 +52,10 @@ const Flow: React.FC = () => {
 
                 <TabsContent value="value-stream" className="space-y-4">
                   <ValueStream onDetach={() => setIsValueStreamDetached(true)} />
+                </TabsContent>
+
+                <TabsContent value="kanban" className="space-y-4">
+                  <KanbanBoard />
                 </TabsContent>
 
                 <TabsContent value="continuous-improvement">
