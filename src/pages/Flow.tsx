@@ -29,7 +29,7 @@ const Flow: React.FC = () => {
 
               <Tabs defaultValue="chatflow" className="space-y-4">
                 <TabsList>
-                  <TabsTrigger value="chatflow">Chatflow</TabsTrigger>
+                  <TabsTrigger value="chatflow">Chatflow Designer</TabsTrigger>
                   <TabsTrigger value="data-flow">Data Flow Design</TabsTrigger>
                   <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
                   <TabsTrigger value="continuous-improvement">Continuous Improvement</TabsTrigger>
