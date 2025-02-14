@@ -40,7 +40,6 @@ export const useDomainFlow = () => {
           onDuplicate: handleDuplicateEntity,
           onSave: handleSaveEntity,
         },
-        draggable: true,
       };
 
       setNodes(prev => [...prev, newNode]);
@@ -114,7 +113,6 @@ export const useDomainFlow = () => {
             onDuplicate: handleDuplicateEntity,
             onSave: handleSaveEntity,
           },
-          draggable: true,
         };
         setNodes(prev => [...prev, newNode]);
       } else {
@@ -194,7 +192,15 @@ export const useDomainFlow = () => {
   }, []);
 
   const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node) => {
-    console.log('Node dragged:', node);
+    setNodes(nds => nds.map(n => {
+      if (n.id === node.id) {
+        return {
+          ...n,
+          position: node.position
+        };
+      }
+      return n;
+    }));
   }, []);
 
   return {

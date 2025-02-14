@@ -8,6 +8,8 @@ import {
   Connection,
   Panel,
   MiniMap,
+  NodeChange,
+  applyNodeChanges,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import EntityNode from './EntityNode';
@@ -31,13 +33,25 @@ const DomainFlowDiagram: React.FC<DomainFlowDiagramProps> = ({
   onNodeDragStop,
   style
 }) => {
+  const onNodesChange = (changes: NodeChange[]) => {
+    const nextNodes = applyNodeChanges(changes, nodes);
+    // Update node positions in the parent component
+    const draggedNode = changes.find(change => change.type === 'position' && change.dragging === false);
+    if (draggedNode && draggedNode.type === 'position') {
+      const node = nextNodes.find(n => n.id === draggedNode.id);
+      if (node) {
+        onNodeDragStop({} as React.MouseEvent, node);
+      }
+    }
+  };
+
   return (
     <div style={style} className="bg-slate-50 rounded-lg border border-slate-200 overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        onNodesChange={onNodesChange}
         onConnect={onConnect}
-        onNodeDragStop={onNodeDragStop}
         nodeTypes={nodeTypes}
         defaultViewport={{ x: 0, y: 0, zoom: 1 }}
         fitView
