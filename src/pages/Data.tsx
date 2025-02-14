@@ -9,6 +9,7 @@ import { DataCleaningTab } from "@/components/data/DataCleaningTab";
 import { DataLabelingTab } from "@/components/data/DataLabelingTab";
 import { FeatureEngineeringTab } from "@/components/data/FeatureEngineeringTab";
 import { ComplianceTab } from "@/components/compliance/ComplianceTab";
+import { DataEngineering } from "@/components/flow/DataEngineering";
 
 const Data = () => {
   const [activeTab, setActiveTab] = useState('collection');
@@ -33,6 +34,7 @@ const Data = () => {
                   <TabsTrigger value="labeling">Data Labeling</TabsTrigger>
                   <TabsTrigger value="features">Feature Engineering</TabsTrigger>
                   <TabsTrigger value="compliance">Compliance</TabsTrigger>
+                  <TabsTrigger value="flow">Data Flow</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="collection">
@@ -57,6 +59,10 @@ const Data = () => {
 
                 <TabsContent value="compliance">
                   <ComplianceTab />
+                </TabsContent>
+
+                <TabsContent value="flow">
+                  <DataEngineering />
                 </TabsContent>
               </Tabs>
             </div>
