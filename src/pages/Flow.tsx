@@ -10,7 +10,6 @@ import { ContinuousImprovement } from "@/components/flow/ContinuousImprovement";
 import { Automation } from "@/components/flow/Automation";
 import { Analytics } from "@/components/flow/Analytics";
 import { DataEngineering } from "@/components/flow/DataEngineering";
-import { DataCollectionTab } from "@/components/data/DataCollectionTab";
 import '@xyflow/react/dist/style.css';
 
 const Flow: React.FC = () => {
@@ -31,7 +30,6 @@ const Flow: React.FC = () => {
               <Tabs defaultValue="data-flow" className="space-y-4">
                 <TabsList>
                   <TabsTrigger value="data-flow">Data Flow Design</TabsTrigger>
-                  <TabsTrigger value="data-collection">Data Collection</TabsTrigger>
                   <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
                   <TabsTrigger value="chatflow">Chatflow</TabsTrigger>
                   <TabsTrigger value="continuous-improvement">Continuous Improvement</TabsTrigger>
@@ -41,10 +39,6 @@ const Flow: React.FC = () => {
 
                 <TabsContent value="data-flow" className="space-y-4">
                   <DataEngineering />
-                </TabsContent>
-
-                <TabsContent value="data-collection" className="space-y-4">
-                  <DataCollectionTab />
                 </TabsContent>
 
                 <TabsContent value="value-stream" className="space-y-4">
