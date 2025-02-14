@@ -78,14 +78,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
     <ContextMenu>
       <ContextMenuTrigger>
         <div 
-          className="bg-white p-4 rounded-lg shadow-lg relative min-w-[300px]" 
-          style={{ 
-            border: '1px solid #fff',
-            outline: 'none',
-            ['--xy-node-border-default' as string]: '#fff',
-            ['--xy-node-border-selected' as string]: '#fff',
-            ['--xy-node-border-hover' as string]: '#fff'
-          } as React.CSSProperties}
+          className="bg-white p-4 rounded-lg shadow-lg relative min-w-[300px] border border-gray-200" 
         >
           <div className="absolute right-2 top-2 flex gap-2">
             {isEditing ? (
@@ -94,29 +87,31 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
                 onClick={handleSave}
               />
             ) : (
-              <Edit2 
-                className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag"
-                onClick={() => setIsEditing(true)}
-              />
+              <>
+                <Edit2 
+                  className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag"
+                  onClick={() => setIsEditing(true)}
+                />
+                <Copy 
+                  className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+                  onClick={handleDuplicate}
+                />
+                <Trash 
+                  className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+                  onClick={handleDelete}
+                />
+                <Info 
+                  className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+                  onClick={() => setShowInfo(true)}
+                />
+              </>
             )}
-            <Copy 
-              className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
-              onClick={handleDuplicate}
-            />
-            <Trash 
-              className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
-              onClick={handleDelete}
-            />
-            <Info 
-              className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
-              onClick={() => setShowInfo(true)}
-            />
           </div>
 
           <Handle
             type="target"
             position={Position.Left}
-            className="w-2 h-2 bg-blue-400 border-2 border-white !opacity-100"
+            className="w-2 h-2 !bg-blue-400 border-2 border-white"
             style={{ left: -5, top: '50%' }}
             isConnectableStart={false}
           />
@@ -125,19 +120,19 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
             <div className="p-1.5 bg-slate-100 rounded">
               <div className="w-4 h-4">⚡</div>
             </div>
-            <div className="font-medium">{data.label}</div>
+            <div className="font-medium text-slate-900">{data.label}</div>
           </div>
 
           <div className="space-y-4">
             <div>
-              <div className="text-xs font-medium mb-2">Inputs</div>
-              <div className="space-y-2">
+              <div className="text-xs font-medium text-slate-700 mb-2">Inputs</div>
+              <div className="space-y-3">
                 <div>
                   <div className="text-xs text-slate-500 mb-1">Data Source</div>
                   <div className="nodrag">
                     <Input 
                       placeholder="Data Source"
-                      className="h-8 text-sm"
+                      className="h-8 text-sm bg-white border border-gray-200"
                       value={isEditing ? tempInputs.dataSource : data.config.inputs?.dataSource || ''}
                       onChange={(e) => setTempInputs({ ...tempInputs, dataSource: e.target.value })}
                       readOnly={!isEditing}
@@ -149,7 +144,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
                   <div className="nodrag">
                     <Input 
                       placeholder="Connection String"
-                      className="h-8 text-sm"
+                      className="h-8 text-sm bg-white border border-gray-200"
                       value={isEditing ? tempInputs.connectionString : data.config.inputs?.connectionString || ''}
                       onChange={(e) => setTempInputs({ ...tempInputs, connectionString: e.target.value })}
                       readOnly={!isEditing}
@@ -160,14 +155,14 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
             </div>
 
             <div>
-              <div className="text-xs font-medium mb-2">Output</div>
+              <div className="text-xs font-medium text-slate-700 mb-2">Output</div>
               <div className="nodrag">
                 <Select 
                   defaultValue={data.config.outputs?.output || ''} 
                   onValueChange={(value) => setTempInputs({ ...tempInputs, output: value })}
                   disabled={!isEditing}
                 >
-                  <SelectTrigger className="h-8 text-sm">
+                  <SelectTrigger className="h-8 text-sm bg-white border border-gray-200">
                     <SelectValue placeholder="Select output" />
                   </SelectTrigger>
                   <SelectContent>
@@ -182,7 +177,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
           <Handle
             type="source"
             position={Position.Right}
-            className="w-2 h-2 bg-blue-400 border-2 border-white !opacity-100"
+            className="w-2 h-2 !bg-blue-400 border-2 border-white"
             style={{ right: -5, top: '50%' }}
             isConnectableEnd={false}
           />
