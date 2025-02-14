@@ -19,14 +19,14 @@ const Data = () => {
       <div className="min-h-screen flex">
         <AppSidebar />
         <main className="flex-1 overflow-auto bg-slate-50">
-          <div className="p-6">
-            <div>
+          <div className={activeTab === 'flow' ? 'p-6 h-full' : 'p-6'}>
+            <div className="h-full">
               <div className="mb-6">
                 <h1 className="text-3xl font-bold mb-2">Data Engineering</h1>
                 <p className="text-gray-600">Manage and process your data through various stages</p>
               </div>
 
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="h-[calc(100%-5rem)]">
                 <TabsList className="mb-4">
                   <TabsTrigger value="flow">Data Flow Design</TabsTrigger>
                   <TabsTrigger value="collection">Data Collection</TabsTrigger>
@@ -37,7 +37,7 @@ const Data = () => {
                   <TabsTrigger value="compliance">Compliance</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="flow" className="m-0">
+                <TabsContent value="flow" className="m-0 h-full">
                   <DataEngineering />
                 </TabsContent>
 
