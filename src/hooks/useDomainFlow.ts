@@ -11,7 +11,7 @@ export const useDomainFlow = () => {
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
   const { toast } = useToast();
 
-  const handleDuplicateEntity = (id: string) => {
+  const handleDuplicateEntity = useCallback((id: string) => {
     const entityToDuplicate = entities.find(e => e.id === id);
     if (entityToDuplicate) {
       const newEntity: Entity = {
@@ -20,17 +20,17 @@ export const useDomainFlow = () => {
         attributes: [...entityToDuplicate.attributes]
       };
 
-      setEntities([...entities, newEntity]);
-
       const originalNode = nodes.find(node => node.id === id);
-      const offset = 50;
+      if (!originalNode) return;
 
-      setNodes([...nodes, {
+      setEntities(prev => [...prev, newEntity]);
+      
+      const newNode = {
         id: newEntity.id,
-        type: 'entity',
+        type: 'entity' as const,
         position: { 
-          x: (originalNode?.position.x || 0) + offset, 
-          y: (originalNode?.position.y || 0) + offset 
+          x: originalNode.position.x + 50, 
+          y: originalNode.position.y + 50 
         },
         data: { 
           label: newEntity.name, 
@@ -40,33 +40,36 @@ export const useDomainFlow = () => {
           onDuplicate: handleDuplicateEntity,
           onSave: handleSaveEntity,
         },
-      }]);
+        draggable: true,
+      };
+
+      setNodes(prev => [...prev, newNode]);
 
       toast({
         title: "Entity Duplicated",
         description: "A copy of the entity has been created.",
       });
     }
-  };
+  }, [entities, nodes, toast]);
 
-  const handleEditEntity = (id: string) => {
+  const handleEditEntity = useCallback((id: string) => {
     const entity = entities.find(e => e.id === id);
     if (entity) {
       setSelectedEntity(entity);
     }
-  };
+  }, [entities]);
 
-  const handleDeleteEntity = (id: string) => {
-    setEntities(entities.filter(e => e.id !== id));
-    setNodes(nodes.filter(node => node.id !== id));
-    setEdges(edges.filter(edge => edge.source !== id && edge.target !== id));
+  const handleDeleteEntity = useCallback((id: string) => {
+    setEntities(prev => prev.filter(e => e.id !== id));
+    setNodes(prev => prev.filter(node => node.id !== id));
+    setEdges(prev => prev.filter(edge => edge.source !== id && edge.target !== id));
     toast({
       title: "Entity Deleted",
       description: "The entity has been removed from the model.",
     });
-  };
+  }, [toast]);
 
-  const handleSaveEntity = (idOrEntity: string | Entity, newData?: { label: string; attributes: string[] }) => {
+  const handleSaveEntity = useCallback((idOrEntity: string | Entity, newData?: { label: string; attributes: string[] }) => {
     if (typeof idOrEntity === 'string' && newData) {
       // Handle inline save
       const updatedEntity: Entity = {
@@ -75,8 +78,8 @@ export const useDomainFlow = () => {
         attributes: newData.attributes
       };
 
-      setEntities(entities.map(e => e.id === idOrEntity ? updatedEntity : e));
-      setNodes(nodes.map(node => 
+      setEntities(prev => prev.map(e => e.id === idOrEntity ? updatedEntity : e));
+      setNodes(prev => prev.map(node => 
         node.id === idOrEntity 
           ? {
               ...node,
@@ -95,13 +98,13 @@ export const useDomainFlow = () => {
       
       if (existingEntityIndex === -1) {
         // New entity
-        setEntities([...entities, entity]);
+        setEntities(prev => [...prev, entity]);
         const newNode = {
           id: entity.id,
-          type: 'entity',
+          type: 'entity' as const,
           position: { 
-            x: Math.random() * 500, 
-            y: Math.random() * 300 
+            x: Math.random() * 300, 
+            y: Math.random() * 200 
           },
           data: {
             label: entity.name,
@@ -111,12 +114,13 @@ export const useDomainFlow = () => {
             onDuplicate: handleDuplicateEntity,
             onSave: handleSaveEntity,
           },
+          draggable: true,
         };
-        setNodes([...nodes, newNode]);
+        setNodes(prev => [...prev, newNode]);
       } else {
         // Update existing entity
-        setEntities(entities.map(e => e.id === entity.id ? entity : e));
-        setNodes(nodes.map(node => 
+        setEntities(prev => prev.map(e => e.id === entity.id ? entity : e));
+        setNodes(prev => prev.map(node => 
           node.id === entity.id 
             ? {
                 ...node,
@@ -136,9 +140,9 @@ export const useDomainFlow = () => {
       title: "Entity Updated",
       description: "The entity has been updated successfully.",
     });
-  };
+  }, [handleDeleteEntity, handleDuplicateEntity, handleEditEntity, toast]);
 
-  const handleGenerateModel = (modelDescription: string) => {
+  const handleGenerateModel = useCallback((modelDescription: string) => {
     if (!modelDescription.trim()) {
       toast({
         title: "Description Required",
@@ -165,7 +169,7 @@ export const useDomainFlow = () => {
 
     const flowNodes = mockEntities.map((entity, index) => ({
       id: entity.id,
-      type: 'entity',
+      type: 'entity' as const,
       position: { x: 250 * index, y: 100 },
       data: { 
         label: entity.name, 
@@ -175,6 +179,7 @@ export const useDomainFlow = () => {
         onDuplicate: handleDuplicateEntity,
         onSave: handleSaveEntity,
       },
+      draggable: true,
     }));
 
     setNodes(flowNodes);
@@ -182,7 +187,7 @@ export const useDomainFlow = () => {
       title: "Model Generated",
       description: "Your domain model has been generated successfully.",
     });
-  };
+  }, [handleDeleteEntity, handleDuplicateEntity, handleEditEntity, handleSaveEntity, toast]);
 
   const onConnect = useCallback((params: Connection) => {
     setEdges((eds) => addEdge(params, eds));

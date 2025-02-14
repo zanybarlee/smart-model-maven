@@ -1,6 +1,6 @@
 
-import React from 'react';
-import ReactFlow, {
+import {
+  ReactFlow,
   Background,
   Controls,
   Node,
@@ -44,6 +44,7 @@ const DomainFlowDiagram: React.FC<DomainFlowDiagramProps> = ({
         minZoom={0.1}
         maxZoom={4}
         proOptions={{ hideAttribution: true }}
+        deleteKeyCode={null}
       >
         <Background />
         <Controls />
