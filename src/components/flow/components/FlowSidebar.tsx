@@ -15,9 +15,9 @@ export const FlowSidebar = ({ searchQuery, onSearchChange, onAddNode }: FlowSide
   const nodeTypes = {
     dataIngestion: { data: createNodeConfig('dataIngestion', 'Data Ingestion') },
     dataCleaning: { data: createNodeConfig('dataCleaning', 'Data Cleaning') },
-    featureEngineering: { data: createNodeConfig('featureEngineering', 'Feature Engineering') },
     dataQuality: { data: createNodeConfig('dataQuality', 'Data Quality') },
     dataLabeling: { data: createNodeConfig('dataLabeling', 'Data Labeling') },
+    featureEngineering: { data: createNodeConfig('featureEngineering', 'Feature Engineering') },
   };
 
   const filteredNodeTypes = Object.entries(nodeTypes)
