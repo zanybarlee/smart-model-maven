@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import {
   ReactFlow,
@@ -74,33 +75,6 @@ const Index = () => {
     }
   };
 
-  const handleSaveEntity = (id: string, newData: { label: string; attributes: string[] }) => {
-    const updatedEntity: Entity = {
-      id,
-      name: newData.label,
-      attributes: newData.attributes
-    };
-
-    setEntities(entities.map(e => e.id === id ? updatedEntity : e));
-    setNodes(nodes.map(node => 
-      node.id === id 
-        ? {
-            ...node,
-            data: {
-              ...node.data,
-              label: newData.label,
-              attributes: newData.attributes,
-            }
-          }
-        : node
-    ));
-
-    toast({
-      title: "Entity Updated",
-      description: "The entity has been updated successfully.",
-    });
-  };
-
   const handleEditEntity = (id: string) => {
     const entity = entities.find(e => e.id === id);
     if (entity) {
@@ -165,6 +139,55 @@ const Index = () => {
     toast({
       title: "Model Generated",
       description: "Your domain model has been generated successfully.",
+    });
+  };
+
+  // Updated to handle both inline and dialog saves
+  const handleSaveEntity = (idOrEntity: string | Entity, newData?: { label: string; attributes: string[] }) => {
+    if (typeof idOrEntity === 'string' && newData) {
+      // Handle inline save
+      const updatedEntity: Entity = {
+        id: idOrEntity,
+        name: newData.label,
+        attributes: newData.attributes
+      };
+
+      setEntities(entities.map(e => e.id === idOrEntity ? updatedEntity : e));
+      setNodes(nodes.map(node => 
+        node.id === idOrEntity 
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                label: newData.label,
+                attributes: newData.attributes,
+              }
+            }
+          : node
+      ));
+    } else if (typeof idOrEntity === 'object') {
+      // Handle dialog save
+      const entity = idOrEntity;
+      setEntities(entities.map(e => e.id === entity.id ? entity : e));
+      setNodes(nodes.map(node => 
+        node.id === entity.id 
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                label: entity.name,
+                attributes: entity.attributes,
+              }
+            }
+          : node
+      ));
+      setSelectedEntity(null);
+      setDialogOpen(false);
+    }
+
+    toast({
+      title: "Entity Updated",
+      description: "The entity has been updated successfully.",
     });
   };
 
