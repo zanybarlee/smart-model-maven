@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Board from '@asseinfo/react-kanban';
 import '@asseinfo/react-kanban/dist/styles.css';
@@ -13,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import debounce from 'lodash/debounce';
+import type { Json } from '@/integrations/supabase/types';
 
 type Priority = 'low' | 'medium' | 'high';
 
@@ -106,6 +106,21 @@ export const KanbanBoard = () => {
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
   const { toast } = useToast();
 
+  const loadLabels = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('card_labels')
+        .select('*');
+
+      if (error) throw error;
+      if (data) {
+        setLabels(data);
+      }
+    } catch (error) {
+      console.error('Error loading labels:', error);
+    }
+  };
+
   useEffect(() => {
     loadBoard();
     loadLabels();
@@ -130,16 +145,13 @@ export const KanbanBoard = () => {
         setBoardId(boards[0].id);
         setBoard(boards[0].board_data as unknown as KanbanBoard);
       } else {
-        // Create new board if none exists
         const { data, error: insertError } = await supabase
           .from('kanban_boards')
-          .insert([
-            { 
-              title: 'Main Board', 
-              board_data: defaultBoard,
-              user_id: user.id 
-            }
-          ])
+          .insert({
+            title: 'Main Board',
+            board_data: defaultBoard as unknown as Json,
+            user_id: user.id
+          })
           .select()
           .single();
 
@@ -171,8 +183,7 @@ export const KanbanBoard = () => {
       const { error } = await supabase
         .from('kanban_boards')
         .update({ 
-          board_data: newBoard as unknown as Json,
-          user_id: user.id
+          board_data: newBoard as unknown as Json
         })
         .eq('id', boardId)
         .eq('user_id', user.id);
