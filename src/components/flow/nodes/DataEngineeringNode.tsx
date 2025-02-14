@@ -21,10 +21,10 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
           style={{ 
             border: 'none',
             outline: 'none',
-            '--xy-node-border-default': 'none',
-            '--xy-node-border-selected': 'none',
-            '--xy-node-border-hover': 'none'
-          }}
+            ['--xy-node-border-default' as string]: 'none',
+            ['--xy-node-border-selected' as string]: 'none',
+            ['--xy-node-border-hover' as string]: 'none'
+          } as React.CSSProperties}
         >
           <div className="absolute right-2 top-2 flex gap-2">
             <Copy className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" />
