@@ -21,7 +21,7 @@ import {
 
 interface ValueStreamNodeData {
   label: string;
-  config: {
+  config?: {
     inputs?: {
       duration: string;
       resources: string;
@@ -37,14 +37,36 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
   const [isEditing, setIsEditing] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [tempInputs, setTempInputs] = useState({
-    duration: data.config.inputs?.duration || '',
-    resources: data.config.inputs?.resources || '',
-    deliverable: data.config.outputs?.deliverable || ''
+    duration: data.config?.inputs?.duration || '',
+    resources: data.config?.inputs?.resources || '',
+    deliverable: data.config?.outputs?.deliverable || ''
   });
   const { toast } = useToast();
   const { setNodes, getNode, getNodes, setEdges, getEdges } = useReactFlow();
 
   const handleSave = () => {
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (node.id === id) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              config: {
+                inputs: {
+                  duration: tempInputs.duration,
+                  resources: tempInputs.resources,
+                },
+                outputs: {
+                  deliverable: tempInputs.deliverable,
+                },
+              },
+            },
+          };
+        }
+        return node;
+      })
+    );
     setIsEditing(false);
     toast({
       title: "Changes saved",
@@ -150,7 +172,7 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
                     <Input 
                       placeholder="Duration (e.g., 2 days)"
                       className="h-8 text-sm"
-                      value={isEditing ? tempInputs.duration : data.config.inputs?.duration || ''}
+                      value={isEditing ? tempInputs.duration : data.config?.inputs?.duration || ''}
                       onChange={(e) => setTempInputs({ ...tempInputs, duration: e.target.value })}
                       readOnly={!isEditing}
                     />
@@ -162,7 +184,7 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
                     <Input 
                       placeholder="Required resources"
                       className="h-8 text-sm"
-                      value={isEditing ? tempInputs.resources : data.config.inputs?.resources || ''}
+                      value={isEditing ? tempInputs.resources : data.config?.inputs?.resources || ''}
                       onChange={(e) => setTempInputs({ ...tempInputs, resources: e.target.value })}
                       readOnly={!isEditing}
                     />
@@ -175,7 +197,7 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
               <div className="text-xs font-medium mb-2">Deliverable</div>
               <div className="nodrag">
                 <Select 
-                  defaultValue={data.config.outputs?.deliverable || ''} 
+                  defaultValue={data.config?.outputs?.deliverable || ''} 
                   onValueChange={(value) => setTempInputs({ ...tempInputs, deliverable: value })}
                   disabled={!isEditing}
                 >
@@ -213,9 +235,9 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
                     <div>
                       <h4 className="font-semibold mb-2">Configuration</h4>
                       <div className="text-sm text-slate-600 space-y-2">
-                        <p>Duration: {data.config.inputs?.duration || 'Not set'}</p>
-                        <p>Resources: {data.config.inputs?.resources || 'Not set'}</p>
-                        <p>Deliverable: {data.config.outputs?.deliverable || 'Not set'}</p>
+                        <p>Duration: {data.config?.inputs?.duration || 'Not set'}</p>
+                        <p>Resources: {data.config?.inputs?.resources || 'Not set'}</p>
+                        <p>Deliverable: {data.config?.outputs?.deliverable || 'Not set'}</p>
                       </div>
                     </div>
                     <div>
