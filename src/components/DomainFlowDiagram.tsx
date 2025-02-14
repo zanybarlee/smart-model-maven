@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ReactFlow, Background, Controls, Node, Edge, Connection } from 'reactflow';
+import { ReactFlow, Background, Controls, Node, Edge, Connection, Panel } from 'reactflow';
 import EntityNode from './EntityNode';
 
 const nodeTypes = {
@@ -23,7 +23,7 @@ const DomainFlowDiagram: React.FC<DomainFlowDiagramProps> = ({
   style
 }) => {
   return (
-    <div style={style}>
+    <div style={style} className="bg-slate-50 rounded-lg border border-slate-200 overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -31,9 +31,15 @@ const DomainFlowDiagram: React.FC<DomainFlowDiagramProps> = ({
         onNodeDragStop={onNodeDragStop}
         nodeTypes={nodeTypes}
         fitView
+        className="bg-slate-50"
       >
         <Background />
         <Controls />
+        <Panel position="top-right">
+          <div className="bg-white p-2 rounded shadow-sm text-xs text-slate-500">
+            Drag to pan, scroll to zoom
+          </div>
+        </Panel>
       </ReactFlow>
     </div>
   );
