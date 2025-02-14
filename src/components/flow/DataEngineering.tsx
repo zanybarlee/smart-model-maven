@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState } from 'react';
 import {
   ReactFlow,
@@ -100,8 +101,8 @@ export const DataEngineering = () => {
     }
 
     const words = flowDescription.toLowerCase();
-    const newNodes = [] as CustomNode[];
-    const newEdges: any[] = [];
+    const newNodes = [];
+    const newEdges = [];
     let positionX = 100;
 
     if (words.includes('csv') || words.includes('data') || words.includes('import')) {
@@ -110,7 +111,7 @@ export const DataEngineering = () => {
         type: 'input',
         data: createNodeConfig('dataIngestion', 'Data Ingestion'),
         position: { x: positionX, y: 100 },
-      } as CustomNode);
+      });
       positionX += 200;
     }
 
@@ -121,7 +122,7 @@ export const DataEngineering = () => {
         type: 'default',
         data: createNodeConfig('dataCleaning', 'Data Cleaning'),
         position: { x: positionX, y: 100 },
-      } as CustomNode);
+      });
       if (newNodes.length > 1) {
         newEdges.push({
           id: `e${newNodes[newNodes.length - 2].id}-${nodeId}`,
@@ -139,7 +140,7 @@ export const DataEngineering = () => {
         type: 'default',
         data: createNodeConfig('featureEngineering', 'Feature Engineering'),
         position: { x: positionX, y: 100 },
-      } as CustomNode);
+      });
       if (newNodes.length > 1) {
         newEdges.push({
           id: `e${newNodes[newNodes.length - 2].id}-${nodeId}`,
