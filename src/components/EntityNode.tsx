@@ -1,8 +1,14 @@
 
 import React, { useState } from 'react';
-import { Handle, Position } from 'reactflow';
-import { Edit2, Copy, Trash2, Save } from "lucide-react";
+import { Handle, Position, NodeToolbar } from 'reactflow';
+import { Edit2, Copy, Trash2, Save, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 interface EntityNodeProps {
   data: { 
@@ -21,6 +27,7 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
   const [tempLabel, setTempLabel] = useState(data.label);
   const [tempAttribute, setTempAttribute] = useState('');
   const [tempAttributes, setTempAttributes] = useState(data.attributes);
+  const [showInfo, setShowInfo] = useState(false);
 
   const handleSave = () => {
     if (data.onSave) {
@@ -50,108 +57,130 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
   };
 
   return (
-    <>
-      <Handle type="target" position={Position.Top} className="!bg-primary" />
-      <div className="draggable bg-white p-4 rounded-lg shadow-lg border border-slate-200 min-w-[200px]">
-        <div className="flex justify-between items-center mb-2">
-          {isEditing ? (
-            <div className="flex-1 nodrag">
-              <Input
-                value={tempLabel}
-                onChange={(e) => setTempLabel(e.target.value)}
-                className="font-semibold text-primary"
-                placeholder="Entity name"
-              />
+    <ContextMenu>
+      <ContextMenuTrigger>
+        <div className="relative">
+          <NodeToolbar className="flex gap-2" isVisible={!isEditing}>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="p-1 bg-white rounded shadow hover:bg-slate-50"
+              title="Edit"
+            >
+              <Edit2 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => data.onDuplicate(id)}
+              className="p-1 bg-white rounded shadow hover:bg-slate-50"
+              title="Duplicate"
+            >
+              <Copy className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => data.onDelete(id)}
+              className="p-1 bg-white rounded shadow hover:bg-slate-50"
+              title="Delete"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setShowInfo(!showInfo)}
+              className="p-1 bg-white rounded shadow hover:bg-slate-50"
+              title="Info"
+            >
+              <Info className="h-4 w-4" />
+            </button>
+          </NodeToolbar>
+
+          <div className="bg-white p-4 rounded-lg shadow-lg border border-slate-200 min-w-[200px]">
+            <Handle
+              type="target"
+              position={Position.Top}
+              className="w-2 h-1 !bg-slate-500 border-none"
+            />
+
+            <div className="space-y-2">
+              {isEditing ? (
+                <div className="space-y-2">
+                  <Input
+                    value={tempLabel}
+                    onChange={(e) => setTempLabel(e.target.value)}
+                    className="font-semibold"
+                    placeholder="Entity name"
+                  />
+                  <div className="flex gap-2">
+                    <Input
+                      value={tempAttribute}
+                      onChange={(e) => setTempAttribute(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Add attribute"
+                      className="text-sm"
+                    />
+                    <button
+                      onClick={handleAddAttribute}
+                      className="px-2 py-1 bg-primary text-white rounded text-sm hover:bg-primary/90"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    {tempAttributes.map((attr, index) => (
+                      <div key={index} className="flex justify-between items-center py-1 border-b border-slate-100 last:border-0">
+                        <span className="text-sm">{attr}</span>
+                        <button
+                          onClick={() => handleRemoveAttribute(index)}
+                          className="text-red-500 hover:text-red-600"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      onClick={handleSave}
+                      className="px-2 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="font-semibold text-lg text-primary">{data.label}</div>
+                  <div className="space-y-1">
+                    {tempAttributes.map((attr, index) => (
+                      <div key={index} className="text-sm py-1 border-b border-slate-100 last:border-0">
+                        {attr}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
-          ) : (
-            <div className="font-semibold text-primary">{data.label}</div>
-          )}
-          <div className="flex gap-2">
-            {isEditing ? (
-              <button 
-                onClick={handleSave}
-                className="p-1 hover:bg-slate-100 rounded nodrag"
-                title="Save"
-              >
-                <Save className="h-4 w-4 text-green-500" />
-              </button>
-            ) : (
-              <>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    data.onDuplicate(id);
-                  }}
-                  className="p-1 hover:bg-slate-100 rounded nodrag"
-                  title="Duplicate"
-                >
-                  <Copy className="h-4 w-4 text-slate-500" />
-                </button>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsEditing(true);
-                  }}
-                  className="p-1 hover:bg-slate-100 rounded nodrag"
-                  title="Edit"
-                >
-                  <Edit2 className="h-4 w-4 text-slate-500" />
-                </button>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    data.onDelete(id);
-                  }}
-                  className="p-1 hover:bg-slate-100 rounded nodrag"
-                  title="Delete"
-                >
-                  <Trash2 className="h-4 w-4 text-red-500" />
-                </button>
-              </>
-            )}
+
+            <Handle
+              type="source"
+              position={Position.Bottom}
+              className="w-2 h-1 !bg-slate-500 border-none"
+            />
           </div>
         </div>
-        <div className="text-sm text-slate-600">
-          {isEditing ? (
-            <div className="space-y-2 nodrag">
-              <div className="flex gap-2">
-                <Input
-                  value={tempAttribute}
-                  onChange={(e) => setTempAttribute(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Add attribute"
-                  className="text-sm"
-                />
-                <button
-                  onClick={handleAddAttribute}
-                  className="px-2 py-1 bg-primary text-white rounded text-sm hover:bg-primary/90"
-                >
-                  Add
-                </button>
-              </div>
-              {tempAttributes.map((attr, index) => (
-                <div key={index} className="flex justify-between items-center py-1 border-b border-slate-100 last:border-0">
-                  <span>{attr}</span>
-                  <button
-                    onClick={() => handleRemoveAttribute(index)}
-                    className="text-red-500 hover:text-red-600"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            tempAttributes.map((attr, index) => (
-              <div key={index} className="py-1 border-b border-slate-100 last:border-0">
-                {attr}
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-      <Handle type="source" position={Position.Bottom} className="!bg-primary" />
-    </>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem onClick={() => data.onDuplicate(id)}>
+          <Copy className="mr-2 h-4 w-4" />
+          Duplicate Node
+        </ContextMenuItem>
+        <ContextMenuItem onClick={() => data.onDelete(id)}>
+          <Trash2 className="mr-2 h-4 w-4" />
+          Delete Node
+        </ContextMenuItem>
+        <ContextMenuItem onClick={() => setShowInfo(!showInfo)}>
+          <Info className="mr-2 h-4 w-4" />
+          View Details
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 };
 
