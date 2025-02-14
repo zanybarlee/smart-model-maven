@@ -11,6 +11,13 @@ export interface NodeData {
     cleaningRules?: string[];
     features?: string[];
     transformations?: string[];
+    inputs?: {
+      variableName?: string;
+      workList?: string;
+    };
+    outputs?: {
+      output?: string;
+    };
   };
   status: 'configured' | 'pending' | 'running' | 'completed' | 'error';
 }
@@ -18,7 +25,15 @@ export interface NodeData {
 export const createNodeConfig = (type: NodeType, label: string): NodeData => ({
   label,
   type,
-  config: {},
+  config: {
+    inputs: {
+      variableName: '',
+      workList: ''
+    },
+    outputs: {
+      output: ''
+    }
+  },
   status: 'pending'
 });
 
@@ -26,7 +41,7 @@ export const initialNodes = [
   {
     id: 'dataingestion-1',
     type: 'input',
-    data: createNodeConfig('dataIngestion', 'Data Ingestion'),
+    data: createNodeConfig('dataIngestion', 'Data Collection'),
     position: { x: 100, y: 100 },
   }
 ];
