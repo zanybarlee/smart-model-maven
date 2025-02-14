@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { KanbanCard as KanbanCardComponent } from './components/KanbanCard';
 import { useKanbanBoard } from './hooks/useKanbanBoard';
-import { KanbanCard, Priority } from './types/kanban-types';
+import { KanbanCard, Priority, KanbanBoard as KanbanBoardType } from './types/kanban-types';
 
 export const KanbanBoard = () => {
   const { board, setBoard, labels, saveBoard } = useKanbanBoard();
@@ -132,6 +132,42 @@ export const KanbanBoard = () => {
     }
   };
 
+  const handleDragEnd = (card: KanbanCard, source: any, destination: any) => {
+    if (!destination) {
+      return;
+    }
+
+    const updatedBoard = {
+      ...board,
+      columns: board.columns.map(column => {
+        // Remove from source column
+        if (column.id === source.fromColumnId) {
+          return {
+            ...column,
+            cards: column.cards.filter(c => c.id !== card.id)
+          };
+        }
+        // Add to destination column
+        if (column.id === destination.toColumnId) {
+          const destinationCards = [...column.cards];
+          destinationCards.splice(destination.toPosition, 0, card);
+          return {
+            ...column,
+            cards: destinationCards
+          };
+        }
+        return column;
+      })
+    };
+
+    setBoard(updatedBoard);
+    saveBoard(updatedBoard);
+    toast({
+      title: "Card moved",
+      description: "The card has been moved to a new position"
+    });
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -186,28 +222,7 @@ export const KanbanBoard = () => {
           onLaneRemove={console.log}
           onCardRemove={console.log}
           onLaneRename={console.log}
-          onCardDragEnd={(card, source, destination) => {
-            const updatedBoard = {
-              ...board,
-              columns: board.columns.map(column => {
-                if (column.id === source.fromColumnId) {
-                  return {
-                    ...column,
-                    cards: column.cards.filter(c => c.id !== card.id)
-                  };
-                }
-                if (column.id === destination.toColumnId) {
-                  return {
-                    ...column,
-                    cards: [...column.cards, card]
-                  };
-                }
-                return column;
-              })
-            };
-            setBoard(updatedBoard);
-            saveBoard(updatedBoard);
-          }}
+          onCardDragEnd={handleDragEnd}
           renderCard={(props: KanbanCard) => (
             <KanbanCardComponent
               {...props}
