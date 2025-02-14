@@ -1,94 +1,28 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import Board from '@asseinfo/react-kanban';
 import '@asseinfo/react-kanban/dist/styles.css';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Users, AlertCircle, Search, Tag, MessageSquare } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
-import debounce from 'lodash/debounce';
-import type { Json } from '@/integrations/supabase/types';
-
-type Priority = 'low' | 'medium' | 'high';
-
-interface Comment {
-  id: string;
-  comment: string;
-  created_at: string;
-  user_id: string;
-}
-
-interface Label {
-  id: string;
-  name: string;
-  color: string;
-}
-
-interface KanbanCard {
-  id: string;
-  title: string;
-  description: string;
-  priority: Priority;
-  assignees: string[];
-  labels: Label[];
-  comments: Comment[];
-}
-
-interface KanbanColumn {
-  id: number;
-  title: string;
-  cards: KanbanCard[];
-}
-
-interface KanbanBoard {
-  columns: KanbanColumn[];
-}
-
-const priorityColors = {
-  high: "bg-red-100 text-red-800",
-  medium: "bg-yellow-100 text-yellow-800",
-  low: "bg-green-100 text-green-800"
-};
-
-const defaultBoard: KanbanBoard = {
-  columns: [
-    {
-      id: 1,
-      title: "Backlog",
-      cards: []
-    },
-    {
-      id: 2,
-      title: "In Progress",
-      cards: []
-    },
-    {
-      id: 3,
-      title: "Testing",
-      cards: []
-    },
-    {
-      id: 4,
-      title: "Done",
-      cards: []
-    }
-  ]
-};
+import { useToast } from "@/hooks/use-toast";
+import { KanbanCard as KanbanCardComponent } from './components/KanbanCard';
+import { useKanbanBoard } from './hooks/useKanbanBoard';
+import { KanbanCard, Priority } from './types/kanban-types';
 
 export const KanbanBoard = () => {
-  const [board, setBoard] = useState<KanbanBoard>(defaultBoard);
-  const [boardId, setBoardId] = useState<string | null>(null);
+  const { board, setBoard, labels, saveBoard } = useKanbanBoard();
   const [newCard, setNewCard] = useState<{
     title: string;
     description: string;
     priority: Priority;
     assignees: string;
-    labels: Label[];
+    labels: typeof labels;
   }>({ 
     title: "", 
     description: "", 
@@ -99,123 +33,10 @@ export const KanbanBoard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredBoard, setFilteredBoard] = useState<KanbanBoard>(defaultBoard);
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [newComment, setNewComment] = useState("");
   const [selectedCard, setSelectedCard] = useState<KanbanCard | null>(null);
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
+  const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
-
-  const loadLabels = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('card_labels')
-        .select('*');
-
-      if (error) throw error;
-      if (data) {
-        setLabels(data);
-      }
-    } catch (error) {
-      console.error('Error loading labels:', error);
-    }
-  };
-
-  useEffect(() => {
-    loadBoard();
-    loadLabels();
-  }, []);
-
-  const loadBoard = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('No authenticated user');
-      }
-
-      const { data: boards, error } = await supabase
-        .from('kanban_boards')
-        .select('*')
-        .eq('user_id', user.id)
-        .limit(1);
-
-      if (error) throw error;
-
-      if (boards && boards.length > 0) {
-        setBoardId(boards[0].id);
-        setBoard(boards[0].board_data as unknown as KanbanBoard);
-      } else {
-        const { data, error: insertError } = await supabase
-          .from('kanban_boards')
-          .insert({
-            title: 'Main Board',
-            board_data: defaultBoard as unknown as Json,
-            user_id: user.id
-          })
-          .select()
-          .single();
-
-        if (insertError) throw insertError;
-        if (data) {
-          setBoardId(data.id);
-          setBoard(data.board_data as unknown as KanbanBoard);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading board:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load board data. Please make sure you're logged in.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const saveBoard = debounce(async (newBoard: KanbanBoard) => {
-    if (!boardId) return;
-
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('No authenticated user');
-      }
-
-      const { error } = await supabase
-        .from('kanban_boards')
-        .update({ 
-          board_data: newBoard as unknown as Json
-        })
-        .eq('id', boardId)
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error saving board:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save board changes. Please make sure you're logged in.",
-        variant: "destructive"
-      });
-    }
-  }, 1000);
-
-  const handleColumnAdd = () => {
-    const newColumn = {
-      id: Date.now(),
-      title: "New Column",
-      cards: []
-    };
-    const newBoard = {
-      ...board,
-      columns: [...board.columns, newColumn]
-    };
-    setBoard(newBoard);
-    saveBoard(newBoard);
-    toast({
-      title: "Column added",
-      description: "A new column has been added to the board"
-    });
-  };
 
   const handleCardAdd = (columnId: number) => {
     setSelectedColumn(columnId);
@@ -270,30 +91,24 @@ export const KanbanBoard = () => {
   };
 
   const handleCommentAdd = async () => {
-    if (!selectedCard || !boardId || !newComment.trim()) return;
+    if (!selectedCard || !newComment.trim()) return;
 
     try {
-      const { data, error } = await supabase
-        .from('card_comments')
-        .insert([
-          {
-            board_id: boardId,
-            card_id: selectedCard.id,
-            comment: newComment
-          }
-        ])
-        .select()
-        .single();
-
-      if (error) throw error;
-
       const updatedBoard = {
         ...board,
         columns: board.columns.map(column => ({
           ...column,
           cards: column.cards.map(card => 
             card.id === selectedCard.id
-              ? { ...card, comments: [...(card.comments || []), data] }
+              ? {
+                  ...card,
+                  comments: [...(card.comments || []), {
+                    id: Date.now().toString(),
+                    comment: newComment,
+                    created_at: new Date().toISOString(),
+                    user_id: 'current-user'
+                  }]
+                }
               : card
           )
         }))
@@ -302,6 +117,7 @@ export const KanbanBoard = () => {
       setBoard(updatedBoard);
       saveBoard(updatedBoard);
       setNewComment("");
+      setIsCommentDialogOpen(false);
       toast({
         title: "Comment added",
         description: "Your comment has been added to the card"
@@ -314,53 +130,6 @@ export const KanbanBoard = () => {
         variant: "destructive"
       });
     }
-  };
-
-  const renderCard = (props: KanbanCard) => {
-    const { title, description, priority, assignees, labels, comments = [] } = props;
-    return (
-      <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-200">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-medium">{title}</h3>
-          <span className={`text-xs px-2 py-1 rounded-full ${priorityColors[priority]}`}>
-            {priority}
-          </span>
-        </div>
-        <p className="text-gray-600 text-sm mb-2">{description}</p>
-        {labels.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-2">
-            {labels.map(label => (
-              <Badge 
-                key={label.id}
-                style={{ backgroundColor: label.color }}
-                className="text-white text-xs"
-              >
-                {label.name}
-              </Badge>
-            ))}
-          </div>
-        )}
-        <div className="flex items-center justify-between">
-          {assignees?.length > 0 && (
-            <div className="flex items-center gap-1 text-sm text-gray-500">
-              <Users className="h-4 w-4" />
-              <span>{assignees.join(', ')}</span>
-            </div>
-          )}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setSelectedCard(props);
-              setIsCommentDialogOpen(true);
-            }}
-          >
-            <MessageSquare className="h-4 w-4 mr-1" />
-            {comments.length}
-          </Button>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -382,7 +151,27 @@ export const KanbanBoard = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button onClick={handleColumnAdd} variant="outline" size="sm">
+          <Button 
+            onClick={() => {
+              const newColumn = {
+                id: Date.now(),
+                title: "New Column",
+                cards: []
+              };
+              const newBoard = {
+                ...board,
+                columns: [...board.columns, newColumn]
+              };
+              setBoard(newBoard);
+              saveBoard(newBoard);
+              toast({
+                title: "Column added",
+                description: "A new column has been added to the board"
+              });
+            }} 
+            variant="outline" 
+            size="sm"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Column
           </Button>
@@ -390,7 +179,7 @@ export const KanbanBoard = () => {
       </CardHeader>
       <CardContent className="overflow-x-auto">
         <Board
-          initialBoard={filteredBoard}
+          initialBoard={board}
           allowRemoveLane
           allowRenameLabel
           allowRemoveCard
@@ -419,7 +208,15 @@ export const KanbanBoard = () => {
             setBoard(updatedBoard);
             saveBoard(updatedBoard);
           }}
-          renderCard={renderCard}
+          renderCard={(props: KanbanCard) => (
+            <KanbanCardComponent
+              {...props}
+              onCommentClick={() => {
+                setSelectedCard(props);
+                setIsCommentDialogOpen(true);
+              }}
+            />
+          )}
           renderColumnHeader={({ title, id }) => (
             <div className="flex items-center justify-between p-2">
               <span className="font-medium">{title}</span>
