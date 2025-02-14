@@ -12,7 +12,7 @@ import { ComplianceTab } from "@/components/compliance/ComplianceTab";
 import { DataEngineering } from "@/components/flow/DataEngineering";
 
 const Data = () => {
-  const [activeTab, setActiveTab] = useState('collection');
+  const [activeTab, setActiveTab] = useState('flow');
 
   return (
     <SidebarProvider>
@@ -20,14 +20,14 @@ const Data = () => {
         <AppSidebar />
         <main className="flex-1 overflow-auto bg-slate-50">
           <div className="p-6">
-            <div className="max-w-[1800px] mx-auto space-y-6">
-              <div>
+            <div className="max-w-[1800px] mx-auto">
+              <div className="mb-6">
                 <h1 className="text-3xl font-bold mb-2">Data Engineering</h1>
                 <p className="text-gray-600">Manage and process your data through various stages</p>
               </div>
 
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                <TabsList>
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="mb-4">
                   <TabsTrigger value="flow">Data Flow Design</TabsTrigger>
                   <TabsTrigger value="collection">Data Collection</TabsTrigger>
                   <TabsTrigger value="quality">Data Quality</TabsTrigger>
@@ -37,7 +37,7 @@ const Data = () => {
                   <TabsTrigger value="compliance">Compliance</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="flow">
+                <TabsContent value="flow" className="m-0">
                   <DataEngineering />
                 </TabsContent>
 
