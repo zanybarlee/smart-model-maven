@@ -1,18 +1,37 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Eye, Edit2, CheckSquare, ArrowRight, Copy, Trash, Info } from "lucide-react";
+import { Eye, Edit2, CheckSquare, ArrowRight, Copy, Trash, Info, Save } from "lucide-react";
 import { NodeData } from '../types/flow-types';
 import { Handle, Position } from '@xyflow/react';
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempInputs, setTempInputs] = useState({
+    dataSource: data.config.inputs?.dataSource || '',
+    connectionString: data.config.inputs?.connectionString || '',
+    output: data.config.outputs?.output || ''
+  });
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    // Here you would typically update the node data through a callback
+    // For now, we'll just show a success toast
+    toast({
+      title: "Changes saved",
+      description: "Node configuration has been updated.",
+    });
+    setIsEditing(false);
+  };
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -27,6 +46,17 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
           } as React.CSSProperties}
         >
           <div className="absolute right-2 top-2 flex gap-2">
+            {isEditing ? (
+              <Save 
+                className="h-4 w-4 text-green-500 hover:text-green-600 cursor-pointer nodrag" 
+                onClick={handleSave}
+              />
+            ) : (
+              <Edit2 
+                className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag"
+                onClick={() => setIsEditing(true)}
+              />
+            )}
             <Copy className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" />
             <Trash className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" />
             <Info className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" />
@@ -57,8 +87,9 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
                     <Input 
                       placeholder="Data Source"
                       className="h-8 text-sm"
-                      value={data.config.inputs?.dataSource || ''}
-                      readOnly
+                      value={isEditing ? tempInputs.dataSource : data.config.inputs?.dataSource || ''}
+                      onChange={(e) => setTempInputs({ ...tempInputs, dataSource: e.target.value })}
+                      readOnly={!isEditing}
                     />
                   </div>
                 </div>
@@ -68,8 +99,9 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
                     <Input 
                       placeholder="Connection String"
                       className="h-8 text-sm"
-                      value={data.config.inputs?.connectionString || ''}
-                      readOnly
+                      value={isEditing ? tempInputs.connectionString : data.config.inputs?.connectionString || ''}
+                      onChange={(e) => setTempInputs({ ...tempInputs, connectionString: e.target.value })}
+                      readOnly={!isEditing}
                     />
                   </div>
                 </div>
@@ -79,7 +111,11 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
             <div>
               <div className="text-xs font-medium mb-2">Output</div>
               <div className="nodrag">
-                <Select defaultValue={data.config.outputs?.output || ''}>
+                <Select 
+                  defaultValue={data.config.outputs?.output || ''} 
+                  onValueChange={(value) => setTempInputs({ ...tempInputs, output: value })}
+                  disabled={!isEditing}
+                >
                   <SelectTrigger className="h-8 text-sm">
                     <SelectValue placeholder="Select output" />
                   </SelectTrigger>
@@ -105,10 +141,6 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
         <ContextMenuItem>
           <Eye className="mr-2 h-4 w-4" />
           View Details
-        </ContextMenuItem>
-        <ContextMenuItem>
-          <Edit2 className="mr-2 h-4 w-4" />
-          Edit Node
         </ContextMenuItem>
         <ContextMenuItem>
           <CheckSquare className="mr-2 h-4 w-4" />
