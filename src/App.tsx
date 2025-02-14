@@ -19,6 +19,7 @@ import Flow from "./pages/Flow";
 import Data from "./pages/Data";
 import Knowledge from "./pages/Knowledge";
 import Auth from "./pages/Auth";
+import React from 'react';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -32,114 +33,116 @@ const queryClient = new QueryClient({
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/domain"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/data"
-              element={
-                <ProtectedRoute>
-                  <Data />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/knowledge"
-              element={
-                <ProtectedRoute>
-                  <Knowledge />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/flow"
-              element={
-                <ProtectedRoute>
-                  <Flow />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/design"
-              element={
-                <ProtectedRoute>
-                  <Design />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/code"
-              element={
-                <ProtectedRoute>
-                  <CodeGeneration />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/testing"
-              element={
-                <ProtectedRoute>
-                  <Testing />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/deployment"
-              element={
-                <ProtectedRoute>
-                  <Deployment />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/monitoring"
-              element={
-                <ProtectedRoute>
-                  <Monitoring />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <ProtectedRoute>
-                  <About />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/domain"
+                element={
+                  <ProtectedRoute>
+                    <Index />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/data"
+                element={
+                  <ProtectedRoute>
+                    <Data />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/knowledge"
+                element={
+                  <ProtectedRoute>
+                    <Knowledge />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/flow"
+                element={
+                  <ProtectedRoute>
+                    <Flow />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/design"
+                element={
+                  <ProtectedRoute>
+                    <Design />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/code"
+                element={
+                  <ProtectedRoute>
+                    <CodeGeneration />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/testing"
+                element={
+                  <ProtectedRoute>
+                    <Testing />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/deployment"
+                element={
+                  <ProtectedRoute>
+                    <Deployment />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/monitoring"
+                element={
+                  <ProtectedRoute>
+                    <Monitoring />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <ProtectedRoute>
+                    <About />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </React.StrictMode>
   );
 };
 
