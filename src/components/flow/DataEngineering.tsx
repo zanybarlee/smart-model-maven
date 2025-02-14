@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState } from 'react';
 import {
   ReactFlow,
@@ -160,39 +161,41 @@ export const DataEngineering = () => {
   };
 
   return (
-    <div className="h-full flex">
-      <FlowSidebar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onAddNode={handleAddNode}
-      />
-      <div className="flex-1 relative">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-          fitView
-          className="bg-slate-50"
-        >
-          <Controls />
-          <MiniMap />
-          <Background />
-          <FlowToolbar
-            onOpenTextToFlow={() => setIsTextToFlowOpen(true)}
-            onRunPipeline={runPipeline}
-          />
-        </ReactFlow>
+    <div className="h-full">
+      <div className="flex h-full">
+        <FlowSidebar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onAddNode={handleAddNode}
+        />
+        <div className="flex-1 h-full relative">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+            fitView
+            className="bg-slate-50"
+          >
+            <Controls />
+            <MiniMap />
+            <Background />
+            <FlowToolbar
+              onOpenTextToFlow={() => setIsTextToFlowOpen(true)}
+              onRunPipeline={runPipeline}
+            />
+          </ReactFlow>
+        </div>
+        <TextToFlowDialog
+          isOpen={isTextToFlowOpen}
+          onClose={() => setIsTextToFlowOpen(false)}
+          flowDescription={flowDescription}
+          onFlowDescriptionChange={(value) => setFlowDescription(value)}
+          onGenerate={handleGenerateFromText}
+        />
       </div>
-      <TextToFlowDialog
-        isOpen={isTextToFlowOpen}
-        onClose={() => setIsTextToFlowOpen(false)}
-        flowDescription={flowDescription}
-        onFlowDescriptionChange={(value) => setFlowDescription(value)}
-        onGenerate={handleGenerateFromText}
-      />
     </div>
   );
 };
