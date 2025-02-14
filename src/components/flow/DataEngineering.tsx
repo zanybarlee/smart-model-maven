@@ -26,6 +26,7 @@ export const DataEngineering = () => {
     featureEngineering: DataEngineeringNode,
     dataQuality: DataEngineeringNode,
     dataLabeling: DataEngineeringNode,
+    compliance: DataEngineeringNode,
     default: DataEngineeringNode,
     input: DataEngineeringNode,
   };

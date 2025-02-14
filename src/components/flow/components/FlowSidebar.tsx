@@ -18,6 +18,7 @@ export const FlowSidebar = ({ searchQuery, onSearchChange, onAddNode }: FlowSide
     dataQuality: { data: createNodeConfig('dataQuality', 'Data Quality') },
     dataLabeling: { data: createNodeConfig('dataLabeling', 'Data Labeling') },
     featureEngineering: { data: createNodeConfig('featureEngineering', 'Feature Engineering') },
+    compliance: { data: createNodeConfig('compliance', 'Compliance') },
   };
 
   const filteredNodeTypes = Object.entries(nodeTypes)
