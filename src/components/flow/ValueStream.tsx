@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -11,6 +10,8 @@ import {
   addEdge,
 } from '@xyflow/react';
 import { ValueStreamNode } from './nodes/ValueStreamNode';
+import { Button } from "@/components/ui/button";
+import { Maximize2 } from "lucide-react";
 
 const nodeTypes = {
   default: ValueStreamNode,
@@ -118,7 +119,11 @@ const initialEdges = [
   { id: 'e4-5', source: '4', target: '5', animated: true },
 ];
 
-export const ValueStream = () => {
+interface ValueStreamProps {
+  onDetach?: () => void;
+}
+
+export const ValueStream = ({ onDetach }: ValueStreamProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -126,11 +131,24 @@ export const ValueStream = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Value Stream Map</CardTitle>
-        <CardDescription>
-          Visualize and optimize your end-to-end delivery process
-        </CardDescription>
+      <CardHeader className="flex flex-row items-start justify-between space-y-0">
+        <div>
+          <CardTitle>Value Stream Map</CardTitle>
+          <CardDescription>
+            Visualize and optimize your end-to-end delivery process
+          </CardDescription>
+        </div>
+        {onDetach && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={onDetach}
+          >
+            <Maximize2 className="h-4 w-4" />
+            Detach
+          </Button>
+        )}
       </CardHeader>
       <CardContent className="h-[600px]">
         <ReactFlow
