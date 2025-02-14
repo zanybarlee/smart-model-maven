@@ -12,114 +12,87 @@ import {
   Panel,
 } from '@xyflow/react';
 import { Button } from "@/components/ui/button";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Play, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import '@xyflow/react/dist/style.css';
 
 interface NodeData {
   label: string;
-  inputs: {
-    workList: string;
-    variableName: string;
+  type: 'dataIngestion' | 'dataCleaning' | 'featureEngineering';
+  config: {
+    source?: string;
+    connectionString?: string;
+    cleaningRules?: string[];
+    features?: string[];
+    transformations?: string[];
   };
-  outputs: string[];
+  status: 'configured' | 'pending' | 'running' | 'completed' | 'error';
 }
 
 const nodeTypes = {
-  dataCollection: { 
+  dataIngestion: { 
     type: 'input', 
     data: { 
-      label: 'Data Collection',
-      inputs: { workList: '', variableName: '' },
-      outputs: ['output1']
+      label: 'Data Ingestion',
+      type: 'dataIngestion',
+      config: {},
+      status: 'pending'
     } 
   },
   dataCleaning: { 
     type: 'default', 
     data: { 
       label: 'Data Cleaning',
-      inputs: { workList: '', variableName: '' },
-      outputs: ['output1']
-    } 
-  },
-  dataLabeling: { 
-    type: 'default', 
-    data: { 
-      label: 'Data Labeling',
-      inputs: { workList: '', variableName: '' },
-      outputs: ['output1']
+      type: 'dataCleaning',
+      config: {
+        cleaningRules: []
+      },
+      status: 'pending'
     } 
   },
   featureEngineering: { 
     type: 'default', 
     data: { 
       label: 'Feature Engineering',
-      inputs: { workList: '', variableName: '' },
-      outputs: ['output1']
+      type: 'featureEngineering',
+      config: {
+        features: [],
+        transformations: []
+      },
+      status: 'pending'
     } 
-  },
-  toolAgent: { 
-    type: 'output', 
-    data: { 
-      label: 'Tool Agent',
-      inputs: { workList: '', variableName: '' },
-      outputs: ['output1']
-    } 
-  },
+  }
 };
 
 const initialNodes = [
   {
-    id: 'datacollection',
+    id: 'dataingestion-1',
     type: 'input',
     data: { 
-      label: 'Data Collection',
-      inputs: {
-        workList: '',
-        variableName: '',
-      },
-      outputs: ['output1']
+      label: 'Data Ingestion',
+      type: 'dataIngestion',
+      config: {},
+      status: 'pending'
     },
     position: { x: 100, y: 100 },
     className: 'light',
-  },
-  {
-    id: 'datalabeling',
-    type: 'default',
-    data: { 
-      label: 'Data Labeling',
-      inputs: {
-        workList: '',
-        variableName: '',
-      },
-      outputs: ['output1']
-    },
-    position: { x: 400, y: 100 },
-  },
-  {
-    id: 'featureengineering',
-    type: 'default',
-    data: { 
-      label: 'Feature Engineering',
-      inputs: {
-        workList: '',
-        variableName: '',
-      },
-      outputs: ['output1']
-    },
-    position: { x: 700, y: 100 },
-  },
+  }
 ];
 
-const initialEdges = [
-  { id: 'e1-2', source: 'datacollection', target: 'datalabeling', animated: true },
-  { id: 'e2-3', source: 'datalabeling', target: 'featureengineering', animated: true },
-];
+const initialEdges = [];
 
 export const DataEngineering = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const { toast } = useToast();
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
@@ -134,6 +107,145 @@ export const DataEngineering = () => {
     setNodes((nds) => [...nds, newNode]);
   };
 
+  const handleNodeClick = (event: any, node: any) => {
+    setSelectedNode(node);
+    setIsConfigOpen(true);
+  };
+
+  const updateNodeConfig = (config: any) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === selectedNode.id) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              config,
+              status: 'configured'
+            }
+          };
+        }
+        return node;
+      })
+    );
+    setIsConfigOpen(false);
+    toast({
+      title: "Node configured",
+      description: `${selectedNode.data.label} has been configured successfully.`
+    });
+  };
+
+  const runPipeline = () => {
+    setNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        data: { ...node.data, status: 'running' }
+      }))
+    );
+
+    // Simulate pipeline execution
+    setTimeout(() => {
+      setNodes((nds) =>
+        nds.map((node) => ({
+          ...node,
+          data: { ...node.data, status: 'completed' }
+        }))
+      );
+      toast({
+        title: "Pipeline completed",
+        description: "All nodes have been processed successfully."
+      });
+    }, 2000);
+  };
+
+  const NodeConfigurationDialog = () => {
+    if (!selectedNode) return null;
+
+    const renderConfig = () => {
+      switch (selectedNode.data.type) {
+        case 'dataIngestion':
+          return (
+            <div className="space-y-4">
+              <div>
+                <Label>Data Source</Label>
+                <Select onValueChange={(value) => updateNodeConfig({ source: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select data source" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="s3">S3 Bucket</SelectItem>
+                    <SelectItem value="database">Database</SelectItem>
+                    <SelectItem value="api">REST API</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Connection String</Label>
+                <Input placeholder="Enter connection string or URL" />
+              </div>
+            </div>
+          );
+        case 'dataCleaning':
+          return (
+            <div className="space-y-4">
+              <div>
+                <Label>Cleaning Rules</Label>
+                <Select onValueChange={(value) => updateNodeConfig({ cleaningRules: [value] })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select cleaning rules" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="removeDuplicates">Remove Duplicates</SelectItem>
+                    <SelectItem value="handleMissing">Handle Missing Values</SelectItem>
+                    <SelectItem value="normalize">Normalize Data</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          );
+        case 'featureEngineering':
+          return (
+            <div className="space-y-4">
+              <div>
+                <Label>Feature Transformations</Label>
+                <Select onValueChange={(value) => updateNodeConfig({ transformations: [value] })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select transformations" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="scaling">Feature Scaling</SelectItem>
+                    <SelectItem value="encoding">Label Encoding</SelectItem>
+                    <SelectItem value="pca">PCA</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          );
+        default:
+          return null;
+      }
+    };
+
+    return (
+      <Dialog open={isConfigOpen} onOpenChange={setIsConfigOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selectedNode.data.label} Configuration</DialogTitle>
+          </DialogHeader>
+          {renderConfig()}
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setIsConfigOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => updateNodeConfig({ configured: true })}>
+              Save Configuration
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
   const filteredNodeTypes = Object.entries(nodeTypes).filter(([key]) =>
     key.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -141,10 +253,18 @@ export const DataEngineering = () => {
   return (
     <Card className="h-[800px]">
       <CardHeader>
-        <CardTitle>Data Engineering Flow</CardTitle>
-        <CardDescription>
-          Design your data engineering pipeline using drag-and-drop components
-        </CardDescription>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>Data Engineering Flow</CardTitle>
+            <CardDescription>
+              Design your data engineering pipeline using drag-and-drop components
+            </CardDescription>
+          </div>
+          <Button onClick={runPipeline} className="flex items-center gap-2">
+            <Play className="h-4 w-4" />
+            Run Pipeline
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="flex h-[calc(100%-85px)]">
         <div className="w-64 border-r pr-4 overflow-auto">
@@ -180,6 +300,7 @@ export const DataEngineering = () => {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            onNodeClick={handleNodeClick}
             fitView
           >
             <Controls />
@@ -192,6 +313,7 @@ export const DataEngineering = () => {
             </Panel>
           </ReactFlow>
         </div>
+        <NodeConfigurationDialog />
       </CardContent>
     </Card>
   );
