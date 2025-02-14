@@ -45,7 +45,7 @@ export const DataEngineering = () => {
   const handleAddNode = (type: string) => {
     const newNode = {
       id: `${type}-${Date.now()}`,
-      type: 'default',
+      type: 'default' as const,
       data: createNodeConfig(type as any, type),
       position: { x: Math.random() * 500, y: Math.random() * 300 },
     };
@@ -115,7 +115,7 @@ export const DataEngineering = () => {
     }
 
     const words = flowDescription.toLowerCase();
-    const newNodes: CustomNode[] = [];
+    const newNodes = [] as CustomNode[];
     const newEdges: any[] = [];
     let positionX = 100;
 
@@ -125,7 +125,7 @@ export const DataEngineering = () => {
         type: 'input',
         data: createNodeConfig('dataIngestion', 'Data Ingestion'),
         position: { x: positionX, y: 100 },
-      });
+      } as CustomNode);
       positionX += 200;
     }
 
@@ -136,7 +136,7 @@ export const DataEngineering = () => {
         type: 'default',
         data: createNodeConfig('dataCleaning', 'Data Cleaning'),
         position: { x: positionX, y: 100 },
-      });
+      } as CustomNode);
       if (newNodes.length > 1) {
         newEdges.push({
           id: `e${newNodes[newNodes.length - 2].id}-${nodeId}`,
@@ -154,7 +154,7 @@ export const DataEngineering = () => {
         type: 'default',
         data: createNodeConfig('featureEngineering', 'Feature Engineering'),
         position: { x: positionX, y: 100 },
-      });
+      } as CustomNode);
       if (newNodes.length > 1) {
         newEdges.push({
           id: `e${newNodes[newNodes.length - 2].id}-${nodeId}`,
@@ -164,7 +164,7 @@ export const DataEngineering = () => {
       }
     }
 
-    setNodes(newNodes);
+    setNodes(newNodes as any);
     setEdges(newEdges);
     setIsTextToFlowOpen(false);
     
