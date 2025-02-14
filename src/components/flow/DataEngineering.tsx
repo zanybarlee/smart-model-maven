@@ -13,12 +13,13 @@ import {
   NodeProps,
 } from '@xyflow/react';
 import { Button } from "@/components/ui/button";
-import { Plus, Search, Play } from "lucide-react";
+import { Plus, Search, Play, Wand2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import { Textarea } from "@/components/ui/textarea";
 import '@xyflow/react/dist/style.css';
 
 type NodeType = 'dataIngestion' | 'dataCleaning' | 'featureEngineering';
@@ -78,6 +79,8 @@ export const DataEngineering = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedNode, setSelectedNode] = useState<CustomNode | null>(null);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [isTextToFlowOpen, setIsTextToFlowOpen] = useState(false);
+  const [flowDescription, setFlowDescription] = useState('');
   const { toast } = useToast();
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
@@ -144,6 +147,77 @@ export const DataEngineering = () => {
         description: "All nodes have been processed successfully."
       });
     }, 2000);
+  };
+
+  const handleGenerateFromText = () => {
+    if (!flowDescription.trim()) {
+      toast({
+        title: "Description required",
+        description: "Please enter a description of your data flow.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Example: Generate a simple flow based on keywords
+    const words = flowDescription.toLowerCase();
+    const newNodes: CustomNode[] = [];
+    const newEdges: any[] = [];
+    let positionX = 100;
+
+    if (words.includes('csv') || words.includes('data') || words.includes('import')) {
+      newNodes.push({
+        id: `dataingestion-${Date.now()}`,
+        type: 'input',
+        data: createNodeConfig('dataIngestion', 'Data Ingestion'),
+        position: { x: positionX, y: 100 },
+      });
+      positionX += 200;
+    }
+
+    if (words.includes('clean') || words.includes('validate') || words.includes('process')) {
+      const nodeId = `datacleaning-${Date.now()}`;
+      newNodes.push({
+        id: nodeId,
+        type: 'default',
+        data: createNodeConfig('dataCleaning', 'Data Cleaning'),
+        position: { x: positionX, y: 100 },
+      });
+      if (newNodes.length > 1) {
+        newEdges.push({
+          id: `e${newNodes[newNodes.length - 2].id}-${nodeId}`,
+          source: newNodes[newNodes.length - 2].id,
+          target: nodeId,
+        });
+      }
+      positionX += 200;
+    }
+
+    if (words.includes('feature') || words.includes('transform') || words.includes('engineer')) {
+      const nodeId = `featureengineering-${Date.now()}`;
+      newNodes.push({
+        id: nodeId,
+        type: 'default',
+        data: createNodeConfig('featureEngineering', 'Feature Engineering'),
+        position: { x: positionX, y: 100 },
+      });
+      if (newNodes.length > 1) {
+        newEdges.push({
+          id: `e${newNodes[newNodes.length - 2].id}-${nodeId}`,
+          source: newNodes[newNodes.length - 2].id,
+          target: nodeId,
+        });
+      }
+    }
+
+    setNodes(newNodes);
+    setEdges(newEdges);
+    setIsTextToFlowOpen(false);
+    
+    toast({
+      title: "Flow generated",
+      description: "Your data flow has been generated based on the description.",
+    });
   };
 
   const NodeConfigurationDialog = () => {
@@ -234,6 +308,35 @@ export const DataEngineering = () => {
     );
   };
 
+  const TextToFlowDialog = () => (
+    <Dialog open={isTextToFlowOpen} onOpenChange={setIsTextToFlowOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Generate Data Flow</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <Label>Description</Label>
+            <Textarea
+              placeholder="Describe your data flow (e.g., 'Import CSV data, clean it, and engineer features for machine learning')"
+              value={flowDescription}
+              onChange={(e) => setFlowDescription(e.target.value)}
+              className="h-32"
+            />
+          </div>
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setIsTextToFlowOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleGenerateFromText}>
+              Generate Flow
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   const filteredNodeTypes = Object.entries(nodeTypes).filter(([key]) =>
     key.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -248,10 +351,20 @@ export const DataEngineering = () => {
               Design your data engineering pipeline using drag-and-drop components
             </CardDescription>
           </div>
-          <Button onClick={runPipeline} className="flex items-center gap-2">
-            <Play className="h-4 w-4" />
-            Run Pipeline
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline"
+              onClick={() => setIsTextToFlowOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <Wand2 className="h-4 w-4" />
+              Generate from Text
+            </Button>
+            <Button onClick={runPipeline} className="flex items-center gap-2">
+              <Play className="h-4 w-4" />
+              Run Pipeline
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="flex h-[calc(100%-85px)]">
@@ -301,6 +414,7 @@ export const DataEngineering = () => {
             </Panel>
           </ReactFlow>
         </div>
+        <TextToFlowDialog />
         <NodeConfigurationDialog />
       </CardContent>
     </Card>
