@@ -111,7 +111,7 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
 
   const NodeContent = () => (
     <div 
-      className="bg-white p-4 rounded-lg shadow-lg relative min-w-[300px]" 
+      className="bg-white p-1.5 rounded-lg shadow-lg relative min-w-[120px]" 
       style={{ 
         border: '1px solid #fff',
         outline: 'none',
@@ -120,67 +120,58 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
         ['--xy-node-border-hover' as string]: '#fff'
       } as React.CSSProperties}
     >
-      <div className="absolute right-2 top-2 flex gap-2">
+      <div className="absolute right-0.5 top-0.5 flex gap-0.5">
         {isEditing ? (
           <Save 
-            className="h-4 w-4 text-green-500 hover:text-green-600 cursor-pointer nodrag" 
+            className="h-2 w-2 text-green-500 hover:text-green-600 cursor-pointer nodrag" 
             onClick={handleSave}
           />
         ) : (
-          <Edit2 
-            className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag"
-            onClick={() => setIsEditing(true)}
-          />
-        )}
-        <Copy 
-          className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
-          onClick={handleDuplicate}
-        />
-        <Trash 
-          className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
-          onClick={handleDelete}
-        />
-        <Info 
-          className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
-          onClick={() => setShowInfo(true)}
-        />
-        {!isDetached ? (
-          <Maximize2 
-            className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
-            onClick={() => setIsDetached(true)}
-          />
-        ) : (
-          <Minimize2 
-            className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
-            onClick={() => setIsDetached(false)}
-          />
+          <>
+            <Edit2 
+              className="h-2 w-2 text-slate-400 hover:text-slate-600 cursor-pointer nodrag"
+              onClick={() => setIsEditing(true)}
+            />
+            <Copy 
+              className="h-2 w-2 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              onClick={handleDuplicate}
+            />
+            <Trash 
+              className="h-2 w-2 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              onClick={handleDelete}
+            />
+            <Info 
+              className="h-2 w-2 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              onClick={() => setShowInfo(true)}
+            />
+          </>
         )}
       </div>
 
       <Handle
         type="target"
         position={Position.Left}
-        className="w-2 h-2 bg-blue-400 border-2 border-white !opacity-100"
-        style={{ left: -5, top: '50%' }}
+        className="w-1.5 h-1.5 !bg-blue-400 border-[1.5px] border-white"
+        style={{ left: -4, top: '50%' }}
       />
       
-      <div className="flex items-center gap-2 mb-4">
-        <div className="p-1.5 bg-slate-100 rounded">
-          <div className="w-4 h-4">⚡</div>
+      <div className="flex items-center gap-0.5 mb-1">
+        <div className="p-0.5 bg-slate-100 rounded">
+          <div className="w-2 h-2">⚡</div>
         </div>
-        <div className="font-medium">{data.label}</div>
+        <div className="font-medium text-[8px] text-slate-900">{data.label}</div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         <div>
-          <div className="text-xs font-medium mb-2">Process Details</div>
-          <div className="space-y-2">
+          <div className="text-[8px] font-medium text-slate-700 mb-0.5">Process Details</div>
+          <div className="space-y-1">
             <div>
-              <div className="text-xs text-slate-500 mb-1">Duration</div>
+              <div className="text-[7px] text-slate-500 mb-0.5">Duration</div>
               <div className="nodrag">
                 <Input 
                   placeholder="Duration (e.g., 2 days)"
-                  className="h-8 text-sm"
+                  className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[6px] placeholder:text-slate-400"
                   value={isEditing ? tempInputs.duration : data.config?.inputs?.duration || ''}
                   onChange={(e) => setTempInputs({ ...tempInputs, duration: e.target.value })}
                   readOnly={!isEditing}
@@ -188,11 +179,11 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
               </div>
             </div>
             <div>
-              <div className="text-xs text-slate-500 mb-1">Resources</div>
+              <div className="text-[7px] text-slate-500 mb-0.5">Resources</div>
               <div className="nodrag">
                 <Input 
                   placeholder="Required resources"
-                  className="h-8 text-sm"
+                  className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[6px] placeholder:text-slate-400"
                   value={isEditing ? tempInputs.resources : data.config?.inputs?.resources || ''}
                   onChange={(e) => setTempInputs({ ...tempInputs, resources: e.target.value })}
                   readOnly={!isEditing}
@@ -203,21 +194,21 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
         </div>
 
         <div>
-          <div className="text-xs font-medium mb-2">Deliverable</div>
+          <div className="text-[8px] font-medium text-slate-700 mb-0.5">Deliverable</div>
           <div className="nodrag">
             <Select 
               defaultValue={data.config?.outputs?.deliverable || ''} 
               onValueChange={(value) => setTempInputs({ ...tempInputs, deliverable: value })}
               disabled={!isEditing}
             >
-              <SelectTrigger className="h-8 text-sm">
-                <SelectValue placeholder="Select deliverable" />
+              <SelectTrigger className="h-3 text-[7px] bg-white border border-gray-200 px-1">
+                <SelectValue placeholder="Select deliverable" className="placeholder:text-[6px] placeholder:text-slate-400" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="documentation">Documentation</SelectItem>
-                <SelectItem value="code">Code</SelectItem>
-                <SelectItem value="design">Design</SelectItem>
-                <SelectItem value="test">Test Results</SelectItem>
+                <SelectItem value="documentation" className="text-[7px]">Documentation</SelectItem>
+                <SelectItem value="code" className="text-[7px]">Code</SelectItem>
+                <SelectItem value="design" className="text-[7px]">Design</SelectItem>
+                <SelectItem value="test" className="text-[7px]">Test Results</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -227,8 +218,8 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
       <Handle
         type="source"
         position={Position.Right}
-        className="w-2 h-2 bg-blue-400 border-2 border-white !opacity-100"
-        style={{ right: -5, top: '50%' }}
+        className="w-1.5 h-1.5 !bg-blue-400 border-[1.5px] border-white"
+        style={{ right: -4, top: '50%' }}
       />
     </div>
   );
