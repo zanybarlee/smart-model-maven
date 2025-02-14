@@ -1,6 +1,4 @@
-
 import React, { useCallback, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ReactFlow,
   MiniMap,
@@ -16,7 +14,6 @@ import { Plus, Search, Play, Wand2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { DataEngineeringNode } from './nodes/DataEngineeringNode';
-import { NodeConfigurationDialog } from './dialogs/NodeConfigurationDialog';
 import { TextToFlowDialog } from './dialogs/TextToFlowDialog';
 import { initialNodes, initialEdges, createNodeConfig } from './types/flow-types';
 import { CustomNode } from './types/custom-types';
@@ -26,8 +23,6 @@ export const DataEngineering = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedNode, setSelectedNode] = useState<CustomNode | null>(null);
-  const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isTextToFlowOpen, setIsTextToFlowOpen] = useState(false);
   const [flowDescription, setFlowDescription] = useState('');
   const { toast } = useToast();
@@ -52,22 +47,15 @@ export const DataEngineering = () => {
     setNodes((nds) => [...nds, newNode]);
   };
 
-  const handleNodeClick = (event: React.MouseEvent, node: CustomNode) => {
-    setSelectedNode(node);
-    setIsConfigOpen(true);
-  };
-
-  const updateNodeConfig = (config: Partial<CustomNode['data']['config']>) => {
-    if (!selectedNode) return;
-    
+  const handleNodeConfigUpdate = (nodeId: string, config: any) => {
     setNodes((nds) =>
       nds.map((node) => {
-        if (node.id === selectedNode.id) {
+        if (node.id === nodeId) {
           return {
             ...node,
             data: {
               ...node.data,
-              config: { ...node.data.config, ...config },
+              config,
               status: 'configured'
             }
           };
@@ -75,10 +63,10 @@ export const DataEngineering = () => {
         return node;
       })
     );
-    setIsConfigOpen(false);
+    
     toast({
       title: "Node configured",
-      description: `${selectedNode.data.label} has been configured successfully.`
+      description: "Node has been configured successfully."
     });
   };
 
@@ -181,32 +169,8 @@ export const DataEngineering = () => {
   }).filter(([key]) => key.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <Card className="h-[800px]">
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Data Engineering Flow</CardTitle>
-            <CardDescription>
-              Design your data engineering pipeline using drag-and-drop components
-            </CardDescription>
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline"
-              onClick={() => setIsTextToFlowOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <Wand2 className="h-4 w-4" />
-              Generate from Text
-            </Button>
-            <Button onClick={runPipeline} className="flex items-center gap-2">
-              <Play className="h-4 w-4" />
-              Run Pipeline
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="flex h-[calc(100%-85px)]">
+    <div className="h-full">
+      <div className="flex h-[800px]">
         <div className="w-64 border-r pr-4 overflow-auto">
           <div className="space-y-4">
             <div className="relative">
@@ -240,7 +204,6 @@ export const DataEngineering = () => {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onNodeClick={handleNodeClick}
             nodeTypes={nodeTypes}
             fitView
           >
@@ -248,8 +211,19 @@ export const DataEngineering = () => {
             <MiniMap />
             <Background />
             <Panel position="top-right">
-              <div className="bg-white p-2 rounded shadow-sm text-xs text-slate-500">
-                Drag to pan, scroll to zoom
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline"
+                  onClick={() => setIsTextToFlowOpen(true)}
+                  className="flex items-center gap-2"
+                >
+                  <Wand2 className="h-4 w-4" />
+                  Generate from Text
+                </Button>
+                <Button onClick={runPipeline} className="flex items-center gap-2">
+                  <Play className="h-4 w-4" />
+                  Run Pipeline
+                </Button>
               </div>
             </Panel>
           </ReactFlow>
@@ -261,13 +235,7 @@ export const DataEngineering = () => {
           onFlowDescriptionChange={(value) => setFlowDescription(value)}
           onGenerate={handleGenerateFromText}
         />
-        <NodeConfigurationDialog
-          isOpen={isConfigOpen}
-          onClose={() => setIsConfigOpen(false)}
-          selectedNode={selectedNode}
-          onUpdateConfig={updateNodeConfig}
-        />
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
