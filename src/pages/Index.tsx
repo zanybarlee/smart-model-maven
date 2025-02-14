@@ -1,218 +1,41 @@
 
-import React, { useState, useCallback } from 'react';
-import {
-  ReactFlow,
-  Background, 
-  Controls,
-  Node,
-  Edge,
-  Connection,
-  addEdge,
-} from 'reactflow';
+import React, { useState } from 'react';
 import 'reactflow/dist/style.css';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Maximize2, Minimize2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import EntityNode from '@/components/EntityNode';
 import DomainModelEditor from '@/components/DomainModelEditor';
-import { Entity } from '@/types/domain';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-
-const nodeTypes = {
-  entity: EntityNode,
-};
+import DomainFlowDiagram from '@/components/DomainFlowDiagram';
+import AISuggestions from '@/components/AISuggestions';
+import { useDomainFlow } from '@/hooks/useDomainFlow';
 
 const Index = () => {
   const [modelDescription, setModelDescription] = useState('');
-  const [entities, setEntities] = useState<Entity[]>([]);
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
-  const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
   const [isDetached, setIsDetached] = useState(false);
-  const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleDuplicateEntity = (id: string) => {
-    const entityToDuplicate = entities.find(e => e.id === id);
-    if (entityToDuplicate) {
-      const newEntity: Entity = {
-        id: Date.now().toString(),
-        name: `${entityToDuplicate.name} (Copy)`,
-        attributes: [...entityToDuplicate.attributes]
-      };
-
-      setEntities([...entities, newEntity]);
-
-      // Find the position of the original node
-      const originalNode = nodes.find(node => node.id === id);
-      const offset = 50; // Offset for the new node position
-
-      setNodes([...nodes, {
-        id: newEntity.id,
-        type: 'entity',
-        position: { 
-          x: (originalNode?.position.x || 0) + offset, 
-          y: (originalNode?.position.y || 0) + offset 
-        },
-        data: { 
-          label: newEntity.name, 
-          attributes: newEntity.attributes,
-          onEdit: handleEditEntity,
-          onDelete: handleDeleteEntity,
-          onDuplicate: handleDuplicateEntity,
-          onSave: handleSaveEntity,
-        },
-        draggable: true
-      }]);
-
-      toast({
-        title: "Entity Duplicated",
-        description: "A copy of the entity has been created.",
-      });
-    }
-  };
-
-  const handleEditEntity = (id: string) => {
-    const entity = entities.find(e => e.id === id);
-    if (entity) {
-      setSelectedEntity(entity);
-      setDialogOpen(true);
-    }
-  };
-
-  const handleDeleteEntity = (id: string) => {
-    setEntities(entities.filter(e => e.id !== id));
-    setNodes(nodes.filter(node => node.id !== id));
-    setEdges(edges.filter(edge => edge.source !== id && edge.target !== id));
-    toast({
-      title: "Entity Deleted",
-      description: "The entity has been removed from the model.",
-    });
-  };
-
-  const handleGenerateModel = () => {
-    if (!modelDescription.trim()) {
-      toast({
-        title: "Description Required",
-        description: "Please enter a description of your domain model.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Mock entities generation
-    const mockEntities: Entity[] = [
-      {
-        id: '1',
-        name: 'Customer',
-        attributes: ['id', 'name', 'email', 'phoneNumber']
-      },
-      {
-        id: '2',
-        name: 'Order',
-        attributes: ['id', 'orderDate', 'totalAmount', 'status']
-      }
-    ];
-
-    setEntities(mockEntities);
-
-    // Convert entities to flow nodes
-    const flowNodes = mockEntities.map((entity, index) => ({
-      id: entity.id,
-      type: 'entity',
-      position: { x: 250 * index, y: 100 },
-      data: { 
-        label: entity.name, 
-        attributes: entity.attributes,
-        onEdit: handleEditEntity,
-        onDelete: handleDeleteEntity,
-        onDuplicate: handleDuplicateEntity,
-        onSave: handleSaveEntity,
-      },
-      draggable: true
-    }));
-
-    setNodes(flowNodes);
-    toast({
-      title: "Model Generated",
-      description: "Your domain model has been generated successfully.",
-    });
-  };
-
-  // Updated to handle both inline and dialog saves
-  const handleSaveEntity = (idOrEntity: string | Entity, newData?: { label: string; attributes: string[] }) => {
-    if (typeof idOrEntity === 'string' && newData) {
-      // Handle inline save
-      const updatedEntity: Entity = {
-        id: idOrEntity,
-        name: newData.label,
-        attributes: newData.attributes
-      };
-
-      setEntities(entities.map(e => e.id === idOrEntity ? updatedEntity : e));
-      setNodes(nodes.map(node => 
-        node.id === idOrEntity 
-          ? {
-              ...node,
-              data: {
-                ...node.data,
-                label: newData.label,
-                attributes: newData.attributes,
-              }
-            }
-          : node
-      ));
-    } else if (typeof idOrEntity === 'object') {
-      // Handle dialog save
-      const entity = idOrEntity;
-      setEntities(entities.map(e => e.id === entity.id ? entity : e));
-      setNodes(nodes.map(node => 
-        node.id === entity.id 
-          ? {
-              ...node,
-              data: {
-                ...node.data,
-                label: entity.name,
-                attributes: entity.attributes,
-              }
-            }
-          : node
-      ));
-      setSelectedEntity(null);
-      setDialogOpen(false);
-    }
-
-    toast({
-      title: "Entity Updated",
-      description: "The entity has been updated successfully.",
-    });
-  };
-
-  const onConnect = useCallback((params: Connection) => {
-    setEdges((eds) => addEdge(params, eds));
-  }, []);
-
-  const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node) => {
-    console.log('Node dragged:', node);
-  }, []);
+  const {
+    nodes,
+    edges,
+    selectedEntity,
+    setSelectedEntity,
+    handleSaveEntity,
+    handleGenerateModel,
+    onConnect,
+    onNodeDragStop
+  } = useDomainFlow();
 
   const FlowDiagram = () => (
-    <div style={{ height: isDetached ? '100%' : '500px' }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onConnect={onConnect}
-        onNodeDragStop={onNodeDragStop}
-        nodeTypes={nodeTypes}
-        fitView
-      >
-        <Background />
-        <Controls />
-      </ReactFlow>
-    </div>
+    <DomainFlowDiagram
+      nodes={nodes}
+      edges={edges}
+      onConnect={onConnect}
+      onNodeDragStop={onNodeDragStop}
+      style={{ height: isDetached ? '100%' : '500px' }}
+    />
   );
 
   return (
@@ -245,26 +68,14 @@ const Index = () => {
                 <DomainModelEditor 
                   modelDescription={modelDescription}
                   onModelDescriptionChange={setModelDescription}
-                  onGenerateModel={handleGenerateModel}
+                  onGenerateModel={() => handleGenerateModel(modelDescription)}
                   dialogOpen={dialogOpen}
                   setDialogOpen={setDialogOpen}
                   selectedEntity={selectedEntity}
                   onSaveEntity={handleSaveEntity}
                 />
 
-                {/* Suggestions Panel */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>AI Suggestions</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3 text-sm text-slate-600">
-                      <p>• Add validation rules for email addresses</p>
-                      <p>• Consider adding timestamps for auditing</p>
-                      <p>• Include soft delete functionality</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <AISuggestions />
 
                 {/* Flow Diagram */}
                 {nodes.length > 0 && (
