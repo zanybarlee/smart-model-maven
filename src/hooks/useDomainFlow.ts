@@ -40,7 +40,6 @@ export const useDomainFlow = () => {
           onDuplicate: handleDuplicateEntity,
           onSave: handleSaveEntity,
         },
-        draggable: true
       }]);
 
       toast({
@@ -90,24 +89,49 @@ export const useDomainFlow = () => {
           : node
       ));
     } else if (typeof idOrEntity === 'object') {
-      // Handle dialog save
+      // Handle new entity creation or dialog save
       const entity = idOrEntity;
-      setEntities(entities.map(e => e.id === entity.id ? entity : e));
-      setNodes(nodes.map(node => 
-        node.id === entity.id 
-          ? {
-              ...node,
-              data: {
-                ...node.data,
-                label: entity.name,
-                attributes: entity.attributes,
+      const existingEntityIndex = entities.findIndex(e => e.id === entity.id);
+      
+      if (existingEntityIndex === -1) {
+        // New entity
+        setEntities([...entities, entity]);
+        const newNode = {
+          id: entity.id,
+          type: 'entity',
+          position: { 
+            x: Math.random() * 500, 
+            y: Math.random() * 300 
+          },
+          data: {
+            label: entity.name,
+            attributes: entity.attributes,
+            onEdit: handleEditEntity,
+            onDelete: handleDeleteEntity,
+            onDuplicate: handleDuplicateEntity,
+            onSave: handleSaveEntity,
+          },
+        };
+        setNodes([...nodes, newNode]);
+      } else {
+        // Update existing entity
+        setEntities(entities.map(e => e.id === entity.id ? entity : e));
+        setNodes(nodes.map(node => 
+          node.id === entity.id 
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  label: entity.name,
+                  attributes: entity.attributes,
+                }
               }
-            }
-          : node
-      ));
-      setSelectedEntity(null);
+            : node
+        ));
+      }
     }
 
+    setSelectedEntity(null);
     toast({
       title: "Entity Updated",
       description: "The entity has been updated successfully.",
@@ -151,7 +175,6 @@ export const useDomainFlow = () => {
         onDuplicate: handleDuplicateEntity,
         onSave: handleSaveEntity,
       },
-      draggable: true
     }));
 
     setNodes(flowNodes);
