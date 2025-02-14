@@ -54,16 +54,18 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
       <Handle type="target" position={Position.Top} className="!bg-primary" />
       <div className="flex justify-between items-center mb-2">
         {isEditing ? (
-          <Input
-            value={tempLabel}
-            onChange={(e) => setTempLabel(e.target.value)}
-            className="font-semibold text-primary"
-            placeholder="Entity name"
-          />
+          <div className="nodrag flex-1">
+            <Input
+              value={tempLabel}
+              onChange={(e) => setTempLabel(e.target.value)}
+              className="font-semibold text-primary"
+              placeholder="Entity name"
+            />
+          </div>
         ) : (
           <div className="font-semibold text-primary">{data.label}</div>
         )}
-        <div className="flex gap-2">
+        <div className="flex gap-2 nodrag">
           {isEditing ? (
             <button 
               onClick={handleSave}
@@ -110,7 +112,7 @@ const EntityNode = ({ data, id }: EntityNodeProps) => {
       </div>
       <div className="text-sm text-slate-600">
         {isEditing ? (
-          <div className="space-y-2">
+          <div className="space-y-2 nodrag">
             <div className="flex gap-2">
               <Input
                 value={tempAttribute}
