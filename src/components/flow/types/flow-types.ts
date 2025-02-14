@@ -12,8 +12,8 @@ export interface NodeData {
     features?: string[];
     transformations?: string[];
     inputs?: {
-      variableName?: string;
-      workList?: string;
+      dataSource?: string;
+      connectionString?: string;
     };
     outputs?: {
       output?: string;
@@ -27,8 +27,8 @@ export const createNodeConfig = (type: NodeType, label: string): NodeData => ({
   type,
   config: {
     inputs: {
-      variableName: '',
-      workList: ''
+      dataSource: '',
+      connectionString: ''
     },
     outputs: {
       output: ''
