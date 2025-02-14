@@ -170,8 +170,8 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
               <div className="text-[7px] text-slate-500 mb-0.5">Duration</div>
               <div className="nodrag">
                 <Input 
-                  placeholder="Duration (e.g., 2 days)"
-                  className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[6px] placeholder:text-slate-400"
+                  placeholder="Enter duration..."
+                  className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[5px] placeholder:text-slate-400"
                   value={isEditing ? tempInputs.duration : data.config?.inputs?.duration || ''}
                   onChange={(e) => setTempInputs({ ...tempInputs, duration: e.target.value })}
                   readOnly={!isEditing}
@@ -182,8 +182,8 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
               <div className="text-[7px] text-slate-500 mb-0.5">Resources</div>
               <div className="nodrag">
                 <Input 
-                  placeholder="Required resources"
-                  className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[6px] placeholder:text-slate-400"
+                  placeholder="Enter resources..."
+                  className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[5px] placeholder:text-slate-400"
                   value={isEditing ? tempInputs.resources : data.config?.inputs?.resources || ''}
                   onChange={(e) => setTempInputs({ ...tempInputs, resources: e.target.value })}
                   readOnly={!isEditing}
@@ -202,7 +202,7 @@ export const ValueStreamNode = ({ data, id }: { data: ValueStreamNodeData; id: s
               disabled={!isEditing}
             >
               <SelectTrigger className="h-3 text-[7px] bg-white border border-gray-200 px-1">
-                <SelectValue placeholder="Select deliverable" className="placeholder:text-[6px] placeholder:text-slate-400" />
+                <SelectValue placeholder="Select type..." className="placeholder:text-[5px] placeholder:text-slate-400" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="documentation" className="text-[7px]">Documentation</SelectItem>

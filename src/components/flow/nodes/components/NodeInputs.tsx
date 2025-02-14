@@ -23,8 +23,8 @@ export const NodeInputs = ({
           <div className="text-[7px] text-slate-500 mb-0.5">Data Source</div>
           <div className="nodrag">
             <Input 
-              placeholder="Data Source"
-              className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[6px] placeholder:text-slate-400"
+              placeholder="Enter data source..."
+              className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[5px] placeholder:text-slate-400"
               value={dataSource}
               onChange={(e) => onInputChange('dataSource', e.target.value)}
               readOnly={!isEditing}
@@ -35,8 +35,8 @@ export const NodeInputs = ({
           <div className="text-[7px] text-slate-500 mb-0.5">Connection String</div>
           <div className="nodrag">
             <Input 
-              placeholder="Connection String"
-              className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[6px] placeholder:text-slate-400"
+              placeholder="Enter connection..."
+              className="h-3 text-[7px] bg-white border border-gray-200 px-1 py-0 placeholder:text-[5px] placeholder:text-slate-400"
               value={connectionString}
               onChange={(e) => onInputChange('connectionString', e.target.value)}
               readOnly={!isEditing}
