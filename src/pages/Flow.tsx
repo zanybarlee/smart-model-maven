@@ -10,6 +10,7 @@ import { ContinuousImprovement } from "@/components/flow/ContinuousImprovement";
 import { Automation } from "@/components/flow/Automation";
 import { Analytics } from "@/components/flow/Analytics";
 import { DataEngineering } from "@/components/flow/DataEngineering";
+import { DataCollectionTab } from "@/components/data/DataCollectionTab";
 import '@xyflow/react/dist/style.css';
 
 const Flow = () => {
