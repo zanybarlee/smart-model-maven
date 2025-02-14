@@ -182,6 +182,25 @@ export const KanbanBoard = () => {
     });
   };
 
+  // Convert board data to the format expected by @asseinfo/react-kanban
+  const controlledBoard = {
+    columns: board.columns.map(column => ({
+      id: column.id,
+      title: column.title,
+      cards: column.cards.map(card => ({
+        ...card,
+        // Ensure all required properties are present
+        id: card.id,
+        title: card.title,
+        description: card.description || "",
+        priority: card.priority || "medium",
+        assignees: card.assignees || [],
+        labels: card.labels || [],
+        comments: card.comments || []
+      }))
+    }))
+  };
+
   return (
     <Card>
       <BoardHeader 
@@ -221,7 +240,7 @@ export const KanbanBoard = () => {
             </div>
           )}
         >
-          {board}
+          {controlledBoard}
         </Board>
 
         <AddCardDialog
