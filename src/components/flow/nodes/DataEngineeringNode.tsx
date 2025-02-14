@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   ContextMenu,
@@ -75,7 +76,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <div className="bg-white p-3 rounded-lg shadow-lg relative min-w-[240px] border border-gray-200">
+        <div className="bg-white p-2 rounded-lg shadow-lg relative min-w-[160px] border border-gray-200">
           <Handle
             type="target"
             position={Position.Left}
@@ -94,7 +95,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
             onInfo={() => setShowInfo(true)}
           />
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             <NodeInputs
               isEditing={isEditing}
               dataSource={isEditing ? tempInputs.dataSource : data.config.inputs?.dataSource || ''}

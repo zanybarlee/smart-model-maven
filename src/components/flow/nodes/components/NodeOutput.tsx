@@ -15,14 +15,14 @@ export const NodeOutput = ({
 }: NodeOutputProps) => {
   return (
     <div>
-      <div className="text-xs font-medium text-slate-700 mb-2">Output</div>
+      <div className="text-xs font-medium text-slate-700 mb-1">Output</div>
       <div className="nodrag">
         <Select 
           defaultValue={output} 
           onValueChange={onOutputChange}
           disabled={!isEditing}
         >
-          <SelectTrigger className="h-8 text-sm bg-white border border-gray-200">
+          <SelectTrigger className="h-6 text-xs bg-white border border-gray-200 px-2">
             <SelectValue placeholder="Select output" />
           </SelectTrigger>
           <SelectContent>
