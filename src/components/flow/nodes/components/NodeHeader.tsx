@@ -23,39 +23,39 @@ export const NodeHeader = ({
 }: NodeHeaderProps) => {
   return (
     <>
-      <div className="absolute right-1 top-1 flex gap-1">
+      <div className="absolute right-1 top-1 flex gap-0.5">
         {isEditing ? (
           <Save 
-            className="h-3 w-3 text-green-500 hover:text-green-600 cursor-pointer nodrag" 
+            className="h-2.5 w-2.5 text-green-500 hover:text-green-600 cursor-pointer nodrag" 
             onClick={onSave}
           />
         ) : (
           <>
             <Edit2 
-              className="h-3 w-3 text-slate-400 hover:text-slate-600 cursor-pointer nodrag"
+              className="h-2.5 w-2.5 text-slate-400 hover:text-slate-600 cursor-pointer nodrag"
               onClick={onEdit}
             />
             <Copy 
-              className="h-3 w-3 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              className="h-2.5 w-2.5 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
               onClick={onDuplicate}
             />
             <Trash 
-              className="h-3 w-3 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              className="h-2.5 w-2.5 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
               onClick={onDelete}
             />
             <Info 
-              className="h-3 w-3 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              className="h-2.5 w-2.5 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
               onClick={onInfo}
             />
           </>
         )}
       </div>
       
-      <div className="flex items-center gap-1.5 mb-2">
-        <div className="p-1 bg-slate-100 rounded">
-          <div className="w-3 h-3">⚡</div>
+      <div className="flex items-center gap-1 mb-1.5">
+        <div className="p-0.5 bg-slate-100 rounded">
+          <div className="w-2.5 h-2.5">⚡</div>
         </div>
-        <div className="font-medium text-xs text-slate-900">{label}</div>
+        <div className="font-medium text-[10px] text-slate-900">{label}</div>
       </div>
     </>
   );

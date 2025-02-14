@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   ContextMenu,
@@ -76,7 +75,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <div className="bg-white p-2 rounded-lg shadow-lg relative min-w-[160px] border border-gray-200">
+        <div className="bg-white p-2 rounded-lg shadow-lg relative min-w-[140px] border border-gray-200">
           <Handle
             type="target"
             position={Position.Left}
