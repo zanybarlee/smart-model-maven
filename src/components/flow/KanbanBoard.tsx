@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Board from '@asseinfo/react-kanban';
 import '@asseinfo/react-kanban/dist/styles.css';
@@ -13,6 +12,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import debounce from 'lodash/debounce';
+
+type Priority = 'low' | 'medium' | 'high';
 
 interface Comment {
   id: string;
@@ -31,7 +32,7 @@ interface KanbanCard {
   id: string;
   title: string;
   description: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: Priority;
   assignees: string[];
   labels: Label[];
   comments: Comment[];
@@ -53,7 +54,7 @@ const priorityColors = {
   low: "bg-green-100 text-green-800"
 };
 
-const defaultBoard = {
+const defaultBoard: KanbanBoard = {
   columns: [
     {
       id: 1,
@@ -81,12 +82,18 @@ const defaultBoard = {
 export const KanbanBoard = () => {
   const [board, setBoard] = useState<KanbanBoard>(defaultBoard);
   const [boardId, setBoardId] = useState<string | null>(null);
-  const [newCard, setNewCard] = useState({ 
+  const [newCard, setNewCard] = useState<{
+    title: string;
+    description: string;
+    priority: Priority;
+    assignees: string;
+    labels: Label[];
+  }>({ 
     title: "", 
     description: "", 
-    priority: "medium" as const, 
+    priority: "medium", 
     assignees: "",
-    labels: [] as Label[]
+    labels: []
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState<number | null>(null);
@@ -98,26 +105,10 @@ export const KanbanBoard = () => {
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  // Load board data
   useEffect(() => {
     loadBoard();
     loadLabels();
   }, []);
-
-  // Filter cards when search query changes
-  useEffect(() => {
-    const filtered = {
-      columns: board.columns.map(column => ({
-        ...column,
-        cards: column.cards.filter(card => 
-          card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          card.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          card.labels.some(label => label.name.toLowerCase().includes(searchQuery.toLowerCase()))
-        )
-      }))
-    };
-    setFilteredBoard(filtered);
-  }, [searchQuery, board]);
 
   const loadBoard = async () => {
     try {
@@ -130,9 +121,8 @@ export const KanbanBoard = () => {
 
       if (boards && boards.length > 0) {
         setBoardId(boards[0].id);
-        setBoard(boards[0].board_data as KanbanBoard);
+        setBoard(boards[0].board_data as unknown as KanbanBoard);
       } else {
-        // Create new board if none exists
         const { data, error: insertError } = await supabase
           .from('kanban_boards')
           .insert([
@@ -144,7 +134,7 @@ export const KanbanBoard = () => {
         if (insertError) throw insertError;
         if (data) {
           setBoardId(data.id);
-          setBoard(data.board_data as KanbanBoard);
+          setBoard(data.board_data as unknown as KanbanBoard);
         }
       }
     } catch (error) {
@@ -178,7 +168,9 @@ export const KanbanBoard = () => {
     try {
       const { error } = await supabase
         .from('kanban_boards')
-        .update({ board_data: newBoard })
+        .update({ 
+          board_data: newBoard as unknown as Json 
+        })
         .eq('id', boardId);
 
       if (error) throw error;
@@ -457,7 +449,7 @@ export const KanbanBoard = () => {
                   id="priority"
                   className="w-full p-2 border rounded-md"
                   value={newCard.priority}
-                  onChange={(e) => setNewCard({ ...newCard, priority: e.target.value as 'low' | 'medium' | 'high' })}
+                  onChange={(e) => setNewCard({ ...newCard, priority: e.target.value as Priority })}
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
