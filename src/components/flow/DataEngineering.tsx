@@ -1,23 +1,14 @@
+
 import React, { useCallback, useState } from 'react';
-import {
-  ReactFlow,
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-} from '@xyflow/react';
+import { useNodesState, useEdgesState, addEdge } from '@xyflow/react';
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Maximize2, Minimize2 } from "lucide-react";
+import { Maximize2 } from "lucide-react";
 import { DataEngineeringNode } from './nodes/DataEngineeringNode';
-import { TextToFlowDialog } from './dialogs/TextToFlowDialog';
 import { initialNodes, initialEdges, createNodeConfig } from './types/flow-types';
-import { FlowSidebar } from './components/FlowSidebar';
-import { FlowToolbar } from './components/FlowToolbar';
+import { DataFlowContent } from './components/DataFlowContent';
+import { FullScreenDialog } from './components/FullScreenDialog';
 import '@xyflow/react/dist/style.css';
 
 export const DataEngineering = () => {
@@ -119,40 +110,23 @@ export const DataEngineering = () => {
     });
   };
 
-  const DataEngineeringContent = () => (
-    <div className="flex h-full">
-      <FlowSidebar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onAddNode={handleAddNode}
-      />
-      <div className="flex-1 h-full">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-          fitView
-        >
-          <Controls />
-          <MiniMap />
-          <Background />
-          <FlowToolbar
-            onOpenTextToFlow={() => setIsTextToFlowOpen(true)}
-            onRunPipeline={() => {}}
-          />
-        </ReactFlow>
-      </div>
-      <TextToFlowDialog
-        isOpen={isTextToFlowOpen}
-        onClose={() => setIsTextToFlowOpen(false)}
-        flowDescription={flowDescription}
-        onFlowDescriptionChange={(value) => setFlowDescription(value)}
-        onGenerate={handleGenerateFromText}
-      />
-    </div>
+  const flowContent = (
+    <DataFlowContent
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      nodeTypes={nodeTypes}
+      searchQuery={searchQuery}
+      onSearchChange={setSearchQuery}
+      onAddNode={handleAddNode}
+      isTextToFlowOpen={isTextToFlowOpen}
+      setIsTextToFlowOpen={setIsTextToFlowOpen}
+      flowDescription={flowDescription}
+      onFlowDescriptionChange={setFlowDescription}
+      onGenerateFromText={handleGenerateFromText}
+    />
   );
 
   return (
@@ -175,28 +149,17 @@ export const DataEngineering = () => {
           </Button>
         </CardHeader>
         <CardContent className="h-[800px] p-0">
-          {!isDetached && <DataEngineeringContent />}
+          {!isDetached && flowContent}
         </CardContent>
       </Card>
 
-      <Dialog open={isDetached} onOpenChange={setIsDetached}>
-        <DialogContent className="max-w-[100vw] w-full h-[100vh] p-4" onInteractOutside={(e) => e.preventDefault()}>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">Dataflow Designer</h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsDetached(false)}
-              className="h-8 w-8"
-            >
-              <Minimize2 className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="flex-1 h-[calc(100vh-64px)]">
-            <DataEngineeringContent />
-          </div>
-        </DialogContent>
-      </Dialog>
+      <FullScreenDialog
+        isOpen={isDetached}
+        onClose={() => setIsDetached(false)}
+        title="Dataflow Designer"
+      >
+        {flowContent}
+      </FullScreenDialog>
     </>
   );
 };
