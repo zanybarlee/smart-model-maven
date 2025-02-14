@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Board from '@asseinfo/react-kanban';
 import '@asseinfo/react-kanban/dist/styles.css';
@@ -181,6 +182,11 @@ export const KanbanBoard = () => {
     });
   };
 
+  // Ensure board data is properly structured for the library
+  const initialBoard = {
+    columns: board?.columns || []
+  };
+
   return (
     <Card>
       <BoardHeader 
@@ -190,6 +196,7 @@ export const KanbanBoard = () => {
       />
       <CardContent className="overflow-x-auto">
         <Board
+          initialBoard={initialBoard}
           disableColumnDrag
           allowRemoveLane
           allowRenameLabel
@@ -219,11 +226,7 @@ export const KanbanBoard = () => {
               </Button>
             </div>
           )}
-        >
-          {{
-            columns: board.columns
-          }}
-        </Board>
+        />
 
         <AddCardDialog
           isOpen={isDialogOpen}
