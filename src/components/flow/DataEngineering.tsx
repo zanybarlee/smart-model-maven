@@ -10,6 +10,7 @@ import {
   addEdge,
   Panel,
   Node,
+  NodeProps,
 } from '@xyflow/react';
 import { Button } from "@/components/ui/button";
 import { Plus, Search, Play } from "lucide-react";
@@ -20,9 +21,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 import '@xyflow/react/dist/style.css';
 
+type NodeType = 'dataIngestion' | 'dataCleaning' | 'featureEngineering';
+
 interface NodeData {
+  [key: string]: unknown;  // Add index signature to satisfy Record<string, unknown>
   label: string;
-  type: 'dataIngestion' | 'dataCleaning' | 'featureEngineering';
+  type: NodeType;
   config: {
     source?: string;
     connectionString?: string;
@@ -33,14 +37,11 @@ interface NodeData {
   status: 'configured' | 'pending' | 'running' | 'completed' | 'error';
 }
 
-interface FlowNode extends Node {
-  data: NodeData;
-  className: string;
-}
+type CustomNode = Node<NodeData>;
 
-const createNodeConfig = (type: string, label: string): NodeData => ({
+const createNodeConfig = (type: NodeType, label: string): NodeData => ({
   label,
-  type: type as NodeData['type'],
+  type,
   config: {},
   status: 'pending'
 });
@@ -60,23 +61,22 @@ const nodeTypes = {
   }
 };
 
-const initialNodes: FlowNode[] = [
+const initialNodes: CustomNode[] = [
   {
     id: 'dataingestion-1',
     type: 'input',
     data: createNodeConfig('dataIngestion', 'Data Ingestion'),
     position: { x: 100, y: 100 },
-    className: 'light'
   }
 ];
 
 const initialEdges = [];
 
 export const DataEngineering = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode>(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedNode, setSelectedNode] = useState<FlowNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<CustomNode | null>(null);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const { toast } = useToast();
 
@@ -84,18 +84,17 @@ export const DataEngineering = () => {
 
   const handleAddNode = (type: string) => {
     const nodeConfig = nodeTypes[type as keyof typeof nodeTypes];
-    const newNode: FlowNode = {
+    const newNode: CustomNode = {
       id: `${type}-${Date.now()}`,
       type: nodeConfig.type,
       data: nodeConfig.data,
       position: { x: Math.random() * 500, y: Math.random() * 300 },
-      className: 'light'
     };
     setNodes((nds) => [...nds, newNode]);
   };
 
-  const handleNodeClick = (event: React.MouseEvent, node: FlowNode) => {
-    setSelectedNode(node);
+  const handleNodeClick = (event: React.MouseEvent, node: Node) => {
+    setSelectedNode(node as CustomNode);
     setIsConfigOpen(true);
   };
 
@@ -226,7 +225,7 @@ export const DataEngineering = () => {
             <Button variant="outline" onClick={() => setIsConfigOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => updateNodeConfig({ configured: true })}>
+            <Button onClick={() => updateNodeConfig({})}>
               Save Configuration
             </Button>
           </div>
