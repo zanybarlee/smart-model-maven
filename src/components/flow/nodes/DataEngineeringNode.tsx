@@ -6,30 +6,72 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Eye, Edit2, CheckSquare, ArrowRight, Copy, Trash, Info, Save } from "lucide-react";
+import { Edit2, CheckSquare, ArrowRight, Copy, Trash, Info, Save } from "lucide-react";
 import { NodeData } from '../types/flow-types';
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, useReactFlow } from '@xyflow/react';
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
-export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
+export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const [tempInputs, setTempInputs] = useState({
     dataSource: data.config.inputs?.dataSource || '',
     connectionString: data.config.inputs?.connectionString || '',
     output: data.config.outputs?.output || ''
   });
   const { toast } = useToast();
+  const { setNodes, getNode, getNodes, setEdges, getEdges } = useReactFlow();
 
   const handleSave = () => {
-    // Here you would typically update the node data through a callback
-    // For now, we'll just show a success toast
+    setIsEditing(false);
     toast({
       title: "Changes saved",
       description: "Node configuration has been updated.",
     });
-    setIsEditing(false);
+  };
+
+  const handleDuplicate = () => {
+    const node = getNode(id);
+    if (node) {
+      const position = {
+        x: node.position.x + 50,
+        y: node.position.y + 50,
+      };
+
+      const newNode = {
+        ...node,
+        id: `${node.type}-${Date.now()}`,
+        position,
+        data: {
+          ...node.data,
+          label: `${node.data.label} (Copy)`,
+        },
+      };
+
+      setNodes(getNodes().concat(newNode));
+      toast({
+        title: "Node duplicated",
+        description: "A copy of the node has been created.",
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    setNodes(getNodes().filter(node => node.id !== id));
+    setEdges(getEdges().filter(edge => edge.source !== id && edge.target !== id));
+    toast({
+      title: "Node deleted",
+      description: "The node has been removed from the flow.",
+    });
   };
 
   return (
@@ -57,9 +99,18 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
                 onClick={() => setIsEditing(true)}
               />
             )}
-            <Copy className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" />
-            <Trash className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" />
-            <Info className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" />
+            <Copy 
+              className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              onClick={handleDuplicate}
+            />
+            <Trash 
+              className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              onClick={handleDelete}
+            />
+            <Info 
+              className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-pointer nodrag" 
+              onClick={() => setShowInfo(true)}
+            />
           </div>
 
           <Handle
@@ -135,20 +186,48 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
             style={{ right: -5, top: '50%' }}
             isConnectableEnd={false}
           />
+
+          <Dialog open={showInfo} onOpenChange={setShowInfo}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{data.label} Information</DialogTitle>
+                <DialogDescription>
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h4 className="font-semibold mb-2">Node Type</h4>
+                      <p className="text-sm text-slate-600">{data.nodeType || 'Default'}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Configuration</h4>
+                      <div className="text-sm text-slate-600 space-y-2">
+                        <p>Data Source: {data.config.inputs?.dataSource || 'Not set'}</p>
+                        <p>Connection: {data.config.inputs?.connectionString || 'Not set'}</p>
+                        <p>Output Type: {data.config.outputs?.output || 'Not set'}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Status</h4>
+                      <p className="text-sm text-slate-600">{data.status || 'Not started'}</p>
+                    </div>
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem>
-          <Eye className="mr-2 h-4 w-4" />
+        <ContextMenuItem onClick={handleDuplicate}>
+          <Copy className="mr-2 h-4 w-4" />
+          Duplicate Node
+        </ContextMenuItem>
+        <ContextMenuItem onClick={handleDelete}>
+          <Trash className="mr-2 h-4 w-4" />
+          Delete Node
+        </ContextMenuItem>
+        <ContextMenuItem onClick={() => setShowInfo(true)}>
+          <Info className="mr-2 h-4 w-4" />
           View Details
-        </ContextMenuItem>
-        <ContextMenuItem>
-          <CheckSquare className="mr-2 h-4 w-4" />
-          Add Validation
-        </ContextMenuItem>
-        <ContextMenuItem>
-          <ArrowRight className="mr-2 h-4 w-4" />
-          Drill Down
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
