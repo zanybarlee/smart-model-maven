@@ -69,13 +69,21 @@ const Design = () => {
                 </p>
               </div>
               
-              <Tabs defaultValue="requirements" className="space-y-6">
+              <Tabs defaultValue="value-stream" className="space-y-6">
                 <TabsList>
-                  <TabsTrigger value="requirements">Requirements</TabsTrigger>
                   <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
                   <TabsTrigger value="kanban">Kanban Board</TabsTrigger>
+                  <TabsTrigger value="requirements">Requirements</TabsTrigger>
                   <TabsTrigger value="architecture">Architecture</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="value-stream">
+                  <ValueStream onDetach={() => setIsValueStreamDetached(true)} />
+                </TabsContent>
+
+                <TabsContent value="kanban">
+                  <KanbanBoard />
+                </TabsContent>
 
                 <TabsContent value="requirements">
                   <Card>
@@ -120,14 +128,6 @@ const Design = () => {
                       )}
                     </CardContent>
                   </Card>
-                </TabsContent>
-
-                <TabsContent value="value-stream">
-                  <ValueStream onDetach={() => setIsValueStreamDetached(true)} />
-                </TabsContent>
-
-                <TabsContent value="kanban">
-                  <KanbanBoard />
                 </TabsContent>
 
                 <TabsContent value="architecture">
