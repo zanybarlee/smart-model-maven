@@ -18,6 +18,24 @@ const Home = () => {
       imageUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
     },
     {
+      title: "Data Engineering",
+      description: "Manage and transform your data with AI assistance",
+      route: "/data",
+      imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71"
+    },
+    {
+      title: "Knowledge Management",
+      description: "Organize and leverage your knowledge base effectively",
+      route: "/knowledge",
+      imageUrl: "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06"
+    },
+    {
+      title: "Flow Engineering",
+      description: "Design and optimize your workflow processes",
+      route: "/flow",
+      imageUrl: "https://images.unsplash.com/photo-1551434678-e076c223a692"
+    },
+    {
       title: "Design & Planning",
       description: "AI-assisted requirements and architecture planning",
       route: "/design",
