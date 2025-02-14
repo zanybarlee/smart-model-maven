@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,9 +10,14 @@ import { ContinuousImprovement } from "@/components/flow/ContinuousImprovement";
 import { Automation } from "@/components/flow/Automation";
 import { Analytics } from "@/components/flow/Analytics";
 import { DataEngineering } from "@/components/flow/DataEngineering";
+import { Button } from "@/components/ui/button";
+import { FullScreenDialog } from "@/components/flow/components/FullScreenDialog";
+import { Maximize2 } from "lucide-react";
 import '@xyflow/react/dist/style.css';
 
 const Flow: React.FC = () => {
+  const [isValueStreamDetached, setIsValueStreamDetached] = useState(false);
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -20,9 +25,20 @@ const Flow: React.FC = () => {
         <main className="flex-1 overflow-auto bg-slate-50">
           <div className="p-6">
             <div className="max-w-[1800px] mx-auto space-y-6">
-              <div>
-                <h1 className="text-3xl font-bold mb-2">Flow Engineering</h1>
-                <p className="text-gray-600">Optimize value delivery through visualization and continuous improvement</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold mb-2">Flow Engineering</h1>
+                  <p className="text-gray-600">Optimize value delivery through visualization and continuous improvement</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  onClick={() => setIsValueStreamDetached(true)}
+                >
+                  <Maximize2 className="h-4 w-4" />
+                  Detach Value Stream
+                </Button>
               </div>
 
               <KPIDashboard />
@@ -65,6 +81,16 @@ const Flow: React.FC = () => {
           </div>
         </main>
       </div>
+
+      <FullScreenDialog
+        isOpen={isValueStreamDetached}
+        onClose={() => setIsValueStreamDetached(false)}
+        title="Value Stream Map"
+      >
+        <div className="h-full">
+          <ValueStream />
+        </div>
+      </FullScreenDialog>
     </SidebarProvider>
   );
 };
