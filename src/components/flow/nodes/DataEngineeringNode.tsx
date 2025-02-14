@@ -75,12 +75,12 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <div className="bg-white p-2 rounded-lg shadow-lg relative min-w-[140px] border border-gray-200">
+        <div className="bg-white p-1.5 rounded-lg shadow-lg relative min-w-[120px] border border-gray-200">
           <Handle
             type="target"
             position={Position.Left}
-            className="w-2 h-2 !bg-blue-400 border-2 border-white"
-            style={{ left: -5, top: '50%' }}
+            className="w-1.5 h-1.5 !bg-blue-400 border-[1.5px] border-white"
+            style={{ left: -4, top: '50%' }}
             isConnectableStart={false}
           />
 
@@ -94,7 +94,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
             onInfo={() => setShowInfo(true)}
           />
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <NodeInputs
               isEditing={isEditing}
               dataSource={isEditing ? tempInputs.dataSource : data.config.inputs?.dataSource || ''}
@@ -112,8 +112,8 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
           <Handle
             type="source"
             position={Position.Right}
-            className="w-2 h-2 !bg-blue-400 border-2 border-white"
-            style={{ right: -5, top: '50%' }}
+            className="w-1.5 h-1.5 !bg-blue-400 border-[1.5px] border-white"
+            style={{ right: -4, top: '50%' }}
             isConnectableEnd={false}
           />
 
