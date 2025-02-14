@@ -195,7 +195,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
                   <div className="space-y-4 mt-4">
                     <div>
                       <h4 className="font-semibold mb-2">Node Type</h4>
-                      <p className="text-sm text-slate-600">{data.nodeType || 'Default'}</p>
+                      <p className="text-sm text-slate-600">{data.type || 'Default'}</p>
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Configuration</h4>
@@ -207,7 +207,7 @@ export const DataEngineeringNode = ({ data, id }: { data: NodeData; id: string }
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Status</h4>
-                      <p className="text-sm text-slate-600">{data.status || 'Not started'}</p>
+                      <p className="text-sm text-slate-600">{String(data.status) || 'Not started'}</p>
                     </div>
                   </div>
                 </DialogDescription>
