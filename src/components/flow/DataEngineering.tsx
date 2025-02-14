@@ -24,6 +24,8 @@ export const DataEngineering = () => {
     dataIngestion: DataEngineeringNode,
     dataCleaning: DataEngineeringNode,
     featureEngineering: DataEngineeringNode,
+    dataQuality: DataEngineeringNode,
+    dataLabeling: DataEngineeringNode,
     default: DataEngineeringNode,
     input: DataEngineeringNode,
   };
@@ -83,6 +85,42 @@ export const DataEngineering = () => {
       positionX += 200;
     }
 
+    if (words.includes('quality') || words.includes('validate') || words.includes('check')) {
+      const nodeId = `dataquality-${Date.now()}`;
+      newNodes.push({
+        id: nodeId,
+        type: 'default',
+        data: createNodeConfig('dataQuality', 'Data Quality'),
+        position: { x: positionX, y: 100 },
+      });
+      if (newNodes.length > 1) {
+        newEdges.push({
+          id: `e${newNodes[newNodes.length - 2].id}-${nodeId}`,
+          source: newNodes[newNodes.length - 2].id,
+          target: nodeId,
+        });
+      }
+      positionX += 200;
+    }
+
+    if (words.includes('label') || words.includes('annotate') || words.includes('tag')) {
+      const nodeId = `datalabeling-${Date.now()}`;
+      newNodes.push({
+        id: nodeId,
+        type: 'default',
+        data: createNodeConfig('dataLabeling', 'Data Labeling'),
+        position: { x: positionX, y: 100 },
+      });
+      if (newNodes.length > 1) {
+        newEdges.push({
+          id: `e${newNodes[newNodes.length - 2].id}-${nodeId}`,
+          source: newNodes[newNodes.length - 2].id,
+          target: nodeId,
+        });
+      }
+      positionX += 200;
+    }
+
     if (words.includes('feature') || words.includes('transform') || words.includes('engineer')) {
       const nodeId = `featureengineering-${Date.now()}`;
       newNodes.push({
@@ -109,25 +147,6 @@ export const DataEngineering = () => {
       description: "Your data flow has been generated based on the description.",
     });
   };
-
-  const flowContent = (
-    <DataFlowContent
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      nodeTypes={nodeTypes}
-      searchQuery={searchQuery}
-      onSearchChange={setSearchQuery}
-      onAddNode={handleAddNode}
-      isTextToFlowOpen={isTextToFlowOpen}
-      setIsTextToFlowOpen={setIsTextToFlowOpen}
-      flowDescription={flowDescription}
-      onFlowDescriptionChange={setFlowDescription}
-      onGenerateFromText={handleGenerateFromText}
-    />
-  );
 
   return (
     <>

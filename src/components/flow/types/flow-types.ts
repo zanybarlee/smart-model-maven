@@ -1,5 +1,5 @@
 
-export type NodeType = 'dataIngestion' | 'dataCleaning' | 'featureEngineering';
+export type NodeType = 'dataIngestion' | 'dataCleaning' | 'featureEngineering' | 'dataQuality' | 'dataLabeling';
 
 export interface NodeData {
   [key: string]: unknown;
@@ -11,6 +11,16 @@ export interface NodeData {
     cleaningRules?: string[];
     features?: string[];
     transformations?: string[];
+    qualityRules?: {
+      nullThreshold?: number;
+      uniquenessCheck?: boolean;
+      formatValidation?: string[];
+    };
+    labelingConfig?: {
+      taskType?: string;
+      annotators?: number;
+      categories?: string[];
+    };
     inputs?: {
       dataSource?: string;
       connectionString?: string;
