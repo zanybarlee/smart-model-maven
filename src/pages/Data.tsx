@@ -16,12 +16,12 @@ const Data = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex">
+      <div className="min-h-screen flex w-full">
         <AppSidebar />
         <main className="flex-1 overflow-auto bg-slate-50">
           <div className="p-6">
-            <div>
-              <div className="mb-6">
+            <div className="max-w-[1800px] mx-auto space-y-6">
+              <div>
                 <h1 className="text-3xl font-bold mb-2">Data Engineering</h1>
                 <p className="text-gray-600">Manage and process your data through various stages</p>
               </div>
