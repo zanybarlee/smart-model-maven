@@ -2,18 +2,16 @@
 import React, { useState } from 'react';
 import Board from '@asseinfo/react-kanban';
 import '@asseinfo/react-kanban/dist/styles.css';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Plus, Search } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { KanbanCard as KanbanCardComponent } from './components/KanbanCard';
 import { useKanbanBoard } from './hooks/useKanbanBoard';
-import { KanbanCard, Priority, KanbanBoard as KanbanBoardType } from './types/kanban-types';
+import { KanbanCard, Priority } from './types/kanban-types';
+import { BoardHeader } from './components/BoardHeader';
+import { AddCardDialog } from './components/AddCardDialog';
+import { CommentsDialog } from './components/CommentsDialog';
 
 export const KanbanBoard = () => {
   const { board, setBoard, labels, saveBoard } = useKanbanBoard();
@@ -140,14 +138,12 @@ export const KanbanBoard = () => {
     const updatedBoard = {
       ...board,
       columns: board.columns.map(column => {
-        // Remove from source column
         if (column.id === source.fromColumnId) {
           return {
             ...column,
             cards: column.cards.filter(c => c.id !== card.id)
           };
         }
-        // Add to destination column
         if (column.id === destination.toColumnId) {
           const destinationCards = [...column.cards];
           destinationCards.splice(destination.toPosition, 0, card);
@@ -168,51 +164,31 @@ export const KanbanBoard = () => {
     });
   };
 
+  const handleAddColumn = () => {
+    const newColumn = {
+      id: Date.now(),
+      title: "New Column",
+      cards: []
+    };
+    const newBoard = {
+      ...board,
+      columns: [...board.columns, newColumn]
+    };
+    setBoard(newBoard);
+    saveBoard(newBoard);
+    toast({
+      title: "Column added",
+      description: "A new column has been added to the board"
+    });
+  };
+
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Kanban Board</CardTitle>
-          <CardDescription>
-            Visualize and manage work items across different stages
-          </CardDescription>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
-            <Input
-              placeholder="Search cards..."
-              className="pl-9"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button 
-            onClick={() => {
-              const newColumn = {
-                id: Date.now(),
-                title: "New Column",
-                cards: []
-              };
-              const newBoard = {
-                ...board,
-                columns: [...board.columns, newColumn]
-              };
-              setBoard(newBoard);
-              saveBoard(newBoard);
-              toast({
-                title: "Column added",
-                description: "A new column has been added to the board"
-              });
-            }} 
-            variant="outline" 
-            size="sm"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Add Column
-          </Button>
-        </div>
-      </CardHeader>
+      <BoardHeader 
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onAddColumn={handleAddColumn}
+      />
       <CardContent className="overflow-x-auto">
         <Board
           initialBoard={board}
@@ -246,116 +222,23 @@ export const KanbanBoard = () => {
           )}
         />
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Card</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={newCard.title}
-                  onChange={(e) => setNewCard({ ...newCard, title: e.target.value })}
-                  placeholder="Enter card title"
-                />
-              </div>
-              <div>
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={newCard.description}
-                  onChange={(e) => setNewCard({ ...newCard, description: e.target.value })}
-                  placeholder="Enter card description"
-                />
-              </div>
-              <div>
-                <Label htmlFor="priority">Priority</Label>
-                <select
-                  id="priority"
-                  className="w-full p-2 border rounded-md"
-                  value={newCard.priority}
-                  onChange={(e) => setNewCard({ ...newCard, priority: e.target.value as Priority })}
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
-              </div>
-              <div>
-                <Label htmlFor="assignees">Assignees</Label>
-                <Input
-                  id="assignees"
-                  value={newCard.assignees}
-                  onChange={(e) => setNewCard({ ...newCard, assignees: e.target.value })}
-                  placeholder="Enter assignees (comma-separated)"
-                />
-              </div>
-              <div>
-                <Label>Labels</Label>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {labels.map(label => (
-                    <Badge
-                      key={label.id}
-                      style={{ backgroundColor: label.color }}
-                      className="cursor-pointer"
-                      onClick={() => {
-                        const isSelected = newCard.labels.some(l => l.id === label.id);
-                        setNewCard({
-                          ...newCard,
-                          labels: isSelected
-                            ? newCard.labels.filter(l => l.id !== label.id)
-                            : [...newCard.labels, label]
-                        });
-                      }}
-                    >
-                      {label.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              <Button onClick={handleCardSubmit} className="w-full">
-                Add Card
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <AddCardDialog
+          isOpen={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          newCard={newCard}
+          setNewCard={setNewCard}
+          onSubmit={handleCardSubmit}
+          labels={labels}
+        />
 
-        <Dialog open={isCommentDialogOpen} onOpenChange={setIsCommentDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{selectedCard?.title} - Comments</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="max-h-60 overflow-y-auto space-y-2">
-                {selectedCard?.comments?.map((comment) => (
-                  <div key={comment.id} className="bg-gray-50 p-3 rounded-lg">
-                    <p className="text-sm">{comment.comment}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {new Date(comment.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <Input
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Add a comment..."
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      handleCommentAdd();
-                    }
-                  }}
-                />
-                <Button onClick={handleCommentAdd}>
-                  Add
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <CommentsDialog
+          isOpen={isCommentDialogOpen}
+          onOpenChange={setIsCommentDialogOpen}
+          card={selectedCard}
+          newComment={newComment}
+          setNewComment={setNewComment}
+          onAddComment={handleCommentAdd}
+        />
       </CardContent>
     </Card>
   );
