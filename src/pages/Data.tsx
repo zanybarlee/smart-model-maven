@@ -28,14 +28,18 @@ const Data = () => {
 
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
                 <TabsList>
+                  <TabsTrigger value="flow">Data Flow Design</TabsTrigger>
                   <TabsTrigger value="collection">Data Collection</TabsTrigger>
                   <TabsTrigger value="quality">Data Quality</TabsTrigger>
                   <TabsTrigger value="cleaning">Data Cleaning</TabsTrigger>
                   <TabsTrigger value="labeling">Data Labeling</TabsTrigger>
                   <TabsTrigger value="features">Feature Engineering</TabsTrigger>
                   <TabsTrigger value="compliance">Compliance</TabsTrigger>
-                  <TabsTrigger value="flow">Data Flow</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="flow">
+                  <DataEngineering />
+                </TabsContent>
 
                 <TabsContent value="collection">
                   <DataCollectionTab />
@@ -59,10 +63,6 @@ const Data = () => {
 
                 <TabsContent value="compliance">
                   <ComplianceTab />
-                </TabsContent>
-
-                <TabsContent value="flow">
-                  <DataEngineering />
                 </TabsContent>
               </Tabs>
             </div>

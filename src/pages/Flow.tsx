@@ -30,6 +30,7 @@ const Flow = () => {
               <Tabs defaultValue="data-flow" className="space-y-4">
                 <TabsList>
                   <TabsTrigger value="data-flow">Data Flow Design</TabsTrigger>
+                  <TabsTrigger value="data-collection">Data Collection</TabsTrigger>
                   <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
                   <TabsTrigger value="chatflow">Chatflow</TabsTrigger>
                   <TabsTrigger value="continuous-improvement">Continuous Improvement</TabsTrigger>
@@ -39,6 +40,10 @@ const Flow = () => {
 
                 <TabsContent value="data-flow" className="space-y-4">
                   <DataEngineering />
+                </TabsContent>
+
+                <TabsContent value="data-collection" className="space-y-4">
+                  <DataCollectionTab />
                 </TabsContent>
 
                 <TabsContent value="value-stream" className="space-y-4">
@@ -70,4 +75,3 @@ const Flow = () => {
 };
 
 export default Flow;
-
