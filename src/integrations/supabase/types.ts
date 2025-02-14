@@ -81,6 +81,73 @@ export type Database = {
         }
         Relationships: []
       }
+      card_comments: {
+        Row: {
+          board_id: string | null
+          card_id: string
+          comment: string
+          created_at: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          board_id?: string | null
+          card_id: string
+          comment: string
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          board_id?: string | null
+          card_id?: string
+          comment?: string
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_comments_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "kanban_boards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      card_labels: {
+        Row: {
+          board_id: string | null
+          color: string
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          board_id?: string | null
+          color: string
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          board_id?: string | null
+          color?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_labels_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "kanban_boards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compliance_reports: {
         Row: {
           compliance_standards: string[] | null
@@ -606,6 +673,33 @@ export type Database = {
         }
         Relationships: []
       }
+      kanban_boards: {
+        Row: {
+          board_data: Json
+          created_at: string | null
+          id: string
+          title: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          board_data?: Json
+          created_at?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          board_data?: Json
+          created_at?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       knowledge_base_files: {
         Row: {
           chunk_method: string | null
@@ -1051,6 +1145,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      card_priority: "low" | "medium" | "high"
       data_process_status: "pending" | "in_progress" | "completed" | "failed"
       model_type: "rag" | "classification" | "generation" | "embedding"
       user_role:
