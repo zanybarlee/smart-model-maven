@@ -20,7 +20,7 @@ const Data = () => {
         <AppSidebar />
         <main className="flex-1 overflow-auto bg-slate-50">
           <div className="p-6">
-            <div className="max-w-[1800px] mx-auto">
+            <div>
               <div className="mb-6">
                 <h1 className="text-3xl font-bold mb-2">Data Engineering</h1>
                 <p className="text-gray-600">Manage and process your data through various stages</p>
