@@ -78,173 +78,175 @@ describe('ExampleComponent', () => {
 
   return (
     <SidebarProvider>
-      <div className="grid lg:grid-cols-[280px_1fr] h-screen">
+      <div className="min-h-screen flex w-full">
         <AppSidebar />
-        <main className="p-6 overflow-y-auto">
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-4">Testing</h1>
-              <p className="text-gray-600">
-                AI-powered test generation and retrieval testing platform
-              </p>
+        <main className="flex-1 overflow-auto bg-slate-50">
+          <div className="p-6">
+            <div className="max-w-[1800px] mx-auto space-y-6">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">Testing</h1>
+                <p className="text-gray-600">
+                  AI-powered test generation and retrieval testing platform
+                </p>
+              </div>
+
+              <Tabs defaultValue="generate" className="space-y-6">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="generate">Generate Tests</TabsTrigger>
+                  <TabsTrigger value="execute">Execute Tests</TabsTrigger>
+                  <TabsTrigger value="retrieval">Retrieval Testing</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="generate">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Generate Test Cases</CardTitle>
+                      <CardDescription>
+                        Generate comprehensive test suites using AI-powered analysis
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Form {...generationForm}>
+                        <form onSubmit={generationForm.handleSubmit(onGenerateTests)} className="space-y-4">
+                          <FormField
+                            control={generationForm.control}
+                            name="codeInput"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Source Code</FormLabel>
+                                <FormControl>
+                                  <Textarea
+                                    placeholder="Paste the code you want to test..."
+                                    className="min-h-[200px] font-mono"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormDescription>
+                                  Paste the component or function code you want to generate tests for
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={generationForm.control}
+                            name="testType"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Test Type</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder="e.g., Unit Test, Integration Test, E2E Test"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormDescription>
+                                  Specify the type of tests you want to generate
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={generationForm.control}
+                            name="coverage"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Coverage Requirements (Optional)</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder="e.g., 80% coverage"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button type="submit">Generate Tests</Button>
+                        </form>
+                      </Form>
+
+                      {generatedTests && (
+                        <div className="mt-6">
+                          <h3 className="font-semibold mb-2">Generated Test Suite</h3>
+                          <div className="bg-slate-900 text-slate-50 p-4 rounded-lg">
+                            <pre className="whitespace-pre-wrap">{generatedTests}</pre>
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="execute">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Execute Test Suite</CardTitle>
+                      <CardDescription>
+                        Run your test suite and view detailed results
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Form {...executionForm}>
+                        <form onSubmit={executionForm.handleSubmit(onExecuteTests)} className="space-y-4">
+                          <FormField
+                            control={executionForm.control}
+                            name="testSuite"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Test Suite</FormLabel>
+                                <FormControl>
+                                  <Textarea
+                                    placeholder="Paste your test suite here..."
+                                    className="min-h-[200px] font-mono"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormDescription>
+                                  Paste the test suite you want to execute
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={executionForm.control}
+                            name="environment"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Test Environment</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder="e.g., development, staging, production"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button type="submit">Run Tests</Button>
+                        </form>
+                      </Form>
+
+                      {testResults && (
+                        <div className="mt-6">
+                          <h3 className="font-semibold mb-2">Test Results</h3>
+                          <div className="bg-slate-900 text-slate-50 p-4 rounded-lg">
+                            <pre className="whitespace-pre-wrap">{testResults}</pre>
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="retrieval">
+                  <RetrievalTesting />
+                </TabsContent>
+              </Tabs>
             </div>
-
-            <Tabs defaultValue="generate" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="generate">Generate Tests</TabsTrigger>
-                <TabsTrigger value="execute">Execute Tests</TabsTrigger>
-                <TabsTrigger value="retrieval">Retrieval Testing</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="generate">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Generate Test Cases</CardTitle>
-                    <CardDescription>
-                      Generate comprehensive test suites using AI-powered analysis
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Form {...generationForm}>
-                      <form onSubmit={generationForm.handleSubmit(onGenerateTests)} className="space-y-4">
-                        <FormField
-                          control={generationForm.control}
-                          name="codeInput"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Source Code</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Paste the code you want to test..."
-                                  className="min-h-[200px] font-mono"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                Paste the component or function code you want to generate tests for
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={generationForm.control}
-                          name="testType"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Test Type</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  placeholder="e.g., Unit Test, Integration Test, E2E Test"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                Specify the type of tests you want to generate
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={generationForm.control}
-                          name="coverage"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Coverage Requirements (Optional)</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  placeholder="e.g., 80% coverage"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button type="submit">Generate Tests</Button>
-                      </form>
-                    </Form>
-
-                    {generatedTests && (
-                      <div className="mt-6">
-                        <h3 className="font-semibold mb-2">Generated Test Suite</h3>
-                        <div className="bg-slate-900 text-slate-50 p-4 rounded-lg">
-                          <pre className="whitespace-pre-wrap">{generatedTests}</pre>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="execute">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Execute Test Suite</CardTitle>
-                    <CardDescription>
-                      Run your test suite and view detailed results
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Form {...executionForm}>
-                      <form onSubmit={executionForm.handleSubmit(onExecuteTests)} className="space-y-4">
-                        <FormField
-                          control={executionForm.control}
-                          name="testSuite"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Test Suite</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Paste your test suite here..."
-                                  className="min-h-[200px] font-mono"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                Paste the test suite you want to execute
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={executionForm.control}
-                          name="environment"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Test Environment</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  placeholder="e.g., development, staging, production"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button type="submit">Run Tests</Button>
-                      </form>
-                    </Form>
-
-                    {testResults && (
-                      <div className="mt-6">
-                        <h3 className="font-semibold mb-2">Test Results</h3>
-                        <div className="bg-slate-900 text-slate-50 p-4 rounded-lg">
-                          <pre className="whitespace-pre-wrap">{testResults}</pre>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="retrieval">
-                <RetrievalTesting />
-              </TabsContent>
-            </Tabs>
           </div>
         </main>
       </div>
