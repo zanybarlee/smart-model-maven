@@ -148,6 +148,25 @@ export const DataEngineering = () => {
     });
   };
 
+  const flowContent = (
+    <DataFlowContent
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      nodeTypes={nodeTypes}
+      searchQuery={searchQuery}
+      onSearchChange={setSearchQuery}
+      onAddNode={handleAddNode}
+      isTextToFlowOpen={isTextToFlowOpen}
+      setIsTextToFlowOpen={setIsTextToFlowOpen}
+      flowDescription={flowDescription}
+      onFlowDescriptionChange={setFlowDescription}
+      onGenerateFromText={handleGenerateFromText}
+    />
+  );
+
   return (
     <>
       <Card>
