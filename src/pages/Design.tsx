@@ -8,6 +8,10 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ValueStream } from "@/components/flow/ValueStream";
+import { KanbanBoard } from "@/components/flow/KanbanBoard";
+import { FullScreenDialog } from "@/components/flow/components/FullScreenDialog";
 
 interface RequirementsForm {
   requirements: string;
@@ -21,6 +25,7 @@ const Design = () => {
   const { toast } = useToast();
   const [requirements, setRequirements] = useState<string>("");
   const [architecture, setArchitecture] = useState<string>("");
+  const [isValueStreamDetached, setIsValueStreamDetached] = useState(false);
 
   const requirementsForm = useForm<RequirementsForm>({
     defaultValues: {
@@ -63,9 +68,15 @@ const Design = () => {
               </p>
             </div>
             
-            <div className="grid gap-8">
-              {/* Requirements Gathering Section */}
-              <section>
+            <Tabs defaultValue="requirements" className="space-y-6">
+              <TabsList>
+                <TabsTrigger value="requirements">Requirements</TabsTrigger>
+                <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
+                <TabsTrigger value="kanban">Kanban Board</TabsTrigger>
+                <TabsTrigger value="architecture">Architecture</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="requirements">
                 <Card>
                   <CardHeader>
                     <CardTitle>Requirements Gathering</CardTitle>
@@ -108,10 +119,17 @@ const Design = () => {
                     )}
                   </CardContent>
                 </Card>
-              </section>
+              </TabsContent>
 
-              {/* Architecture Recommendations Section */}
-              <section>
+              <TabsContent value="value-stream">
+                <ValueStream onDetach={() => setIsValueStreamDetached(true)} />
+              </TabsContent>
+
+              <TabsContent value="kanban">
+                <KanbanBoard />
+              </TabsContent>
+
+              <TabsContent value="architecture">
                 <Card>
                   <CardHeader>
                     <CardTitle>Architecture Recommendations</CardTitle>
@@ -154,11 +172,21 @@ const Design = () => {
                     )}
                   </CardContent>
                 </Card>
-              </section>
-            </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </main>
       </div>
+
+      <FullScreenDialog
+        isOpen={isValueStreamDetached}
+        onClose={() => setIsValueStreamDetached(false)}
+        title="Value Stream Map"
+      >
+        <div className="h-full">
+          <ValueStream />
+        </div>
+      </FullScreenDialog>
     </SidebarProvider>
   );
 };

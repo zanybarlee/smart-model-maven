@@ -4,19 +4,14 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { KPIDashboard } from "@/components/flow/KPIDashboard";
-import { ValueStream } from "@/components/flow/ValueStream";
 import { Chatflow } from "@/components/flow/Chatflow";
 import { ContinuousImprovement } from "@/components/flow/ContinuousImprovement";
 import { Automation } from "@/components/flow/Automation";
 import { Analytics } from "@/components/flow/Analytics";
 import { DataEngineering } from "@/components/flow/DataEngineering";
-import { FullScreenDialog } from "@/components/flow/components/FullScreenDialog";
-import { KanbanBoard } from "@/components/flow/KanbanBoard";
 import '@xyflow/react/dist/style.css';
 
 const Flow: React.FC = () => {
-  const [isValueStreamDetached, setIsValueStreamDetached] = useState(false);
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -35,8 +30,6 @@ const Flow: React.FC = () => {
                 <TabsList>
                   <TabsTrigger value="chatflow">Chatflow Designer</TabsTrigger>
                   <TabsTrigger value="data-flow">Dataflow Designer</TabsTrigger>
-                  <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
-                  <TabsTrigger value="kanban">Kanban Board</TabsTrigger>
                   <TabsTrigger value="continuous-improvement">Continuous Improvement</TabsTrigger>
                   <TabsTrigger value="automation">Automation</TabsTrigger>
                   <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -48,14 +41,6 @@ const Flow: React.FC = () => {
 
                 <TabsContent value="data-flow" className="space-y-4">
                   <DataEngineering />
-                </TabsContent>
-
-                <TabsContent value="value-stream" className="space-y-4">
-                  <ValueStream onDetach={() => setIsValueStreamDetached(true)} />
-                </TabsContent>
-
-                <TabsContent value="kanban" className="space-y-4">
-                  <KanbanBoard />
                 </TabsContent>
 
                 <TabsContent value="continuous-improvement">
@@ -74,16 +59,6 @@ const Flow: React.FC = () => {
           </div>
         </main>
       </div>
-
-      <FullScreenDialog
-        isOpen={isValueStreamDetached}
-        onClose={() => setIsValueStreamDetached(false)}
-        title="Value Stream Map"
-      >
-        <div className="h-full">
-          <ValueStream />
-        </div>
-      </FullScreenDialog>
     </SidebarProvider>
   );
 };
