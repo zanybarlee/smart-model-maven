@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import {
   ReactFlow,
@@ -10,11 +11,14 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Maximize2, Minimize2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import EntityNode from '@/components/EntityNode';
 import DomainModelEditor from '@/components/DomainModelEditor';
 import { Entity } from '@/types/domain';
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 
 const nodeTypes = {
@@ -27,6 +31,7 @@ const Index = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
+  const [isDetached, setIsDetached] = useState(false);
   const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -123,7 +128,7 @@ const Index = () => {
         attributes: entity.attributes,
         onEdit: handleEditEntity,
         onDelete: handleDeleteEntity,
-        onDuplicate: handleDuplicateEntity, // Added this line
+        onDuplicate: handleDuplicateEntity,
       },
       draggable: true
     }));
@@ -182,6 +187,22 @@ const Index = () => {
     console.log('Node dragged:', node);
   }, []);
 
+  const FlowDiagram = () => (
+    <div style={{ height: isDetached ? '100%' : '500px' }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onConnect={onConnect}
+        onNodeDragStop={onNodeDragStop}
+        nodeTypes={nodeTypes}
+        fitView
+      >
+        <Background />
+        <Controls />
+      </ReactFlow>
+    </div>
+  );
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -236,23 +257,19 @@ const Index = () => {
                 {/* Flow Diagram */}
                 {nodes.length > 0 && (
                   <Card className="lg:col-span-3">
-                    <CardHeader>
+                    <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle>Domain Model Diagram</CardTitle>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsDetached(true)}
+                        className="h-8 w-8"
+                      >
+                        <Maximize2 className="h-4 w-4" />
+                      </Button>
                     </CardHeader>
                     <CardContent>
-                      <div style={{ height: '500px' }}>
-                        <ReactFlow
-                          nodes={nodes}
-                          edges={edges}
-                          onConnect={onConnect}
-                          onNodeDragStop={onNodeDragStop}
-                          nodeTypes={nodeTypes}
-                          fitView
-                        >
-                          <Background />
-                          <Controls />
-                        </ReactFlow>
-                      </div>
+                      {!isDetached && <FlowDiagram />}
                     </CardContent>
                   </Card>
                 )}
@@ -261,6 +278,25 @@ const Index = () => {
           </div>
         </main>
       </div>
+
+      <Dialog open={isDetached} onOpenChange={setIsDetached}>
+        <DialogContent className="max-w-[100vw] w-full h-[100vh] p-4" onInteractOutside={(e) => e.preventDefault()}>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Domain Model Diagram</h2>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsDetached(false)}
+              className="h-8 w-8"
+            >
+              <Minimize2 className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="flex-1 h-[calc(100vh-64px)]">
+            <FlowDiagram />
+          </div>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };
