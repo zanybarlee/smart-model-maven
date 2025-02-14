@@ -19,11 +19,11 @@ export const DataEngineeringNode = ({ data }: { data: NodeData }) => {
         <div 
           className="bg-white p-4 rounded-lg shadow-lg relative min-w-[300px]" 
           style={{ 
-            border: 'none',
+            border: '1px solid #fff',
             outline: 'none',
-            ['--xy-node-border-default' as string]: 'none',
-            ['--xy-node-border-selected' as string]: 'none',
-            ['--xy-node-border-hover' as string]: 'none'
+            ['--xy-node-border-default' as string]: '#fff',
+            ['--xy-node-border-selected' as string]: '#fff',
+            ['--xy-node-border-hover' as string]: '#fff'
           } as React.CSSProperties}
         >
           <div className="absolute right-2 top-2 flex gap-2">
