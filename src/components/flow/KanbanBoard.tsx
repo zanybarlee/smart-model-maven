@@ -191,7 +191,7 @@ export const KanbanBoard = () => {
       />
       <CardContent className="overflow-x-auto">
         <Board
-          initialBoard={board}
+          disableColumnDrag
           allowRemoveLane
           allowRenameLabel
           allowRemoveCard
@@ -220,7 +220,9 @@ export const KanbanBoard = () => {
               </Button>
             </div>
           )}
-        />
+        >
+          {board}
+        </Board>
 
         <AddCardDialog
           isOpen={isDialogOpen}
