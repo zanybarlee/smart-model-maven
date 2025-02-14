@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Board from '@asseinfo/react-kanban';
 import '@asseinfo/react-kanban/dist/styles.css';
@@ -112,9 +113,15 @@ export const KanbanBoard = () => {
 
   const loadBoard = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('No authenticated user');
+      }
+
       const { data: boards, error } = await supabase
         .from('kanban_boards')
         .select('*')
+        .eq('user_id', user.id)
         .limit(1);
 
       if (error) throw error;
@@ -123,10 +130,15 @@ export const KanbanBoard = () => {
         setBoardId(boards[0].id);
         setBoard(boards[0].board_data as unknown as KanbanBoard);
       } else {
+        // Create new board if none exists
         const { data, error: insertError } = await supabase
           .from('kanban_boards')
           .insert([
-            { title: 'Main Board', board_data: defaultBoard }
+            { 
+              title: 'Main Board', 
+              board_data: defaultBoard,
+              user_id: user.id 
+            }
           ])
           .select()
           .single();
@@ -141,24 +153,9 @@ export const KanbanBoard = () => {
       console.error('Error loading board:', error);
       toast({
         title: "Error",
-        description: "Failed to load board data",
+        description: "Failed to load board data. Please make sure you're logged in.",
         variant: "destructive"
       });
-    }
-  };
-
-  const loadLabels = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('card_labels')
-        .select('*');
-
-      if (error) throw error;
-      if (data) {
-        setLabels(data);
-      }
-    } catch (error) {
-      console.error('Error loading labels:', error);
     }
   };
 
@@ -166,19 +163,26 @@ export const KanbanBoard = () => {
     if (!boardId) return;
 
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('No authenticated user');
+      }
+
       const { error } = await supabase
         .from('kanban_boards')
         .update({ 
-          board_data: newBoard as unknown as Json 
+          board_data: newBoard as unknown as Json,
+          user_id: user.id
         })
-        .eq('id', boardId);
+        .eq('id', boardId)
+        .eq('user_id', user.id);
 
       if (error) throw error;
     } catch (error) {
       console.error('Error saving board:', error);
       toast({
         title: "Error",
-        description: "Failed to save board changes",
+        description: "Failed to save board changes. Please make sure you're logged in.",
         variant: "destructive"
       });
     }
