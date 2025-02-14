@@ -27,15 +27,19 @@ const Flow: React.FC = () => {
 
               <KPIDashboard />
 
-              <Tabs defaultValue="data-flow" className="space-y-4">
+              <Tabs defaultValue="chatflow" className="space-y-4">
                 <TabsList>
+                  <TabsTrigger value="chatflow">Chatflow</TabsTrigger>
                   <TabsTrigger value="data-flow">Data Flow Design</TabsTrigger>
                   <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
-                  <TabsTrigger value="chatflow">Chatflow</TabsTrigger>
                   <TabsTrigger value="continuous-improvement">Continuous Improvement</TabsTrigger>
                   <TabsTrigger value="automation">Automation</TabsTrigger>
                   <TabsTrigger value="analytics">Analytics</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="chatflow" className="space-y-4">
+                  <Chatflow />
+                </TabsContent>
 
                 <TabsContent value="data-flow" className="space-y-4">
                   <DataEngineering />
@@ -43,10 +47,6 @@ const Flow: React.FC = () => {
 
                 <TabsContent value="value-stream" className="space-y-4">
                   <ValueStream />
-                </TabsContent>
-
-                <TabsContent value="chatflow" className="space-y-4">
-                  <Chatflow />
                 </TabsContent>
 
                 <TabsContent value="continuous-improvement">
