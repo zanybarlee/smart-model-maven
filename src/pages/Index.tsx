@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import {
   ReactFlow,
@@ -18,7 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import EntityNode from '@/components/EntityNode';
 import DomainModelEditor from '@/components/DomainModelEditor';
 import { Entity } from '@/types/domain';
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 
 const nodeTypes = {
