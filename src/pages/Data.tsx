@@ -29,7 +29,7 @@ const Data = () => {
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="mb-4">
                   <TabsTrigger value="flow">Data Flow Design</TabsTrigger>
-                  <TabsTrigger value="collection">Data Collection</TabsTrigger>
+                  <TabsTrigger value="collection">Data Ingestion</TabsTrigger>
                   <TabsTrigger value="quality">Data Quality</TabsTrigger>
                   <TabsTrigger value="cleaning">Data Cleaning</TabsTrigger>
                   <TabsTrigger value="labeling">Data Labeling</TabsTrigger>
