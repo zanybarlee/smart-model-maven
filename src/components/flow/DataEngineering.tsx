@@ -13,19 +13,25 @@ import {
   NodeProps,
 } from '@xyflow/react';
 import { Button } from "@/components/ui/button";
-import { Plus, Search, Play, Wand2 } from "lucide-react";
+import { Plus, Search, Play, Wand2, Eye, Edit2, CheckSquare, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import '@xyflow/react/dist/style.css';
 
 type NodeType = 'dataIngestion' | 'dataCleaning' | 'featureEngineering';
 
 interface NodeData {
-  [key: string]: unknown;  // Add index signature to satisfy Record<string, unknown>
+  [key: string]: unknown;
   label: string;
   type: NodeType;
   config: {
@@ -72,6 +78,37 @@ const initialNodes: CustomNode[] = [
 ];
 
 const initialEdges = [];
+
+const DataEngineeringNode = ({ data }: { data: NodeData }) => {
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger>
+        <div className="bg-white p-4 rounded-lg shadow-lg border border-slate-200">
+          <div className="font-medium">{data.label}</div>
+          <div className="text-sm text-slate-500">Status: {data.status}</div>
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem>
+          <Eye className="mr-2 h-4 w-4" />
+          View Details
+        </ContextMenuItem>
+        <ContextMenuItem>
+          <Edit2 className="mr-2 h-4 w-4" />
+          Edit Node
+        </ContextMenuItem>
+        <ContextMenuItem>
+          <CheckSquare className="mr-2 h-4 w-4" />
+          Add Validation
+        </ContextMenuItem>
+        <ContextMenuItem>
+          <ArrowRight className="mr-2 h-4 w-4" />
+          Drill Down
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
+  );
+};
 
 export const DataEngineering = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -402,6 +439,7 @@ export const DataEngineering = () => {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             onNodeClick={handleNodeClick}
+            nodeTypes={nodeTypes}
             fitView
           >
             <Controls />
