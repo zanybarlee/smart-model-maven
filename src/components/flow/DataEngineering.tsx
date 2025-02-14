@@ -16,12 +16,56 @@ import { Plus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import '@xyflow/react/dist/style.css';
 
+interface NodeData {
+  label: string;
+  inputs: {
+    workList: string;
+    variableName: string;
+  };
+  outputs: string[];
+}
+
 const nodeTypes = {
-  dataCollection: { type: 'input', data: { label: 'Data Collection' } },
-  dataCleaning: { type: 'default', data: { label: 'Data Cleaning' } },
-  dataLabeling: { type: 'default', data: { label: 'Data Labeling' } },
-  featureEngineering: { type: 'default', data: { label: 'Feature Engineering' } },
-  toolAgent: { type: 'output', data: { label: 'Tool Agent' } },
+  dataCollection: { 
+    type: 'input', 
+    data: { 
+      label: 'Data Collection',
+      inputs: { workList: '', variableName: '' },
+      outputs: ['output1']
+    } 
+  },
+  dataCleaning: { 
+    type: 'default', 
+    data: { 
+      label: 'Data Cleaning',
+      inputs: { workList: '', variableName: '' },
+      outputs: ['output1']
+    } 
+  },
+  dataLabeling: { 
+    type: 'default', 
+    data: { 
+      label: 'Data Labeling',
+      inputs: { workList: '', variableName: '' },
+      outputs: ['output1']
+    } 
+  },
+  featureEngineering: { 
+    type: 'default', 
+    data: { 
+      label: 'Feature Engineering',
+      inputs: { workList: '', variableName: '' },
+      outputs: ['output1']
+    } 
+  },
+  toolAgent: { 
+    type: 'output', 
+    data: { 
+      label: 'Tool Agent',
+      inputs: { workList: '', variableName: '' },
+      outputs: ['output1']
+    } 
+  },
 };
 
 const initialNodes = [
@@ -80,10 +124,11 @@ export const DataEngineering = () => {
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
   const handleAddNode = (type: string) => {
+    const nodeConfig = nodeTypes[type as keyof typeof nodeTypes];
     const newNode = {
       id: `${type}-${Date.now()}`,
-      type: 'default',
-      data: { label: type },
+      type: nodeConfig.type,
+      data: nodeConfig.data,
       position: { x: Math.random() * 500, y: Math.random() * 300 },
     };
     setNodes((nds) => [...nds, newNode]);
