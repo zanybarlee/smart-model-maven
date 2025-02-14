@@ -7,16 +7,13 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
-  Panel,
 } from '@xyflow/react';
-import { Button } from "@/components/ui/button";
-import { Plus, Search, Play, Wand2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { DataEngineeringNode } from './nodes/DataEngineeringNode';
 import { TextToFlowDialog } from './dialogs/TextToFlowDialog';
 import { initialNodes, initialEdges, createNodeConfig } from './types/flow-types';
-import { CustomNode } from './types/custom-types';
+import { FlowSidebar } from './components/FlowSidebar';
+import { FlowToolbar } from './components/FlowToolbar';
 import '@xyflow/react/dist/style.css';
 
 export const DataEngineering = () => {
@@ -162,41 +159,14 @@ export const DataEngineering = () => {
     });
   };
 
-  const filteredNodeTypes = Object.entries({
-    dataIngestion: { data: createNodeConfig('dataIngestion', 'Data Ingestion') },
-    dataCleaning: { data: createNodeConfig('dataCleaning', 'Data Cleaning') },
-    featureEngineering: { data: createNodeConfig('featureEngineering', 'Feature Engineering') },
-  }).filter(([key]) => key.toLowerCase().includes(searchQuery.toLowerCase()));
-
   return (
     <div className="h-full">
       <div className="flex h-[800px]">
-        <div className="w-64 border-r pr-4 overflow-auto">
-          <div className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search components..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8"
-              />
-            </div>
-            <div className="space-y-2">
-              {filteredNodeTypes.map(([key, value]) => (
-                <Button
-                  key={key}
-                  variant="outline"
-                  className="w-full justify-start"
-                  onClick={() => handleAddNode(key)}
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  {value.data.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
+        <FlowSidebar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onAddNode={handleAddNode}
+        />
         <div className="flex-1 h-full">
           <ReactFlow
             nodes={nodes}
@@ -210,22 +180,10 @@ export const DataEngineering = () => {
             <Controls />
             <MiniMap />
             <Background />
-            <Panel position="top-right">
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline"
-                  onClick={() => setIsTextToFlowOpen(true)}
-                  className="flex items-center gap-2"
-                >
-                  <Wand2 className="h-4 w-4" />
-                  Generate from Text
-                </Button>
-                <Button onClick={runPipeline} className="flex items-center gap-2">
-                  <Play className="h-4 w-4" />
-                  Run Pipeline
-                </Button>
-              </div>
-            </Panel>
+            <FlowToolbar
+              onOpenTextToFlow={() => setIsTextToFlowOpen(true)}
+              onRunPipeline={runPipeline}
+            />
           </ReactFlow>
         </div>
         <TextToFlowDialog
