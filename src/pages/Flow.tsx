@@ -9,6 +9,7 @@ import { Chatflow } from "@/components/flow/Chatflow";
 import { ContinuousImprovement } from "@/components/flow/ContinuousImprovement";
 import { Automation } from "@/components/flow/Automation";
 import { Analytics } from "@/components/flow/Analytics";
+import { DataEngineering } from "@/components/flow/DataEngineering";
 import '@xyflow/react/dist/style.css';
 
 const Flow = () => {
@@ -26,14 +27,19 @@ const Flow = () => {
 
               <KPIDashboard />
 
-              <Tabs defaultValue="value-stream" className="space-y-4">
+              <Tabs defaultValue="data-flow" className="space-y-4">
                 <TabsList>
+                  <TabsTrigger value="data-flow">Data Flow Design</TabsTrigger>
                   <TabsTrigger value="value-stream">Value Stream</TabsTrigger>
                   <TabsTrigger value="chatflow">Chatflow</TabsTrigger>
                   <TabsTrigger value="continuous-improvement">Continuous Improvement</TabsTrigger>
                   <TabsTrigger value="automation">Automation</TabsTrigger>
                   <TabsTrigger value="analytics">Analytics</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="data-flow" className="space-y-4">
+                  <DataEngineering />
+                </TabsContent>
 
                 <TabsContent value="value-stream" className="space-y-4">
                   <ValueStream />
@@ -64,3 +70,4 @@ const Flow = () => {
 };
 
 export default Flow;
+
