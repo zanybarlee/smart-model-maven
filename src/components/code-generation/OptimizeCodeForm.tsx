@@ -35,30 +35,30 @@ export const OptimizeCodeForm = ({ onCodeOptimized }: OptimizeCodeFormProps) => 
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Optimize Existing Code</CardTitle>
-        <CardDescription>
+    <Card className="w-full">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-xl md:text-2xl">Optimize Existing Code</CardTitle>
+        <CardDescription className="text-sm md:text-base">
           Paste your existing code, and our AI will suggest optimizations for better performance and readability.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
             <FormField
               control={form.control}
               name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Code to Optimize</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Code to Optimize</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Paste your code here..."
-                      className="min-h-[200px] font-mono"
+                      className="min-h-[200px] md:min-h-[240px] font-mono text-sm md:text-base"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription className="text-xs md:text-sm">
                     Paste the code you want to optimize.
                   </FormDescription>
                   <FormMessage />
@@ -70,11 +70,11 @@ export const OptimizeCodeForm = ({ onCodeOptimized }: OptimizeCodeFormProps) => 
               name="requirements"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Optimization Requirements (Optional)</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Optimization Requirements (Optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Specify any particular optimization goals... (e.g., improve performance, reduce memory usage)"
-                      className="min-h-[100px]"
+                      className="min-h-[100px] md:min-h-[120px] text-sm md:text-base"
                       {...field}
                     />
                   </FormControl>
@@ -82,7 +82,7 @@ export const OptimizeCodeForm = ({ onCodeOptimized }: OptimizeCodeFormProps) => 
                 </FormItem>
               )}
             />
-            <Button type="submit">Optimize Code</Button>
+            <Button type="submit" className="w-full sm:w-auto">Optimize Code</Button>
           </form>
         </Form>
       </CardContent>

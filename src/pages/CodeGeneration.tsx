@@ -14,35 +14,37 @@ const CodeGeneration = () => {
 
   return (
     <SidebarProvider>
-      <div className="grid lg:grid-cols-[280px_1fr] h-screen">
+      <div className="grid lg:grid-cols-[280px_1fr] min-h-screen">
         <AppSidebar />
-        <main className="p-6 overflow-y-auto">
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-4">Code Generation</h1>
-              <p className="text-gray-600">
+        <main className="p-4 md:p-6 overflow-y-auto">
+          <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
+            <div className="text-left">
+              <h1 className="text-2xl md:text-3xl font-bold mb-2 md:mb-4">Code Generation</h1>
+              <p className="text-sm md:text-base text-gray-600">
                 AI-powered code generation and optimization tools
               </p>
             </div>
 
-            <TextToApp />
+            <div className="space-y-6">
+              <TextToApp />
 
-            <Tabs defaultValue="generate" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="generate">Generate Code</TabsTrigger>
-                <TabsTrigger value="optimize">Optimize Code</TabsTrigger>
-              </TabsList>
+              <Tabs defaultValue="generate" className="space-y-6">
+                <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
+                  <TabsTrigger value="generate">Generate Code</TabsTrigger>
+                  <TabsTrigger value="optimize">Optimize Code</TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="generate">
-                <GenerateCodeForm onCodeGenerated={setGeneratedCode} />
-                <CodeDisplay code={generatedCode} title="Generated Code" />
-              </TabsContent>
+                <TabsContent value="generate" className="space-y-6">
+                  <GenerateCodeForm onCodeGenerated={setGeneratedCode} />
+                  <CodeDisplay code={generatedCode} title="Generated Code" />
+                </TabsContent>
 
-              <TabsContent value="optimize">
-                <OptimizeCodeForm onCodeOptimized={setOptimizedCode} />
-                <CodeDisplay code={optimizedCode} title="Optimized Code" />
-              </TabsContent>
-            </Tabs>
+                <TabsContent value="optimize" className="space-y-6">
+                  <OptimizeCodeForm onCodeOptimized={setOptimizedCode} />
+                  <CodeDisplay code={optimizedCode} title="Optimized Code" />
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
         </main>
       </div>
