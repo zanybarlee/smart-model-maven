@@ -18,11 +18,11 @@ export const TextToApp = () => {
 
   return (
     <>
-      <Card>
+      <Card className="bg-black border-gray-800">
         <CardHeader className="flex flex-row items-start justify-between">
           <div>
-            <CardTitle>Text to App (AI Coder)</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-white">Text to App (AI Coder)</CardTitle>
+            <CardDescription className="text-gray-400">
               Transform your text descriptions into fully functional applications using AI
             </CardDescription>
           </div>
@@ -30,7 +30,7 @@ export const TextToApp = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsDetached(true)}
-            className="h-8 w-8"
+            className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-800"
           >
             <Maximize2 className="h-4 w-4" />
           </Button>
@@ -41,14 +41,14 @@ export const TextToApp = () => {
       </Card>
 
       <Dialog open={isDetached} onOpenChange={setIsDetached}>
-        <DialogContent className="max-w-[100vw] w-full h-[100vh] p-4" onInteractOutside={(e) => e.preventDefault()}>
+        <DialogContent className="max-w-[100vw] w-full h-[100vh] p-4 bg-black" onInteractOutside={(e) => e.preventDefault()}>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">Text to App (AI Coder)</h2>
+            <h2 className="text-lg font-semibold text-white">Text to App (AI Coder)</h2>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsDetached(false)}
-              className="h-8 w-8"
+              className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-800"
             >
               <Minimize2 className="h-4 w-4" />
             </Button>
