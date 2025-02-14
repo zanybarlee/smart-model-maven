@@ -14,18 +14,18 @@ const CodeGeneration = () => {
 
   return (
     <SidebarProvider>
-      <div className="grid lg:grid-cols-[280px_1fr] min-h-screen">
+      <div className="min-h-screen flex w-full">
         <AppSidebar />
-        <main className="p-4 md:p-6 overflow-y-auto">
-          <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
-            <div className="text-left">
-              <h1 className="text-2xl md:text-3xl font-bold mb-2 md:mb-4">Code Generation</h1>
-              <p className="text-sm md:text-base text-gray-600">
-                AI-powered code generation and optimization tools
-              </p>
-            </div>
+        <main className="flex-1 overflow-auto bg-slate-50">
+          <div className="p-6">
+            <div className="max-w-[1800px] mx-auto space-y-6">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">Code Generation</h1>
+                <p className="text-gray-600">
+                  AI-powered code generation and optimization tools
+                </p>
+              </div>
 
-            <div className="space-y-6">
               <TextToApp />
 
               <Tabs defaultValue="generate" className="space-y-6">
