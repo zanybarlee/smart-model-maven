@@ -36,25 +36,46 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const getErrorMessage = (error: Error | unknown): string => {
+    if (error instanceof Error) {
+      if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+        return 'Unable to connect to authentication service. Please check your internet connection and try again.';
+      }
+      return error.message;
+    }
+    return 'An unexpected error occurred. Please try again.';
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin,
+        },
+      });
 
-    if (error) {
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error signing up",
+          description: getErrorMessage(error),
+        });
+      } else {
+        toast({
+          title: "Successfully signed up!",
+          description: "Please check your email for verification.",
+        });
+      }
+    } catch (err) {
       toast({
         variant: "destructive",
-        title: "Error signing up",
-        description: error.message,
-      });
-    } else {
-      toast({
-        title: "Successfully signed up!",
-        description: "Please check your email for verification.",
+        title: "Connection Error",
+        description: getErrorMessage(err),
       });
     }
     setLoading(false);
@@ -64,22 +85,30 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
     
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error signing in",
+          description: getErrorMessage(error),
+        });
+      } else {
+        toast({
+          title: "Successfully signed in!",
+        });
+        navigate('/');
+      }
+    } catch (err) {
       toast({
         variant: "destructive",
-        title: "Error signing in",
-        description: error.message,
+        title: "Connection Error",
+        description: getErrorMessage(err),
       });
-    } else {
-      toast({
-        title: "Successfully signed in!",
-      });
-      navigate('/');
     }
     setLoading(false);
   };
