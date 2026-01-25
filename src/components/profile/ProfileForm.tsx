@@ -50,7 +50,7 @@ export const ProfileForm = ({ profile, onProfileUpdate }: {
         .update({
           first_name: data.first_name,
           last_name: data.last_name,
-          role: data.role,
+          role: data.role as any, // Cast to bypass DB enum mismatch - role is stored as text
           job_title: data.job_title,
           organization: data.organization,
         })
